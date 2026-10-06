@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("guias-tema");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Virtualização: guia de estudo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --ink:#18202C; --muted:#5A6474; --line:#D8DDE4;
+  --accent:#2B54D9; --accent-soft:#E3EAFD;
+  --warn:#9A5B00; --warn-soft:#FFF2DC; --warn-line:#F0C77F;
+  --ok:#1F7A55; --ok-soft:#E0F3EA;
+  --hw:#2A3442; --hv:#2B54D9; --vm:#6E8DF0;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151C; --surface:#18202A; --ink:#E7EBF0; --muted:#9AA5B4; --line:#2A3441;
+    --accent:#86A2FF; --accent-soft:#1E2A4A;
+    --warn:#F2B65A; --warn-soft:#2E2414; --warn-line:#6B4E1E;
+    --ok:#5FCB98; --ok-soft:#14302A;
+    --hw:#3A4656; --hv:#3E63E0; --vm:#5D7BDB;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10151C; --surface:#18202A; --ink:#E7EBF0; --muted:#9AA5B4; --line:#2A3441;
+  --accent:#86A2FF; --accent-soft:#1E2A4A;
+  --warn:#F2B65A; --warn-soft:#2E2414; --warn-line:#6B4E1E;
+  --ok:#5FCB98; --ok-soft:#14302A;
+  --hw:#3A4656; --hv:#3E63E0; --vm:#5D7BDB;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0}
+p{margin:0 0 .9em}
+strong{font-weight:600}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* Hero */
+.hero{padding-top:44px;padding-bottom:28px}
+.hero h1{font-size:clamp(2.6rem,9vw,4rem);font-weight:700;letter-spacing:-.01em}
+.hero .sub{color:var(--muted);font-size:1.05rem;margin-top:8px;max-width:34em}
+.hero-stack{margin:28px 0 8px;display:grid;gap:6px}
+.layer{border-radius:8px;padding:12px 16px;color:#fff;font-family:var(--display);font-weight:600;font-size:1.05rem;display:flex;justify-content:space-between;align-items:center;opacity:0;transform:translateY(10px);animation:rise .5s ease forwards}
+.layer small{font-family:var(--font);font-weight:400;font-size:.82rem;opacity:.85}
+.layer.vms{background:transparent;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;animation-delay:.7s}
+.layer.vms span{background:var(--vm);border-radius:8px;padding:12px 10px;text-align:center}
+.layer.hv{background:var(--hv);animation-delay:.4s}
+.layer.hw{background:var(--hw);animation-delay:.1s}
+@keyframes rise{to{opacity:1;transform:none}}
+.hero-meta{color:var(--muted);font-size:.92rem;margin-top:14px}
+
+/* Barra fixa */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:12px;height:56px}
+.prog{flex:1;min-width:0}
+.prog-txt{font-size:.85rem;color:var(--muted)}
+.prog-track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;width:0;background:var(--ok);transition:width .3s}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.9rem}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.toc{display:none;position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 56px);bottom:0;background:var(--bg);z-index:19;overflow-y:auto;padding:16px 0 calc(32px + env(safe-area-inset-bottom,0px))}
+.toc.open{display:block}
+.toc h4{font-family:var(--display);font-size:1rem;margin:18px 0 6px;color:var(--muted);font-weight:600}
+.toc a{display:flex;justify-content:space-between;gap:10px;padding:8px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a .ck{color:var(--ok);font-weight:600}
+
+/* Partes e tópicos */
+.part{margin-top:56px}
+.part-head{border-left:4px solid var(--accent);padding-left:14px;margin-bottom:22px}
+.part-head .n{color:var(--accent);font-weight:600;font-size:.9rem}
+.part-head h2{font-size:1.9rem;font-weight:700}
+.topic{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 20px 18px;margin-bottom:16px}
+.topic-head{display:flex;gap:12px;align-items:baseline;margin-bottom:12px}
+.topic-head .num{font-family:var(--display);font-weight:700;color:var(--accent);font-size:1.3rem;min-width:1.6em}
+.topic-head h3{font-size:1.4rem;font-weight:600}
+.topic ul{padding-left:1.2em;margin:0 0 .9em}
+.topic li{margin-bottom:.3em}
+.done-btn{margin-top:8px;display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px;font-size:.85rem;color:var(--muted);cursor:pointer}
+.done-btn[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.done-btn .box{width:14px;height:14px;border:1.5px solid currentColor;border-radius:3px;display:inline-grid;place-items:center;font-size:11px;line-height:1}
+
+/* Caixas */
+.note{border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.95rem}
+.note b.t{display:block;font-family:var(--display);font-size:1rem;margin-bottom:2px}
+.note p:last-child{margin-bottom:0}
+.note.sum{background:var(--ok-soft);color:var(--ink)}
+.note.sum b.t{color:var(--ok)}
+.note.warn{background:var(--warn-soft);border:1px solid var(--warn-line)}
+.note.warn b.t{color:var(--warn)}
+.note.tip{background:var(--accent-soft)}
+.note.tip b.t{color:var(--accent)}
+
+/* Diagramas */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0}
+.flow span{background:var(--accent-soft);border-radius:6px;padding:6px 12px;font-weight:600;font-size:.92rem}
+.flow i{font-style:normal;color:var(--muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media (max-width:520px){.duo{grid-template-columns:1fr}}
+.duo>div{border:1px solid var(--line);border-radius:10px;padding:14px}
+.duo h4{font-family:var(--display);font-size:1.1rem;margin:0 0 6px}
+.mini-stack{display:grid;gap:4px;margin:10px 0}
+.mini-stack div{border-radius:6px;padding:6px 10px;font-size:.85rem;font-weight:600;color:#fff;text-align:center}
+.ms-vm{background:var(--vm)}.ms-hv{background:var(--hv)}.ms-os{background:#7B6A9E}.ms-hw{background:var(--hw)}
+.res4{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.res4 div{border:1px solid var(--line);border-radius:10px;padding:12px}
+.res4 b{display:block;font-family:var(--display);font-size:1.15rem}
+.res4 span{color:var(--muted);font-size:.9rem}
+.hier{margin:14px 0;display:grid;gap:5px}
+.hier div{border-radius:6px;padding:8px 12px;display:flex;justify-content:space-between;font-size:.9rem;background:var(--accent-soft)}
+.hier div b{font-weight:600}
+.hier-axis{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-top:4px}
+.bars{margin:14px 0;display:grid;gap:10px}
+.bars .row{display:grid;grid-template-columns:9.5em 1fr;gap:10px;align-items:center;font-size:.88rem}
+.bars .trk{background:var(--line);border-radius:4px;height:22px;overflow:hidden}
+.bars .fl{height:100%;background:var(--accent);color:#fff;font-size:.78rem;font-weight:600;display:flex;align-items:center;padding-left:8px;white-space:nowrap}
+.consol{display:flex;height:34px;border-radius:6px;overflow:hidden;margin:6px 0 4px;background:var(--line)}
+.consol div{display:grid;place-items:center;color:#fff;font-size:.78rem;font-weight:600}
+.cpu-grid{margin:14px 0;display:grid;gap:8px}
+.cpu-grid .lvl{font-size:.8rem;color:var(--muted);margin-bottom:-4px}
+.cells{display:grid;gap:4px}
+.cells span{border-radius:5px;padding:6px 0;text-align:center;font-size:.72rem;font-weight:600}
+.c-vm{background:var(--vm);color:#fff}.c-hv{background:var(--hv);color:#fff}.c-ht{background:var(--accent-soft)}.c-p{background:var(--hw);color:#fff}
+
+/* Simulador */
+.sim{border:2px solid var(--accent);border-radius:12px;padding:16px;margin:16px 0}
+.sim h4{font-family:var(--display);font-size:1.15rem;margin:0 0 10px}
+.ctrl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;margin-bottom:10px;font-size:.92rem}
+.ctrl input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.ctrl output{font-weight:600}
+.sim-out{margin-top:12px;display:grid;gap:8px}
+.sim-badge{font-weight:600;border-radius:8px;padding:8px 12px}
+.sim-dots{display:flex;flex-wrap:wrap;gap:3px}
+.sim-dots i{width:12px;height:12px;border-radius:3px;display:block}
+
+/* Flashcards e quiz */
+.fc{perspective:1000px;margin:16px 0}
+.fc-card{position:relative;min-height:170px;cursor:pointer;transition:transform .45s;transform-style:preserve-3d;border:none;background:none;width:100%;padding:0;text-align:left}
+.fc-card.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;padding:20px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line);background:var(--surface)}
+.fc-face.back{transform:rotateY(180deg);background:var(--accent-soft)}
+.fc-face h4{font-family:var(--display);font-size:1.6rem;margin:0}
+.fc-face small{color:var(--muted);margin-top:8px}
+.fc-nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.q{margin:14px 0 18px}
+.q p{font-weight:600}
+.q .opts{display:grid;gap:6px}
+.q .opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer}
+.q .opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.q .opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
+.q .fb{font-size:.9rem;color:var(--muted);margin-top:6px}
+.score{font-family:var(--display);font-size:1.3rem;font-weight:600}
+footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
+
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:38px;height:36px;display:inline-grid;place-items:center;cursor:pointer;font-size:1.05rem;line-height:1;flex:none}
+.theme-btn:hover{border-color:var(--accent,var(--ink))}
+:root{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
+</style>
+</head>
+<body>
+
+<div class="wrap" style="padding-top:16px"><a href="index.html" style="color:var(--accent);font-weight:600;font-size:.9rem;text-decoration:none">‹ Todos os guias</a></div>
+<header class="wrap hero">
+  <h1>Virtualização</h1>
+  <p class="sub">Guia de estudo para a prova, organizado em cinco partes, com diagramas, um simulador de overcommitment, flashcards e quiz no final.</p>
+  <div class="hero-stack" aria-label="Camadas da virtualização: hardware físico, hypervisor e máquinas virtuais">
+    <div class="layer vms"><span>VM 1</span><span>VM 2</span><span>VM 3</span></div>
+    <div class="layer hv">Hypervisor <small>distribui os recursos</small></div>
+    <div class="layer hw">Hardware físico <small>CPU, RAM, disco, rede</small></div>
+  </div>
+  <p class="hero-meta">As caixas amarelas marcam pontos do material original que estavam imprecisos ou incompletos.</p>
+</header>
+
+<nav class="bar" aria-label="Progresso e tópicos">
+  <div class="wrap">
+    <div class="prog">
+      <div class="prog-txt" id="progTxt">0 de 22 tópicos estudados</div>
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    </div>
+    <button class="theme-btn" type="button" aria-label="Alternar tema"></button>
+    <button class="btn" id="tocBtn" aria-expanded="false" aria-controls="toc">Tópicos</button>
+  </div>
+</nav>
+<div class="toc" id="toc"><div class="wrap" id="tocList"></div></div>
+
+<main class="wrap">
+
+<!-- PARTE 1 -->
+<section class="part" data-part="Parte 1: A base">
+  <div class="part-head"><div class="n">Parte 1</div><h2>A base</h2></div>
+
+  <article class="topic" id="t1" data-title="Fundamentos da virtualização">
+    <div class="topic-head"><span class="num">1</span><h3>Fundamentos da virtualização</h3></div>
+    <p>A virtualização permite usar os recursos de <strong>um único equipamento físico</strong> para executar vários ambientes virtuais de forma independente.</p>
+    <p>Um servidor físico tem processador, memória RAM, armazenamento e rede. Com a virtualização, esses recursos são divididos entre várias <strong>máquinas virtuais (VMs)</strong>, e cada uma funciona como um computador separado.</p>
+    <div class="flow"><span>Hardware físico</span><i>→</i><span>Hypervisor</span><i>→</i><span>Máquinas virtuais</span></div>
+    <p>Três ideias sustentam tudo:</p>
+    <ul>
+      <li><strong>Abstração:</strong> a VM não precisa conhecer todos os detalhes do hardware físico.</li>
+      <li><strong>Isolamento:</strong> cada VM trabalha de forma independente, reduzindo a interferência entre ambientes.</li>
+      <li><strong>Compartilhamento de recursos:</strong> CPU, memória, disco e rede do equipamento físico são distribuídos entre as VMs.</li>
+    </ul>
+    <div class="note sum"><b class="t">Em resumo</b><p>Virtualizar é usar os recursos de um mesmo computador físico para manter várias máquinas virtuais independentes e isoladas.</p></div>
+  </article>
+
+  <article class="topic" id="t2" data-title="Máquinas virtuais: Host e Guest">
+    <div class="topic-head"><span class="num">2</span><h3>Máquinas virtuais: Host e Guest</h3></div>
+    <p>Uma VM é um <strong>computador criado por software</strong>. Ela se comporta como uma máquina comum, mas não tem componentes físicos próprios: processador, memória, disco e placa de rede são entregues virtualmente pelo equipamento físico, através do hypervisor.</p>
+    <div class="duo">
+      <div><h4>Host (hospedeiro)</h4><p style="margin:0">A máquina <strong>física</strong> que fornece os recursos.</p></div>
+      <div><h4>Guest (convidado)</h4><p style="margin:0">A máquina <strong>virtual</strong> executada dentro do Host.</p></div>
+    </div>
+    <p>Uma VM pode ter sistema operacional, aplicativos, serviços, memória virtual, armazenamento virtual, processadores virtuais (vCPUs) e interfaces de rede virtuais.</p>
+    <div class="note warn"><b class="t">Ponto de atenção</b><p>O termo "memória virtual" tem outro significado consagrado em sistemas operacionais: é a técnica de paginação/swap, que usa o disco como extensão da RAM. Aqui o material quer dizer <strong>RAM virtualizada</strong>, ou seja, a memória que o hypervisor entrega à VM. Se aparecer na prova, vale ficar atento a qual dos dois sentidos a questão usa.</p></div>
+  </article>
+
+  <article class="topic" id="t3" data-title="Os quatro recursos fundamentais">
+    <div class="topic-head"><span class="num">3</span><h3>Os quatro recursos fundamentais</h3></div>
+    <div class="res4">
+      <div><b>CPU</b><span>Processa: executa as instruções dos programas.</span></div>
+      <div><b>RAM</b><span>Mantém temporariamente os dados e instruções em uso.</span></div>
+      <div><b>Armazenamento</b><span>Guarda arquivos e dados de forma persistente.</span></div>
+      <div><b>Rede</b><span>Comunica a máquina com outros dispositivos e sistemas.</span></div>
+    </div>
+    <p>A quantidade de VMs que um servidor consegue executar depende diretamente da disponibilidade desses quatro recursos.</p>
+    <div class="note warn"><b class="t">Ponto de atenção</b><p>O material lista HDD, SSD, NVMe e RAID lado a lado como se fossem a mesma categoria, mas são coisas diferentes:</p>
+      <ul>
+        <li><strong>HDD e SSD</strong> são tipos de dispositivo (disco magnético e memória flash).</li>
+        <li><strong>NVMe</strong> é um protocolo/interface de comunicação usado por SSDs ligados ao barramento PCIe. O correto seria "SSD NVMe".</li>
+        <li><strong>RAID</strong> é uma forma de organizar vários discos em conjunto, que pode ser montada com HDDs, SSDs ou SSDs NVMe.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- PARTE 2 -->
+<section class="part" data-part="Parte 2: Como o computador executa">
+  <div class="part-head"><div class="n">Parte 2</div><h2>Como o computador executa</h2></div>
+
+  <article class="topic" id="t4" data-title="Workload (carga de trabalho)">
+    <div class="topic-head"><span class="num">4</span><h3>Workload (carga de trabalho)</h3></div>
+    <p>Workload é a carga de trabalho que um sistema executa e que consome recursos computacionais. Exemplos: iniciar uma VM, abrir um aplicativo, fazer login, consultar um banco de dados, transferir arquivos, usar a rede.</p>
+    <p>Uma carga <strong>estável</strong> não fica cravada num valor fixo. Ela apresenta um comportamento relativamente constante, sem grandes variações inesperadas.</p>
+    <div class="note warn"><b class="t">Ajuste fino</b><p>O material define workload como "o nível de utilização dos recursos". Mais preciso é dizer que workload é o <strong>trabalho demandado</strong> (as tarefas), e a utilização de CPU, RAM, disco e rede é a <strong>consequência</strong> dele. Na prática os dois se confundem, então a definição do material serve para a prova.</p></div>
+  </article>
+
+  <article class="topic" id="t5" data-title="Disco, RAM e processador">
+    <div class="topic-head"><span class="num">5</span><h3>Relação entre disco, RAM e processador</h3></div>
+    <p>Quando um programa é executado, existe um fluxo básico:</p>
+    <div class="flow"><span>1. Disco</span><i>→</i><span>2. RAM</span><i>→</i><span>3. Processador</span></div>
+    <ul>
+      <li><strong>Disco:</strong> onde o programa fica armazenado.</li>
+      <li><strong>RAM:</strong> recebe os dados e instruções necessários.</li>
+      <li><strong>Processador:</strong> executa as instruções carregadas.</li>
+    </ul>
+    <p>De forma simplificada, executar um programa é fazer o processador trabalhar sobre as instruções presentes nos arquivos desse programa.</p>
+  </article>
+
+  <article class="topic" id="t6" data-title="Processador e suas operações">
+    <div class="topic-head"><span class="num">6</span><h3>Processador e suas operações</h3></div>
+    <div class="duo">
+      <div><h4>Aritméticas</h4><p style="margin:0">Soma, subtração, multiplicação, divisão.</p></div>
+      <div><h4>Lógicas (comparações)</h4><p style="margin:0">Maior que, menor que, igual, diferente.</p></div>
+    </div>
+    <p>Uma estrutura <code>if/else</code> usa essas comparações para decidir qual instrução será executada. A parte do processador responsável por essas operações é a <strong>ULA (Unidade Lógica e Aritmética)</strong>.</p>
+    <div class="note warn"><b class="t">Ponto de atenção</b><p>Tecnicamente, "maior que, menor que, igual, diferente" são <strong>operações de comparação</strong> (relacionais). As operações lógicas propriamente ditas da ULA são <strong>AND, OR, NOT e XOR</strong>, que trabalham com bits. Na ULA, uma comparação costuma ser feita por meio de uma subtração seguida da leitura de indicadores (flags). Para a prova, siga a definição do professor, mas é bom conhecer a distinção.</p></div>
+  </article>
+
+  <article class="topic" id="t7" data-title="Registradores, cache, RAM e disco">
+    <div class="topic-head"><span class="num">7</span><h3>Registradores, cache, RAM e disco</h3></div>
+    <p>Quanto mais perto do processador, mais rápido, menor e mais caro. Quanto mais longe, mais lento e com mais capacidade.</p>
+    <div class="hier">
+      <div style="width:40%"><b>Registradores</b></div>
+      <div style="width:55%"><b>Cache</b></div>
+      <div style="width:75%"><b>RAM</b></div>
+      <div style="width:100%"><b>Disco</b></div>
+    </div>
+    <div class="hier-axis"><span>Mais rápido, mais caro</span><span>Mais capacidade</span></div>
+    <ul style="margin-top:12px">
+      <li><strong>Registradores:</strong> pequenas áreas de armazenamento dentro do processador, usadas diretamente nas operações.</li>
+      <li><strong>Cache:</strong> guarda temporariamente informações com grande chance de serem usadas de novo, acelerando o acesso.</li>
+      <li><strong>RAM:</strong> volátil, perde os dados quando o equipamento é desligado.</li>
+      <li><strong>Disco:</strong> persistente, mantém os dados mesmo desligado.</li>
+    </ul>
+    <div class="note warn"><b class="t">Ajuste fino</b><p>O "maior custo" se refere ao <strong>custo por byte</strong>. Um módulo de RAM de 32 GB pode custar mais que um HDD barato, mas o gigabyte de RAM é muito mais caro que o gigabyte de disco.</p></div>
+  </article>
+</section>
+
+<!-- PARTE 3 -->
+<section class="part" data-part="Parte 3: Requisitos e hypervisor">
+  <div class="part-head"><div class="n">Parte 3</div><h2>Requisitos e hypervisor</h2></div>
+
+  <article class="topic" id="t8" data-title="Requisitos de hardware">
+    <div class="topic-head"><span class="num">8</span><h3>Requisitos de hardware para virtualização</h3></div>
+    <p><strong>CPU:</strong> precisa ter suporte à virtualização assistida por hardware.</p>
+    <div class="duo">
+      <div><h4>Intel</h4><p style="margin:0">VT-x (na BIOS/UEFI: "Intel Virtualization Technology")</p></div>
+      <div><h4>AMD</h4><p style="margin:0">AMD-V (na BIOS/UEFI: "SVM Mode")</p></div>
+    </div>
+    <p><strong>RAM:</strong> o servidor precisa de memória para RAM das VMs + RAM do hypervisor + RAM do sistema hospedeiro (quando houver). Se faltar memória, o desempenho cai bastante.</p>
+    <p><strong>Armazenamento:</strong> pode ser gargalo. Opções citadas: SSD, NVMe, SAN, NAS, RAID. O indicador importante é o <strong>IOPS</strong>, a quantidade de operações de entrada e saída por segundo que o armazenamento suporta.</p>
+    <p><strong>Rede:</strong> precisa aguentar o tráfego de gerenciamento, de comunicação entre as VMs e de armazenamento.</p>
+    <div class="note tip"><b class="t">Complemento</b><p>Além do VT-x/AMD-V, processadores modernos trazem o <strong>SLAT</strong> (Intel EPT / AMD RVI), que acelera a tradução de memória das VMs, e o <strong>IOMMU</strong> (Intel VT-d / AMD-Vi), que permite entregar um dispositivo físico direto a uma VM. Não está no material, mas pode aparecer em questões de requisitos.</p></div>
+  </article>
+
+  <article class="topic" id="t9" data-title="Hypervisor">
+    <div class="topic-head"><span class="num">9</span><h3>Hypervisor</h3></div>
+    <p>É o componente que <strong>administra e distribui os recursos físicos do Host</strong> entre as VMs. Ele controla como CPU, RAM, disco e rede serão usados por cada máquina virtual.</p>
+    <div class="mini-stack">
+      <div class="ms-vm">VM 1 | VM 2 | VM 3 | ...</div>
+      <div class="ms-hv">Hypervisor</div>
+      <div class="ms-hw">Servidor físico (CPU + RAM + disco + rede)</div>
+    </div>
+  </article>
+
+  <article class="topic" id="t10" data-title="Hypervisor tipo 1 e tipo 2">
+    <div class="topic-head"><span class="num">10</span><h3>Hypervisor tipo 1 e tipo 2</h3></div>
+    <div class="duo">
+      <div>
+        <h4>Tipo 1: bare metal (nativo)</h4>
+        <div class="mini-stack"><div class="ms-vm">VMs</div><div class="ms-hv">Hypervisor</div><div class="ms-hw">Hardware</div></div>
+        <p style="font-size:.92rem">Roda direto no hardware. Mais desempenho, menos sobrecarga, acesso mais direto ao hardware.</p>
+        <p style="font-size:.92rem;margin:0"><strong>Uso:</strong> servidores, datacenters, nuvem.<br><strong>Exemplos:</strong> VMware ESXi, Hyper-V, KVM, XenServer.</p>
+      </div>
+      <div>
+        <h4>Tipo 2: hosted</h4>
+        <div class="mini-stack"><div class="ms-vm">VMs</div><div class="ms-hv">Hypervisor</div><div class="ms-os">Sistema operacional</div><div class="ms-hw">Hardware</div></div>
+        <p style="font-size:.92rem">Roda sobre um sistema operacional já instalado.</p>
+        <p style="font-size:.92rem;margin:0"><strong>Uso:</strong> estudos, desenvolvimento, laboratórios, testes.<br><strong>Exemplos:</strong> VirtualBox, VMware Workstation, Parallels Desktop.</p>
+      </div>
+    </div>
+    <div class="note warn"><b class="t">Ponto de atenção</b>
+      <p><strong>Hyper-V</strong> é tipo 1 mesmo quando você ativa no Windows 10/11 Pro: ao ligar o recurso, o hypervisor passa a rodar abaixo do Windows, e o próprio Windows vira uma partição sobre ele. É uma pegadinha comum.</p>
+      <p><strong>KVM</strong> é um módulo do kernel Linux que transforma o próprio Linux em hypervisor. A maioria das fontes classifica como tipo 1, mas alguns autores discutem essa classificação justamente porque existe um sistema operacional completo envolvido.</p>
+    </div>
+  </article>
+</section>
+
+<!-- PARTE 4 -->
+<section class="part" data-part="Parte 4: Processamento virtual">
+  <div class="part-head"><div class="n">Parte 4</div><h2>Processamento virtual</h2></div>
+
+  <article class="topic" id="t11" data-title="vCPU e pCPU">
+    <div class="topic-head"><span class="num">11</span><h3>vCPU e pCPU</h3></div>
+    <div class="duo">
+      <div><h4>pCPU</h4><p style="margin:0">Recurso de processamento <strong>físico</strong> do Host.</p></div>
+      <div><h4>vCPU</h4><p style="margin:0">Processador <strong>virtual</strong> entregue a uma VM.</p></div>
+    </div>
+    <p>A soma das vCPUs configuradas nas VMs pode ser <strong>maior</strong> que os recursos físicos existentes. Quem organiza esse uso é o hypervisor. Exemplo: 4 VMs com 4 vCPUs cada somam 16 vCPUs.</p>
+    <div class="note warn"><b class="t">Inconsistência no material</b><p>O material define pCPU como "físico/lógico" nos tópicos 11 e na revisão, mas no tópico 14 usa pCPU apenas para <strong>núcleos físicos</strong> e chama os lógicos de HT. Na literatura o termo também varia conforme o fabricante. Como o desenho da aula separa as duas coisas, o mais seguro para a prova é: <strong>pCPU = núcleo físico</strong>, <strong>HT = processador lógico</strong>.</p></div>
+  </article>
+
+  <article class="topic" id="t12" data-title="SMT e Hyper-Threading">
+    <div class="topic-head"><span class="num">12</span><h3>SMT e Hyper-Threading</h3></div>
+    <p><strong>SMT</strong> (Simultaneous Multithreading) permite que um núcleo físico trabalhe com mais de um thread lógico. <strong>Hyper-Threading</strong> é o nome comercial da Intel para o SMT.</p>
+    <div class="flow"><span>4 núcleos físicos</span><i>→ SMT →</i><span>8 processadores lógicos</span></div>
+    <p>O SMT não cria núcleos novos. Os 4 núcleos físicos continuam sendo 4; o que aumenta é a quantidade de processadores lógicos que o sistema enxerga. Por isso o ganho real de desempenho é bem menor que o dobro.</p>
+  </article>
+
+  <article class="topic" id="t13" data-title="Overcommitment (superalocação)">
+    <div class="topic-head"><span class="num">13</span><h3>Overcommitment (superalocação)</h3></div>
+    <p>Acontece quando as VMs recebem <strong>mais recursos virtuais do que existem fisicamente</strong>. Exemplo: Host com 8 processadores lógicos e 4 VMs com 4 vCPUs cada, totalizando 16 vCPUs para 8 lógicos (proporção 2:1).</p>
+    <p>O hypervisor usa um <strong>scheduler (escalonador)</strong> para dividir o tempo de processamento entre as VMs. Isso funciona porque, na maior parte do tempo, muitas VMs estão:</p>
+    <ul>
+      <li>ociosas;</li>
+      <li>aguardando acesso ao disco;</li>
+      <li>esperando resposta da rede;</li>
+      <li>usando pouco processamento.</li>
+    </ul>
+    <p>O problema aparece quando muitas VMs pedem processamento ao mesmo tempo:</p>
+    <div class="flow"><span>Fila</span><i>→</i><span>Atraso</span><i>→</i><span>Queda de desempenho</span><i>→</i><span>Gargalo</span></div>
+    <div class="note tip"><b class="t">Analogia</b><p>8 caixas de supermercado e 16 clientes. Só 8 são atendidos ao mesmo tempo; quando um caixa libera, entra o próximo cliente.</p></div>
+
+    <div class="sim" id="sim">
+      <h4>Teste você mesmo</h4>
+      <div class="ctrl"><label for="sCores">Núcleos físicos no Host</label><output id="oCores">4</output><input type="range" id="sCores" min="2" max="32" step="2" value="4"></div>
+      <div class="ctrl"><label for="sSmt">SMT / Hyper-Threading ligado</label><input type="checkbox" id="sSmt" checked style="width:20px;height:20px;accent-color:var(--accent)"></div>
+      <div class="ctrl"><label for="sVms">Quantidade de VMs</label><output id="oVms">4</output><input type="range" id="sVms" min="1" max="16" value="4"></div>
+      <div class="ctrl"><label for="sVcpu">vCPUs por VM</label><output id="oVcpu">4</output><input type="range" id="sVcpu" min="1" max="8" value="4"></div>
+      <div class="sim-out" aria-live="polite">
+        <div id="simText"></div>
+        <div class="sim-dots" id="simDots" aria-hidden="true"></div>
+        <div class="sim-badge" id="simBadge"></div>
+      </div>
+      <p style="font-size:.82rem;color:var(--muted);margin:10px 0 0">Cada quadrado é uma vCPU. Os azuis cabem nos processadores lógicos; os amarelos precisam esperar na fila do escalonador quando todas as VMs disputam a CPU ao mesmo tempo. As faixas de risco são ilustrativas, porque o limite real depende do workload.</p>
+    </div>
+
+    <div class="note warn"><b class="t">Complemento</b><p>O material trata só de CPU, mas overcommitment também existe para <strong>memória RAM</strong>. Nesse caso o hypervisor usa técnicas como ballooning, compartilhamento de páginas e swap, e o risco de perda de desempenho é maior que no caso da CPU.</p></div>
+  </article>
+
+  <article class="topic" id="t14" data-title="Estrutura do desenho">
+    <div class="topic-head"><span class="num">14</span><h3>Estrutura do desenho da aula</h3></div>
+    <p>Dois processadores físicos, com 8 núcleos no total (pCPUs). Com SMT, viram 16 processadores lógicos (HTs). Acima ficam o hypervisor e as VMs.</p>
+    <div class="cpu-grid">
+      <div class="lvl">Máquinas virtuais</div>
+      <div class="cells" style="grid-template-columns:repeat(4,1fr)"><span class="c-vm">VM1</span><span class="c-vm">VM2</span><span class="c-vm">VM3</span><span class="c-vm">VM4</span></div>
+      <div class="lvl">Escalonador</div>
+      <div class="cells"><span class="c-hv">Hypervisor</span></div>
+      <div class="lvl">16 processadores lógicos (HT)</div>
+      <div class="cells" style="grid-template-columns:repeat(8,1fr)" id="htCells"></div>
+      <div class="lvl">8 núcleos físicos (pCPU), em 2 processadores</div>
+      <div class="cells" style="grid-template-columns:repeat(8,1fr)" id="pCells"></div>
+    </div>
+    <div class="flow"><span>VM</span><i>→</i><span>Hypervisor</span><i>→</i><span>Processador lógico</span><i>→</i><span>Núcleo físico</span></div>
+    <p>O hypervisor usa o escalonador para distribuir as vCPUs das VMs entre os processadores disponíveis no Host.</p>
+  </article>
+</section>
+
+<!-- PARTE 5 -->
+<section class="part" data-part="Parte 5: Na prática">
+  <div class="part-head"><div class="n">Parte 5</div><h2>Na prática</h2></div>
+
+  <article class="topic" id="t15" data-title="Consolidação de servidores">
+    <div class="topic-head"><span class="num">15</span><h3>Consolidação de servidores</h3></div>
+    <p>Em vez de manter vários servidores trabalhando muito abaixo da capacidade, roda-se tudo como VMs em um servidor mais potente.</p>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:4px">Cinco servidores físicos, cada um com seu uso de CPU:</p>
+    <div class="bars">
+      <div class="row"><span>Servidor 1</span><div class="trk"><div class="fl" style="width:10%">10%</div></div></div>
+      <div class="row"><span>Servidor 2</span><div class="trk"><div class="fl" style="width:15%">15%</div></div></div>
+      <div class="row"><span>Servidor 3</span><div class="trk"><div class="fl" style="width:20%">20%</div></div></div>
+      <div class="row"><span>Servidor 4</span><div class="trk"><div class="fl" style="width:10%">10%</div></div></div>
+      <div class="row"><span>Servidor 5</span><div class="trk"><div class="fl" style="width:15%">15%</div></div></div>
+    </div>
+    <p style="font-size:.9rem;color:var(--muted);margin-bottom:0">Consolidados em um único Host (como VMs):</p>
+    <div class="consol" aria-label="Uso somado de 70 por cento">
+      <div style="width:10%;background:#2B54D9">10</div><div style="width:15%;background:#3F67E6">15</div><div style="width:20%;background:#5A7DEB">20</div><div style="width:10%;background:#7690EE">10</div><div style="width:15%;background:#90A5F2">15</div>
+    </div>
+    <p style="font-size:.9rem">Somados, dão 70%: cabem num só servidor de capacidade equivalente, ainda com folga.</p>
+    <p><strong>Vantagens:</strong> melhor aproveitamento do hardware, menos equipamentos, economia de espaço, menos cabeamento, menor consumo de energia, menos portas de switch e gerenciamento centralizado.</p>
+    <div class="note warn"><b class="t">Ajuste fino</b><p>O material mostra os percentuais mas não fecha a conta. A lógica é justamente essa soma (70%). Na vida real ainda é preciso considerar os picos de cada servidor, que podem acontecer ao mesmo tempo, e o fato de os servidores originais não terem necessariamente a mesma potência.</p></div>
+  </article>
+
+  <article class="topic" id="t16" data-title="Consumo de energia">
+    <div class="topic-head"><span class="num">16</span><h3>Consumo de energia</h3></div>
+    <ul>
+      <li><strong>Processador:</strong> o consumo cresce conforme aumenta a carga.</li>
+      <li><strong>RAM:</strong> os módulos instalados já consomem energia só por estarem ligados, variando pouco com o uso.</li>
+      <li><strong>Armazenamento:</strong> mais discos físicos, mais consumo.</li>
+    </ul>
+    <p>Por isso, consolidar serviços em menos equipamentos tende a deixar a infraestrutura mais eficiente.</p>
+  </article>
+
+  <article class="topic" id="t17" data-title="RAID e NVMe">
+    <div class="topic-head"><span class="num">17</span><h3>RAID e NVMe</h3></div>
+    <p>O RAID usa vários discos em conjunto e, conforme a configuração, oferece mais desempenho, mais capacidade e/ou tolerância a falhas. Em contrapartida, mais discos significam mais consumo de energia.</p>
+    <div class="bars">
+      <div class="row"><span>RAID 6 (16 HDDs)</span><div class="trk"><div class="fl" style="width:21%">1,5 GB/s</div></div></div>
+      <div class="row"><span>SSD NVMe PCIe 4.0 x4</span><div class="trk"><div class="fl" style="width:100%">7,0 GB/s</div></div></div>
+    </div>
+    <p>Ponto forte do NVMe: velocidade. Ponto forte do RAID 6: tolerância a falhas (ele aguenta a perda de até <strong>dois discos</strong> sem perder dados).</p>
+    <div class="note warn"><b class="t">Ponto de atenção</b>
+      <p>A sequência do material "HDD externo → HDD interno → SSD interno → RAID → NVMe" compara coisas de naturezas diferentes. RAID é uma forma de organização, e é possível montar RAID com SSDs NVMe, ficando ainda mais rápido que um NVMe sozinho. A comparação faz sentido só para o exemplo dado (RAID 6 de HDDs contra um único SSD NVMe).</p>
+      <p>Outro detalhe: RAID protege contra falha de disco, mas <strong>não substitui backup</strong>. Um arquivo apagado ou criptografado por ransomware some de todos os discos ao mesmo tempo.</p>
+    </div>
+  </article>
+
+  <article class="topic" id="t18" data-title="Benefícios da virtualização">
+    <div class="topic-head"><span class="num">18</span><h3>Benefícios da virtualização</h3></div>
+    <div class="duo">
+      <div><h4>Infraestrutura</h4><p style="margin:0;font-size:.94rem">Melhor uso do hardware, menos servidores, menos espaço, menos cabos, menos tomadas, menos portas de switch, menos custo, possível redução de energia.</p></div>
+      <div><h4>Operação</h4><p style="margin:0;font-size:.94rem">Gerenciamento centralizado, flexibilidade, escalabilidade, agilidade e isolamento entre ambientes.</p></div>
+    </div>
+    <p>Também pode haver vantagem de <strong>licenciamento</strong>: alguns fornecedores licenciam por processador ou por Host, em vez de exigir uma licença física separada para cada aplicação.</p>
+  </article>
+
+  <article class="topic" id="t19" data-title="Limitações e problemas">
+    <div class="topic-head"><span class="num">19</span><h3>Limitações e problemas</h3></div>
+    <ul>
+      <li>sobrecarga;</li>
+      <li>maior complexidade administrativa;</li>
+      <li>dependência da infraestrutura física;</li>
+      <li>proliferação excessiva de VMs (VM sprawl);</li>
+      <li>vulnerabilidades e riscos de segurança;</li>
+      <li>custos que não aparecem logo de início.</li>
+    </ul>
+    <div class="note tip"><b class="t">O risco central</b><p>Concentração. Se o Host tiver uma falha grave, todas as VMs dele são afetadas. Uma vulnerabilidade no hypervisor também coloca vários ambientes em risco ao mesmo tempo.</p></div>
+  </article>
+
+  <article class="topic" id="t20" data-title="Virtualização e o trabalho dos analistas">
+    <div class="topic-head"><span class="num">20</span><h3>Virtualização e o trabalho dos analistas</h3></div>
+    <p>A virtualização muda o trabalho dos profissionais de infraestrutura, sem eliminar a necessidade deles.</p>
+    <div class="duo">
+      <div><h4>Tradicional</h4><div class="mini-stack"><div class="ms-vm">Aplicação</div><div class="ms-os">Sistema operacional</div><div class="ms-hw">Servidor físico</div></div></div>
+      <div><h4>Virtualizado</h4><div class="mini-stack"><div class="ms-vm">Aplicações</div><div class="ms-os">Sistemas operacionais</div><div class="ms-vm" style="opacity:.8">VMs</div><div class="ms-hv">Hypervisor</div><div class="ms-hw">Hardware</div></div></div>
+    </div>
+    <p>Novas responsabilidades: hypervisors, VMs, redes virtuais, armazenamento virtual, snapshots, templates, segurança, monitoramento e automação. Diminui parte do trabalho com a infraestrutura física, mas aumenta a exigência de conhecimento especializado.</p>
+  </article>
+
+  <article class="topic" id="t21" data-title="Quantas VMs um servidor executa?">
+    <div class="topic-head"><span class="num">21</span><h3>Quantas VMs um servidor pode executar?</h3></div>
+    <p>Não existe número fixo. Depende de potência da CPU, quantidade de núcleos, RAM disponível, capacidade e velocidade do armazenamento, rede e, principalmente, do <strong>workload de cada VM</strong>.</p>
+    <div class="note sum"><b class="t">Regra para lembrar</b><p>Quanto maior o workload das VMs, menos VMs o Host consegue executar adequadamente. Uma VM com serviço leve consome pouco; um banco de dados de grande porte pode exigir muito mais.</p></div>
+  </article>
+
+  <article class="topic" id="t22" data-title="Virtualização e TI Verde">
+    <div class="topic-head"><span class="num">22</span><h3>Virtualização e TI Verde</h3></div>
+    <p>Pela consolidação, a virtualização ajuda a reduzir servidores físicos, consumo de energia, necessidade de refrigeração, espaço ocupado e descarte de equipamentos.</p>
+    <p>Um servidor virtualizado não consome pouca energia automaticamente. O benefício ambiental vem do <strong>uso mais eficiente</strong> dos recursos e da consolidação. Cargas pesadas, como certas aplicações de IA com GPU, continuam exigindo muita energia.</p>
+  </article>
+</section>
+
+<!-- REVISÃO -->
+<section class="part" data-part="Revisão" id="revisao">
+  <div class="part-head"><div class="n">Revisão</div><h2>Flashcards</h2></div>
+  <p>Toque no cartão para ver a definição.</p>
+  <div class="fc">
+    <button class="fc-card" id="fcCard" aria-live="polite">
+      <div class="fc-face front"><h4 id="fcTerm"></h4><small>Toque para virar</small></div>
+      <div class="fc-face back"><p id="fcDef" style="margin:0;font-size:1.05rem"></p></div>
+    </button>
+    <div class="fc-nav">
+      <button class="btn" id="fcPrev">Anterior</button>
+      <span id="fcCount" style="color:var(--muted);font-size:.9rem"></span>
+      <button class="btn" id="fcNext">Próximo</button>
+    </div>
+  </div>
+
+  <div class="part-head" style="margin-top:44px"><div class="n">Revisão</div><h2>Quiz rápido</h2></div>
+  <div id="quiz"></div>
+  <p class="score" id="score"></p>
+  <button class="btn primary" id="quizReset">Refazer o quiz</button>
+</section>
+
+</main>
+
+<footer class="wrap">Baseado no material "Virtualização: conteúdo para estudo". Os pontos de atenção são complementos e correções; em caso de dúvida na prova, priorize a definição dada pelo professor.</footer>
+
+<script>
+(function(){
+  /* Progresso */
+  const KEY='virt-guia-estudados';
+  let done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){done={}}
+  const topics=[...document.querySelectorAll('.topic')];
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
+  function updateProg(){
+    const n=topics.filter(t=>done[t.id]).length;
+    document.getElementById('progTxt').textContent=n+' de '+topics.length+' tópicos estudados';
+    document.getElementById('progFill').style.width=(n/topics.length*100)+'%';
+    buildToc();
+  }
+  topics.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='done-btn';
+    const set=()=>{b.setAttribute('aria-pressed',done[t.id]?'true':'false');b.innerHTML='<span class="box">'+(done[t.id]?'✓':'')+'</span>'+(done[t.id]?'Estudado':'Marcar como estudado')};
+    b.addEventListener('click',()=>{done[t.id]=!done[t.id];save();set();updateProg()});
+    set();t.appendChild(b);
+  });
+
+  /* Sumário */
+  const toc=document.getElementById('toc'),tocBtn=document.getElementById('tocBtn');
+  function buildToc(){
+    const list=document.getElementById('tocList');list.innerHTML='';
+    document.querySelectorAll('.part').forEach(p=>{
+      const h=document.createElement('h4');h.textContent=p.dataset.part;list.appendChild(h);
+      const ts=p.querySelectorAll('.topic');
+      if(!ts.length){const a=document.createElement('a');a.href='#revisao';a.textContent='Flashcards e quiz';list.appendChild(a)}
+      ts.forEach(t=>{
+        const a=document.createElement('a');a.href='#'+t.id;
+        a.innerHTML='<span>'+t.id.slice(1)+'. '+t.dataset.title+'</span><span class="ck">'+(done[t.id]?'✓':'')+'</span>';
+        list.appendChild(a);
+      });
+    });
+  }
+  tocBtn.addEventListener('click',()=>{const o=toc.classList.toggle('open');tocBtn.setAttribute('aria-expanded',o);tocBtn.textContent=o?'Fechar':'Tópicos'});
+  toc.addEventListener('click',e=>{if(e.target.closest('a')){toc.classList.remove('open');tocBtn.setAttribute('aria-expanded','false');tocBtn.textContent='Tópicos'}});
+  updateProg();
+
+  /* Desenho do tópico 14 */
+  const ht=document.getElementById('htCells'),pc=document.getElementById('pCells');
+  for(let i=1;i<=16;i++){const s=document.createElement('span');s.className='c-ht';s.textContent='HT'+i;ht.appendChild(s)}
+  for(let i=1;i<=8;i++){const s=document.createElement('span');s.className='c-p';s.textContent='P'+i;s.title=(i<=4?'Processador 1':'Processador 2');if(i===5)s.style.marginLeft='6px';pc.appendChild(s)}
+
+  /* Simulador */
+  const $=id=>document.getElementById(id);
+  function sim(){
+    const cores=+$('sCores').value,smt=$('sSmt').checked,vms=+$('sVms').value,v=+$('sVcpu').value;
+    $('oCores').textContent=cores;$('oVms').textContent=vms;$('oVcpu').textContent=v;
+    const logical=cores*(smt?2:1),total=vms*v,ratio=total/logical;
+    $('simText').innerHTML='<strong>'+logical+'</strong> processadores lógicos para <strong>'+total+'</strong> vCPUs. Proporção <strong>'+(Math.round(ratio*10)/10).toString().replace('.',',')+' : 1</strong>. Na analogia: '+total+' clientes para '+logical+' caixas.';
+    const dots=$('simDots');dots.innerHTML='';
+    for(let i=0;i<total;i++){const d=document.createElement('i');d.style.background=i<logical?'var(--accent)':'var(--warn)';dots.appendChild(d)}
+    const b=$('simBadge');
+    let txt,bg,col;
+    if(ratio<=1){txt='Sem overcommitment: há processador lógico para cada vCPU.';bg='var(--ok-soft)';col='var(--ok)'}
+    else if(ratio<=2){txt='Overcommitment leve: costuma funcionar bem com workloads moderados.';bg='var(--accent-soft)';col='var(--accent)'}
+    else if(ratio<=4){txt='Overcommitment moderado: aceitável se as VMs ficarem ociosas boa parte do tempo.';bg='var(--warn-soft)';col='var(--warn)'}
+    else{txt='Overcommitment alto: risco de fila, atraso e gargalo quando as VMs disputam CPU.';bg='var(--warn-soft)';col='var(--warn)'}
+    b.textContent=txt;b.style.background=bg;b.style.color=col;
+  }
+  ['sCores','sSmt','sVms','sVcpu'].forEach(id=>$(id).addEventListener('input',sim));
+  sim();
+
+  /* Flashcards */
+  const cards=[
+    ['Virtualização','Uso dos recursos de um hardware físico para criar e executar ambientes virtuais independentes.'],
+    ['Máquina virtual (VM)','Computador criado por software que usa recursos fornecidos pelo Host.'],
+    ['Host','Equipamento físico que hospeda as máquinas virtuais.'],
+    ['Guest','Sistema ou máquina virtual executada no Host.'],
+    ['Hypervisor','Administra e distribui os recursos físicos entre as VMs.'],
+    ['Hypervisor tipo 1','Funciona diretamente sobre o hardware (bare metal). Ex.: ESXi, Hyper-V, KVM.'],
+    ['Hypervisor tipo 2','Funciona sobre um sistema operacional (hosted). Ex.: VirtualBox, VMware Workstation.'],
+    ['Quatro subsistemas','CPU, memória, armazenamento e rede.'],
+    ['VT-x / AMD-V','Virtualização assistida por hardware da Intel e da AMD, ativada na BIOS/UEFI.'],
+    ['vCPU','Processador virtual entregue a uma VM.'],
+    ['pCPU','Recurso de processamento físico do Host (no desenho da aula, o núcleo físico).'],
+    ['SMT','Permite que um núcleo físico trabalhe com vários threads, apresentando processadores lógicos extras. Hyper-Threading é o nome da Intel.'],
+    ['Overcommitment','Mais recursos virtuais atribuídos do que recursos físicos/lógicos disponíveis. O escalonador do hypervisor administra.'],
+    ['Workload','Carga de trabalho executada pelo sistema.'],
+    ['Fluxo de execução','Disco → RAM → Processador.'],
+    ['RAM','Memória volátil: perde os dados quando o equipamento é desligado.'],
+    ['Cache','Mantém temporariamente informações que podem ser reutilizadas rapidamente.'],
+    ['Registradores','Pequenas áreas de armazenamento dentro do processador.'],
+    ['ULA','Parte da CPU responsável pelas operações lógicas e aritméticas.'],
+    ['IOPS','Quantidade de operações de entrada e saída por segundo que o armazenamento realiza.'],
+    ['RAID','Combinação de discos que pode dar desempenho, capacidade e/ou tolerância a falhas, conforme a configuração.'],
+    ['NVMe','Protocolo de armazenamento de alta velocidade usado por SSDs no barramento PCIe.'],
+    ['TI Verde','A virtualização reduz equipamentos, energia, refrigeração e espaço por meio da consolidação.']
+  ];
+  let ci=0;const card=$('fcCard');
+  function showCard(){card.classList.remove('flip');setTimeout(()=>{$('fcTerm').textContent=cards[ci][0];$('fcDef').textContent=cards[ci][1];$('fcCount').textContent=(ci+1)+' / '+cards.length},card.classList.contains('flip')?200:0)}
+  card.addEventListener('click',()=>card.classList.toggle('flip'));
+  $('fcPrev').addEventListener('click',()=>{ci=(ci-1+cards.length)%cards.length;showCard()});
+  $('fcNext').addEventListener('click',()=>{ci=(ci+1)%cards.length;showCard()});
+  showCard();
+
+  /* Quiz */
+  const qs=[
+    ['Qual hypervisor é executado diretamente sobre o hardware?',['Tipo 1','Tipo 2','Hosted','Guest'],0,'Tipo 1 (bare metal) roda direto no hardware, sem sistema operacional no meio.'],
+    ['O VirtualBox é um hypervisor de qual tipo?',['Tipo 1','Tipo 2'],1,'Ele roda sobre um sistema operacional já instalado, portanto é tipo 2.'],
+    ['Um Host tem 8 processadores lógicos e 4 VMs com 4 vCPUs cada. O que acontece?',['Nada, cabe exatamente','Overcommitment de 2:1','As VMs não ligam','O SMT dobra os núcleos físicos'],1,'São 16 vCPUs para 8 lógicos. O escalonador divide o tempo de CPU entre elas.'],
+    ['Um processador com 4 núcleos e SMT ativado apresenta:',['8 núcleos físicos','4 processadores lógicos','8 processadores lógicos, com 4 núcleos físicos','16 processadores lógicos'],2,'O SMT aumenta os processadores lógicos; os núcleos físicos continuam 4.'],
+    ['Qual é o fluxo básico de execução de um programa?',['RAM → Disco → CPU','Disco → RAM → Processador','CPU → RAM → Disco','Cache → Disco → RAM'],1,'O programa sai do disco, é carregado na RAM e executado pelo processador.'],
+    ['Qual memória é volátil?',['Disco','SSD','RAM','RAID'],2,'A RAM perde os dados quando o equipamento é desligado.'],
+    ['Como se chama a virtualização assistida por hardware da Intel?',['AMD-V','SVM','VT-x','NVMe'],2,'VT-x é da Intel; AMD-V (SVM Mode na BIOS) é da AMD.'],
+    ['Qual indicador mede operações de entrada e saída do armazenamento?',['IOPS','vCPU','SMT','RAID'],0,'IOPS: operações de entrada e saída por segundo.'],
+    ['No exemplo do material, qual a principal vantagem do RAID 6 sobre o SSD NVMe?',['Velocidade','Tolerância a falhas','Menor consumo','Menos discos'],1,'O NVMe foi mais rápido (7,0 GB/s), mas o RAID 6 tolera a falha de até dois discos.'],
+    ['Qual parte da CPU executa operações lógicas e aritméticas?',['Cache','Registrador','ULA','Hypervisor'],2,'ULA: Unidade Lógica e Aritmética.']
+  ];
+  let answered=0,right=0;
+  function buildQuiz(){
+    const box=$('quiz');box.innerHTML='';answered=0;right=0;$('score').textContent='';
+    qs.forEach((q,qi)=>{
+      const d=document.createElement('div');d.className='q';
+      d.innerHTML='<p>'+(qi+1)+'. '+q[0]+'</p><div class="opts"></div><div class="fb" hidden></div>';
+      const opts=d.querySelector('.opts'),fb=d.querySelector('.fb');
+      q[1].forEach((o,oi)=>{
+        const b=document.createElement('button');b.className='opt';b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(d.dataset.done)return;d.dataset.done=1;answered++;
+          if(oi===q[2]){b.classList.add('right');right++;fb.textContent='Correto. '+q[3]}
+          else{b.classList.add('wrong');opts.children[q[2]].classList.add('right');fb.textContent='Resposta certa: '+q[1][q[2]]+'. '+q[3]}
+          fb.hidden=false;
+          if(answered===qs.length)$('score').textContent='Você acertou '+right+' de '+qs.length+'.';
+        });
+        opts.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+  }
+  $('quizReset').addEventListener('click',buildQuiz);
+  buildQuiz();
+})();
+</script>
+<script>
+(function(){
+  var root=document.documentElement,mq=window.matchMedia("(prefers-color-scheme: dark)");
+  function atual(){return root.getAttribute("data-theme")||(mq.matches?"dark":"light")}
+  function pintar(){
+    var escuro=atual()==="dark";
+    document.querySelectorAll(".theme-btn").forEach(function(b){
+      b.textContent=escuro?"☀":"☾";
+      b.setAttribute("aria-label",escuro?"Mudar para tema claro":"Mudar para tema escuro");
+      b.title=b.getAttribute("aria-label");
+    });
+  }
+  document.querySelectorAll(".theme-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var novo=atual()==="dark"?"light":"dark";
+      root.setAttribute("data-theme",novo);
+      try{localStorage.setItem("guias-tema",novo)}catch(e){}
+      pintar();
+    });
+  });
+  if(mq.addEventListener)mq.addEventListener("change",pintar);
+  pintar();
+})();
+</script>
+</body>
+</html>

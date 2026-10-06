@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("guias-tema");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dart &amp; Flutter: guia de estudo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#142220; --muted:#56645F; --line:#D5DEDB;
+  --accent:#0B7A75; --accent-soft:#DCF0EE;
+  --ok:#1F7A55; --ok-soft:#E0F3EA;
+  --warn:#995400; --warn-soft:#FFF1DB; --warn-line:#EBC27A;
+  --code-bg:#18201F; --code-ink:#E3ECE9;
+  --font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  /* cores do app do professor (Material 3, semente índigo) */
+  --m-surface:#FBF8FF; --m-on:#1B1B21; --m-var:#46464F; --m-primary:#4A55A8; --m-pc:#E0E0FF; --m-onpc:#00006E; --m-outline:#777680;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1615; --surface:#172120; --ink:#E2EBE8; --muted:#93A39E; --line:#26332F;
+    --accent:#4FC2BA; --accent-soft:#133331;
+    --ok:#5FCB98; --ok-soft:#14302A;
+    --warn:#F0B45C; --warn-soft:#2D2313; --warn-line:#6A4C1C;
+    --code-bg:#0A100F;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1615; --surface:#172120; --ink:#E2EBE8; --muted:#93A39E; --line:#26332F;
+  --accent:#4FC2BA; --accent-soft:#133331;
+  --ok:#5FCB98; --ok-soft:#14302A;
+  --warn:#F0B45C; --warn-soft:#2D2313; --warn-line:#6A4C1C;
+  --code-bg:#0A100F;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.12;margin:0}
+p{margin:0 0 .9em}
+strong{font-weight:700}
+button{font:inherit;color:inherit}
+code{font-family:var(--mono);font-size:.86em;background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.ms{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;font-size:22px;line-height:1;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;user-select:none;width:1em;overflow:hidden;flex:none;text-align:center}
+
+/* Hero */
+.hero{padding-top:40px;padding-bottom:30px;display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
+@media (max-width:680px){.hero{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(2.6rem,9vw,3.8rem);font-weight:800;letter-spacing:-.02em}
+.hero .sub{color:var(--muted);font-size:1.05rem;margin-top:10px}
+.hero .hint{font-size:.92rem;margin-top:14px;color:var(--muted)}
+
+/* Celular (estilo do app do professor) */
+.phone{width:290px;max-width:100%;margin:0 auto;border:9px solid #262B2A;border-radius:30px;overflow:hidden;background:var(--m-surface);color:var(--m-on);font-family:Roboto,system-ui,sans-serif;box-shadow:0 10px 30px rgba(10,30,28,.18);position:relative}
+.phone .scr{height:430px;overflow-y:auto;position:relative}
+.phone.sm .scr{height:340px}
+.appbar{display:flex;align-items:center;gap:14px;padding:16px 16px 14px;font-size:1.05rem;position:sticky;top:0;background:var(--m-surface);z-index:2}
+.appbar .ms{font-size:22px}
+.tile{display:flex;align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid #E4E1EC;cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;font-family:inherit;color:inherit}
+.tile:hover{background:#EFEDF8}
+.tile .ms{color:var(--m-primary)}
+.tile .tt{flex:1;min-width:0}
+.tile .t1{font-size:.95rem}
+.tile .t2{font-size:.8rem;color:var(--m-var)}
+.mcard{margin:6px 12px;background:#F5F2FA;border-radius:12px;display:flex;align-items:center;gap:12px;padding:10px 12px}
+.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff}
+.fab{position:absolute;right:14px;bottom:14px;width:52px;height:52px;border-radius:16px;background:var(--m-pc);color:var(--m-onpc);display:grid;place-items:center;border:none;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,.2);z-index:3}
+.snack{position:absolute;left:10px;right:10px;bottom:10px;background:#313036;color:#F3EFF7;border-radius:6px;padding:12px 14px;font-size:.85rem;transform:translateY(140%);transition:transform .25s;z-index:4}
+.snack.show{transform:none}
+.mbtn{border-radius:20px;padding:9px 22px;font-size:.9rem;font-family:inherit;cursor:pointer;border:none}
+.mbtn.elev{background:#F5F2FA;color:var(--m-primary);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.mbtn.outl{background:none;border:1px solid var(--m-outline);color:var(--m-primary)}
+.mbtn:disabled{background:#E7E5EB;color:#A7A5AD;box-shadow:none;cursor:not-allowed}
+.mfield{position:relative;margin:8px 0}
+.mfield input{width:100%;font:inherit;font-size:1rem;padding:14px 12px;border:1px solid var(--m-outline);border-radius:4px;background:transparent;color:var(--m-on);outline:none}
+.mfield input:focus{border:2px solid var(--m-primary);padding:13px 11px}
+.mfield label{position:absolute;left:10px;top:14px;padding:0 4px;color:var(--m-var);background:var(--m-surface);transition:all .15s;pointer-events:none;font-size:1rem}
+.mfield input:focus+label,.mfield input:not(:placeholder-shown)+label{top:-9px;font-size:.75rem}
+.mfield input:focus+label{color:var(--m-primary)}
+.mfield .pre{position:absolute;left:13px;top:15px;color:var(--m-var);display:none}
+.mfield.money input{padding-left:40px}
+.mfield.money input:focus~.pre,.mfield.money input:not(:placeholder-shown)~.pre{display:block}
+.red-screen{background:#C00;color:#FFEB3B;font-family:var(--mono);font-size:.72rem;padding:16px;height:100%;line-height:1.5}
+
+/* Barra fixa */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:12px;height:56px}
+.prog{flex:1;min-width:0}
+.prog-txt{font-size:.85rem;color:var(--muted)}
+.prog-track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.9rem}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0F1615}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{color:#0F1615}}
+.toc{display:none;position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 56px);bottom:0;background:var(--bg);z-index:19;overflow-y:auto;padding:16px 0 calc(32px + env(safe-area-inset-bottom,0px))}
+.toc.open{display:block}
+.toc h4{font-size:1rem;margin:18px 0 6px;color:var(--muted)}
+.toc a{display:flex;justify-content:space-between;gap:10px;padding:8px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a .ck{color:var(--ok);font-weight:700}
+
+/* Partes e tópicos */
+.part{margin-top:56px}
+.part-head{margin-bottom:22px}
+.part-head .n{color:var(--accent);font-weight:700;font-size:.9rem}
+.part-head h2{font-size:2rem;font-weight:800;letter-spacing:-.01em}
+.part-head p{color:var(--muted);margin-top:6px}
+.topic{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 20px 18px;margin-bottom:18px}
+.topic-head{margin-bottom:12px}
+.topic-head .file{font-family:var(--mono);font-size:.8rem;color:var(--accent);word-break:break-all}
+.topic-head h3{font-size:1.5rem;font-weight:800;margin-top:2px}
+.topic ul{padding-left:1.2em;margin:0 0 .9em}
+.topic li{margin-bottom:.35em}
+.done-btn{margin-top:10px;display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px;font-size:.85rem;color:var(--muted);cursor:pointer}
+.done-btn[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.done-btn .box{width:14px;height:14px;border:1.5px solid currentColor;border-radius:3px;display:inline-grid;place-items:center;font-size:11px;line-height:1}
+.idea{font-size:1.08rem;border-left:3px solid var(--accent);padding-left:12px;margin:0 0 14px}
+
+/* Código */
+.code{background:var(--code-bg);color:var(--code-ink);border-radius:10px;margin:14px 0;overflow:hidden}
+.code-top{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-bottom:1px solid #2A3533;font-family:var(--mono);font-size:.74rem;color:#93A39E}
+.code-top button{background:none;border:1px solid #3A4744;color:#C9D6D2;border-radius:6px;padding:2px 9px;font-size:.74rem;cursor:pointer;font-family:var(--font)}
+.code code,.q pre code{background:none;padding:0;font-size:inherit;color:inherit;border-radius:0}
+.code pre{margin:0;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.6;tab-size:2}
+.k{color:#F39C6B}.s{color:#A8D98A}.ty{color:#7FD1C7}.c{color:#7C8B87;font-style:italic}.a{color:#E7C76A}.n{color:#C9A7F0}
+details.more{margin:12px 0}
+details.more summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.95rem;padding:6px 0}
+details.more[open] summary{margin-bottom:-4px}
+
+/* Demonstração */
+.demo{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;margin:16px 0}
+@media (max-width:620px){.demo{grid-template-columns:1fr}}
+.demo-side{font-size:.95rem}
+.demo-side .lbl{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:.9rem}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.84rem;cursor:pointer;font-family:var(--mono)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#0F1615}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0F1615}}
+.callout-code{font-family:var(--mono);font-size:.82rem;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:8px 0;word-break:break-word}
+
+/* Caixas */
+.note{border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.95rem}
+.note b.t{display:block;font-family:var(--display);font-size:1.02rem;margin-bottom:2px}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.sum{background:var(--ok-soft)}
+.note.sum b.t{color:var(--ok)}
+.note.warn{background:var(--warn-soft);border:1px solid var(--warn-line)}
+.note.warn b.t{color:var(--warn)}
+.note.tip{background:var(--accent-soft)}
+.note.tip b.t{color:var(--accent)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0}
+.flow span{background:var(--accent-soft);border-radius:6px;padding:5px 10px;font-weight:700;font-size:.86rem;font-family:var(--mono)}
+.flow i{font-style:normal;color:var(--muted)}
+.steps{display:grid;gap:8px;margin:10px 0}
+.step{border:1px solid var(--line);border-radius:10px;padding:10px 12px;opacity:.45;transition:opacity .3s,border-color .3s,background .3s}
+.step.on{opacity:1;border-color:var(--accent);background:var(--accent-soft)}
+.step b{display:block;font-size:.92rem}
+.step code{background:transparent;padding:0}
+
+
+.duo-ax{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.duo-ax div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;font-size:.88rem}
+.duo-ax b{font-family:var(--mono);font-size:1rem}
+.lab{border:2px solid var(--accent);border-radius:14px;padding:14px;margin:16px 0}
+.lab .lbl{font-weight:700;color:var(--accent);font-size:.85rem;margin-top:8px;font-family:var(--mono)}
+.lab .seg{margin:4px 0 2px}
+.lab-frame{margin-top:14px;height:230px;border-radius:10px;padding:22px 10px 10px;background:repeating-linear-gradient(45deg,var(--line) 0 1px,transparent 1px 9px),var(--bg);border:1px solid var(--line);overflow:hidden}
+.lab-flex{display:flex;outline:2px dashed var(--accent);outline-offset:0;position:relative;background:color-mix(in srgb,var(--surface) 75%,transparent);transition:all .2s}
+.lab-tag{position:absolute;bottom:100%;right:-2px;font-family:var(--mono);font-size:.68rem;background:var(--accent);color:#fff;padding:1px 6px;border-radius:0 0 0 6px;z-index:1}
+.lab-kid{color:#fff;border-radius:6px;padding:6px 12px;margin:3px;font-family:Roboto,system-ui,sans-serif;line-height:1.2}
+.lab-legend{font-size:.8rem;color:var(--muted);margin:6px 0 10px}
+.lab-exp{font-size:.92rem;background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+.lab-exp p{margin:0 0 6px}
+.sub-h{font-size:1.15rem;margin:22px 0 8px}
+.optlist{display:grid;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.optlist div{display:grid;grid-template-columns:8.5em 1fr;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:.92rem;align-items:baseline}
+.optlist div:last-child{border-bottom:none}
+.optlist code{background:none;padding:0;color:var(--accent);font-weight:600}
+@media (max-width:480px){.optlist div{grid-template-columns:1fr;gap:2px}}
+/* Flashcards e quiz */
+.fc{perspective:1000px;margin:16px 0}
+.fc-card{position:relative;min-height:180px;cursor:pointer;transition:transform .45s;transform-style:preserve-3d;border:none;background:none;width:100%;padding:0;text-align:left}
+.fc-card.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line);background:var(--surface)}
+.fc-face.back{transform:rotateY(180deg);background:var(--accent-soft)}
+.fc-face h4{font-family:var(--mono);font-size:1.3rem;margin:0;font-weight:600}
+.fc-face small{color:var(--muted);margin-top:8px}
+.fc-nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.q{margin:14px 0 20px}
+.q>p{font-weight:700}
+.q pre{font-family:var(--mono);font-size:.8rem;background:var(--code-bg);color:var(--code-ink);padding:10px 12px;border-radius:8px;overflow-x:auto;margin:0 0 10px}
+.q .opts{display:grid;gap:6px}
+.q .opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer}
+.q .opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.q .opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
+.q .fb{font-size:.9rem;color:var(--muted);margin-top:6px}
+.score{font-family:var(--display);font-size:1.3rem;font-weight:800}
+footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
+
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:38px;height:36px;display:inline-grid;place-items:center;cursor:pointer;font-size:1.05rem;line-height:1;flex:none}
+.theme-btn:hover{border-color:var(--accent,var(--ink))}
+:root{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
+</style>
+</head>
+<body>
+
+<div class="wrap" style="padding-top:16px"><a href="index.html" style="color:var(--accent);font-weight:600;font-size:.9rem;text-decoration:none">‹ Todos os guias</a></div>
+<header class="wrap hero">
+  <div>
+    <h1>Dart &amp; Flutter</h1>
+    <p class="sub">Guia de estudo montado sobre o app do professor. Cada tópico traz a ideia central, o código, uma demonstração que funciona aqui mesmo e as explicações.</p>
+    <p class="hint">O celular reproduz o menu do app. Toque em um item para ir direto ao tópico. As caixas amarelas marcam pontos do material que merecem correção ou complemento.</p>
+  </div>
+  <div class="phone" aria-label="Reprodução do menu do aplicativo">
+    <div class="scr" id="heroMenu">
+      <div class="appbar">Guia de Estudos: Dart &amp; Flutter</div>
+    </div>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Progresso e tópicos">
+  <div class="wrap">
+    <div class="prog">
+      <div class="prog-txt" id="progTxt"></div>
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    </div>
+    <button class="theme-btn" type="button" aria-label="Alternar tema"></button>
+    <button class="btn" id="tocBtn" aria-expanded="false" aria-controls="toc">Tópicos</button>
+  </div>
+</nav>
+<div class="toc" id="toc"><div class="wrap" id="tocList"></div></div>
+
+<main class="wrap">
+
+<!-- ============ PARTE 1 ============ -->
+<section class="part" data-part="Parte 1: Estrutura do app">
+  <div class="part-head"><div class="n">Parte 1</div><h2>Estrutura do app</h2><p>Por onde o aplicativo começa e como o menu leva a cada tela.</p></div>
+
+  <article class="topic" id="e1" data-title="Ponto de entrada (main.dart)">
+    <div class="topic-head"><div class="file">lib/main.dart</div><h3>Ponto de entrada</h3></div>
+    <p class="idea">Todo app começa em <code>main()</code>, que entrega o widget raiz para o <code>runApp()</code>.</p>
+    <div class="flow"><span>main()</span><i>→</i><span>runApp()</span><i>→</i><span>MeuApp</span><i>→</i><span>MaterialApp</span><i>→</i><span>HomeScreen</span></div>
+    <div class="code" data-src="c-main" data-file="lib/main.dart"></div>
+    <ul>
+      <li><strong>main():</strong> ponto de partida de qualquer programa Dart. Aqui chama <code>runApp(const MeuApp())</code>, que transforma <code>MeuApp</code> na raiz visual da interface.</li>
+      <li><strong>MeuApp:</strong> um <code>StatelessWidget</code> cujo único trabalho é construir o <code>MaterialApp</code>.</li>
+      <li><strong>MaterialApp:</strong> configura o app inteiro. <code>title</code> é o nome do app, <code>theme</code> gera a paleta a partir do índigo usando Material 3, e <code>home</code> define a primeira tela.</li>
+    </ul>
+    <div class="note tip"><b class="t">Ligação com o tópico 10</b><p>Sem <code>home</code> (e sem alternativas como <code>routes</code> ou <code>onGenerateRoute</code>), o app não sabe o que mostrar. O tópico 10 tem uma demonstração disso.</p></div>
+  </article>
+
+  <article class="topic" id="e2" data-title="Tela de menu (home_screen.dart)">
+    <div class="topic-head"><div class="file">lib/screens/home_screen.dart</div><h3>Tela de menu</h3></div>
+    <p class="idea">Uma lista de tópicos em que cada item, ao ser tocado, empilha uma nova tela com o <code>Navigator</code>.</p>
+    <p>O código tem três peças principais:</p>
+    <ul>
+      <li><strong><code>_Topico</code>:</strong> classe privada que serve de molde de dados (título, subtítulo, ícone e uma função <code>builder</code> que cria a tela). Ela não é um widget, apenas organiza as informações de cada item.</li>
+      <li><strong><code>ListView.separated</code>:</strong> constrói os itens com <code>itemBuilder</code> e coloca um <code>Divider</code> entre eles com <code>separatorBuilder</code>. É uma variação do <code>ListView.builder</code> que acrescenta separadores.</li>
+      <li><strong><code>ListTile</code> + <code>onTap</code>:</strong> a linha <code>Navigator.of(context).push(MaterialPageRoute(builder: topico.builder))</code> é a que troca de tela, empilhando a nova sobre a atual. O botão de voltar desempilha.</li>
+    </ul>
+    <div class="flow"><span>HomeScreen</span><i>push →</i><span>HomeScreen + Tópico</span><i>← voltar (pop)</i></div>
+    <details class="more"><summary>Ver código completo</summary><div class="code" data-src="c-home" data-file="lib/screens/home_screen.dart"></div></details>
+    <div class="note tip"><b class="t">Detalhe de sintaxe</b><p>Em <code>(_, __) =&gt; const Divider(height: 1)</code>, os sublinhados são nomes para parâmetros que a função recebe mas não usa (o <code>context</code> e o <code>index</code>).</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 2 ============ -->
+<section class="part" data-part="Parte 2: Dart e orientação a objetos">
+  <div class="part-head"><div class="n">Parte 2</div><h2>Dart e orientação a objetos</h2><p>Os modelos em <code>lib/models/</code> concentram as regras de cada conceito. As telas correspondentes apenas exibem o resultado.</p></div>
+
+  <article class="topic" id="t1" data-title="Polimorfismo">
+    <div class="topic-head"><div class="file">models/pessoa.dart + screens/polimorfismo_screen.dart</div><h3>1. Polimorfismo</h3></div>
+    <p class="idea">Uma variável do tipo <code>Pessoa</code> pode guardar um <code>Estudante</code>, e a versão do método executada é sempre a do tipo real do objeto.</p>
+    <div class="code" data-src="c-pessoa" data-file="lib/models/pessoa.dart"></div>
+    <ul>
+      <li><code>Estudante extends Pessoa</code> herda o campo <code>nome</code> e o método <code>saudacao()</code>.</li>
+      <li>Com <code>@override</code>, ele sobrescreve <code>saudacao()</code>, <code>icone</code> e <code>cor</code>.</li>
+      <li><code>Estudante(String nome, this.curso) : super(nome)</code> repassa o nome para o construtor de <code>Pessoa</code>.</li>
+    </ul>
+    <div class="demo">
+      <div class="phone sm"><div class="scr">
+        <div class="appbar"><span class="ms">arrow_back</span>1. Polimorfismo</div>
+        <div id="poliList"></div>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">O que a tela mostra</div>
+        <p>A lista é declarada como <code>List&lt;Pessoa&gt;</code>, mas mistura objetos <code>Pessoa</code> e <code>Estudante</code>. O mesmo código <code>pessoa.saudacao()</code> produz textos, ícones e cores diferentes conforme o tipo real.</p>
+        <p>O subtítulo usa <code>pessoa.runtimeType</code>, que revela esse tipo real.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-poli" data-file="lib/screens/polimorfismo_screen.dart"></div></details>
+    <div class="note warn"><b class="t">Inconsistência no material</b><p>A seção de modelos tem o título "regras de negócio, sem Flutter", mas <code>pessoa.dart</code> importa <code>package:flutter/material.dart</code> para usar <code>IconData</code> e <code>Color</code>. O próprio texto admite a exceção. Na prática, isso acopla o modelo ao Flutter. Uma alternativa mais limpa seria o modelo guardar só os dados (por exemplo, um tipo) e a tela decidir ícone e cor.</p></div>
+  </article>
+
+  <article class="topic" id="t2" data-title="Encapsulamento">
+    <div class="topic-head"><div class="file">models/conta.dart + screens/encapsulamento_screen.dart</div><h3>2. Encapsulamento</h3></div>
+    <p class="idea">Os dados ficam privados e só mudam através de métodos que aplicam as regras.</p>
+    <div class="code" data-src="c-conta" data-file="lib/models/conta.dart"></div>
+    <ul>
+      <li>O prefixo <code>_</code> torna <code>_numero</code> e <code>_saldo</code> privados.</li>
+      <li>Leitura: <code>getSaldo()</code> e o getter <code>numero</code>.</li>
+      <li>Escrita: <code>depositar()</code> e <code>sacar()</code>, que validam se o valor é positivo e, no saque, se há saldo suficiente. Se a regra falhar, o método lança um erro (<code>ArgumentError</code> ou <code>StateError</code>).</li>
+    </ul>
+    <div class="demo">
+      <div class="phone sm"><div class="scr" style="padding:0 14px 14px">
+        <div class="appbar" style="margin:0 -14px"><span class="ms">arrow_back</span>2. Encapsulamento</div>
+        <div style="background:#E0F2F1;border-radius:12px;padding:14px;text-align:center;margin-top:6px">
+          <div style="font-size:.85rem">Conta nº 1234</div>
+          <div id="encSaldo" style="font-size:1.3rem;font-weight:700;margin-top:4px">Saldo: R$ 1000.00</div>
+        </div>
+        <div class="mfield money" style="margin-top:18px"><input id="encValor" placeholder=" " inputmode="decimal" autocomplete="off"><label for="encValor">Valor</label><span class="pre">R$</span></div>
+        <div id="encErro" style="color:#D32F2F;font-size:.8rem;min-height:1.2em"></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="mbtn elev" style="flex:1;padding:9px 6px" id="encDep">Depositar</button>
+          <button class="mbtn outl" style="flex:1;padding:9px 6px" id="encSac">Sacar</button>
+        </div>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">Teste as regras</div>
+        <p>Experimente sacar mais de 1000, digitar um valor negativo ou escrever letras. As mensagens são as mesmas que o app mostraria, inclusive o prefixo que o Dart coloca ao converter o erro em texto.</p>
+        <p>A tela é um <code>StatefulWidget</code>: cada operação roda dentro de um <code>setState()</code> com <code>try/catch</code>, e o texto digitado é convertido com <code>double.tryParse</code> (trocando vírgula por ponto).</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-enc" data-file="lib/screens/encapsulamento_screen.dart"></div></details>
+    <div class="note warn"><b class="t">Pontos de atenção</b>
+      <ul>
+        <li><strong>Privacidade em Dart é por arquivo.</strong> O material diz que os campos são acessíveis "só de fora da classe" pelos métodos. Em Dart, o <code>_</code> torna o membro privado à <em>biblioteca</em> (o arquivo), e não à classe. Qualquer código dentro de <code>conta.dart</code> enxerga <code>_saldo</code>. A conclusão do material continua certa: nenhum <em>outro arquivo</em> consegue mexer no saldo diretamente.</li>
+        <li><strong>Mensagens com prefixo.</strong> Como a tela usa <code>e.toString()</code>, o usuário vê "Invalid argument(s): O valor do depósito deve ser positivo." e "Bad state: Saldo insuficiente.". Para mostrar só o texto, seria preciso ler <code>e.message</code>.</li>
+        <li><strong>Falta o <code>dispose()</code>.</strong> Todo <code>TextEditingController</code> criado no <code>State</code> deveria ser liberado com <code>_valorController.dispose()</code> dentro de um método <code>dispose()</code>. Não quebra o exemplo, mas é uma boa prática que costuma ser cobrada.</li>
+        <li><strong>Estilo.</strong> <code>getSaldo()</code> é um hábito vindo do Java. O jeito idiomático em Dart é um getter, como o próprio código faz com <code>numero</code>: <code>double get saldo =&gt; _saldo;</code>.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="topic" id="t3" data-title="Parâmetros nomeados">
+    <div class="topic-head"><div class="file">models/produto.dart + screens/parametros_nomeados_screen.dart</div><h3>3. Parâmetros nomeados</h3></div>
+    <p class="idea">Parâmetros entre chaves <code>{ }</code> são passados pelo nome, e não pela posição.</p>
+    <div class="code" data-src="c-produto" data-file="lib/models/produto.dart"></div>
+    <div class="flow"><span>Produto(nome: 'Celular', preco: 1200)</span><i>certo</i></div>
+    <div class="flow"><span>Produto('Celular', 1200)</span><i>erro de compilação</i></div>
+    <p>Como os campos são anuláveis (<code>String?</code> e <code>double?</code>), os dois parâmetros são opcionais. Por isso <code>Produto(nome: 'Capa Protetora')</code> é válido, e a tela mostra um traço no lugar do preço quando ele é <code>null</code>.</p>
+    <div class="demo">
+      <div class="phone sm"><div class="scr">
+        <div class="appbar"><span class="ms">arrow_back</span>3. Parâmetros Nomeados</div>
+        <div id="prodList"></div>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">Tratando o null na tela</div>
+        <p><code>produto.nome ?? '(sem nome)'</code> usa o operador <code>??</code>: se o valor da esquerda for <code>null</code>, usa o da direita.</p>
+        <p><code>produto.preco!</code> usa o <code>!</code> para afirmar que o valor não é nulo. Isso é seguro aqui porque vem logo depois do teste <code>produto.preco != null</code>.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-prodscr" data-file="lib/screens/parametros_nomeados_screen.dart"></div></details>
+    <div class="note tip"><b class="t">Complemento que costuma cair</b>
+      <ul>
+        <li><code>{required this.nome}</code>: parâmetro nomeado <strong>obrigatório</strong>. Sem ele, o campo precisaria ser anulável ou ter valor padrão.</li>
+        <li><code>{this.preco = 0}</code>: nomeado com <strong>valor padrão</strong>.</li>
+        <li><code>[this.preco]</code>: posicional <strong>opcional</strong>, usando colchetes.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="topic" id="t4" data-title="Construtor nomeado">
+    <div class="topic-head"><div class="file">models/paciente.dart + screens/construtor_nomeado_screen.dart</div><h3>4. Construtor nomeado</h3></div>
+    <p class="idea">Uma classe pode ter várias formas de ser criada. O nome do construtor vem depois do ponto.</p>
+    <div class="code" data-src="c-paciente" data-file="lib/models/paciente.dart"></div>
+    <ul>
+      <li><code>Paciente(this.nome, this.idade)</code>: construtor principal, idade informada.</li>
+      <li><code>Paciente.comIdadeMinima(this.nome) : idade = 18</code>: construtor nomeado. O trecho depois dos dois-pontos é a <strong>lista de inicializadores</strong>, que fixa a idade em 18.</li>
+    </ul>
+    <div class="demo">
+      <div class="phone sm"><div class="scr">
+        <div class="appbar"><span class="ms">arrow_back</span>4. Construtor Nomeado</div>
+        <div id="pacList"></div>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">Os dois juntos</div>
+        <p>Beatriz e Ricardo foram criados com o construtor principal. Carlos e Fernanda, com <code>Paciente.comIdadeMinima(...)</code>, e por isso aparecem com 18 anos.</p>
+        <p>Todos convivem na mesma <code>List&lt;Paciente&gt;</code>, porque continuam sendo objetos da mesma classe.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-pacscr" data-file="lib/screens/construtor_nomeado_screen.dart"></div></details>
+  </article>
+
+  <article class="topic" id="t5" data-title="Regras de construtores">
+    <div class="topic-head"><div class="file">models/retangulo.dart + screens/regras_construtores_screen.dart</div><h3>5. Regras de construtores</h3></div>
+    <p class="idea">Três regras numa classe só: <code>this.</code> nos parâmetros, redirecionamento com <code>this(...)</code> e mistura de posicional com nomeado.</p>
+    <div class="code" data-src="c-ret" data-file="lib/models/retangulo.dart"></div>
+    <ul>
+      <li><strong><code>this.largura</code></strong> no construtor principal: atalho que atribui o valor direto ao campo.</li>
+      <li><strong><code>Retangulo.quadrado(lado) : this(lado, lado)</code></strong>: redireciona para o construtor principal, passando o mesmo valor duas vezes.</li>
+      <li><strong><code>Retangulo.comEscala(base, {escala = 1.0})</code></strong>: <code>base</code> é posicional e <code>escala</code> é nomeado opcional com valor padrão.</li>
+    </ul>
+    <div class="demo" style="grid-template-columns:1fr">
+      <div class="demo-side">
+        <div class="lbl">Monte um retângulo</div>
+        <div class="seg" id="retSeg" role="group" aria-label="Construtor">
+          <button data-k="p" aria-pressed="true">Retangulo(l, a)</button>
+          <button data-k="q" aria-pressed="false">.quadrado(lado)</button>
+          <button data-k="e" aria-pressed="false">.comEscala(base, escala:)</button>
+        </div>
+        <div id="retInputs" style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0"></div>
+        <div class="callout-code" id="retCall"></div>
+        <div id="retOut" style="font-weight:700"></div>
+        <div id="retShape" style="margin-top:10px;background:var(--accent);opacity:.85;border-radius:3px;transition:all .25s"></div>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-retscr" data-file="lib/screens/regras_construtores_screen.dart"></div></details>
+    <div class="note warn"><b class="t">Pontos de atenção</b>
+      <ul>
+        <li><strong>Quebra de linha dentro da string.</strong> No PDF, a linha <code>'Dimensões: $retangulo | Área: ...'</code> aparece quebrada no meio do texto entre aspas. Isso parece ser só a formatação do documento, mas se for digitado assim dá erro de compilação, pois uma string com aspas simples não pode atravessar linhas. Mantenha tudo numa linha só (como no código desta página) ou use aspas triplas.</li>
+        <li><strong>Regra extra.</strong> Um construtor que redireciona com <code>: this(...)</code> não pode ter lista de inicializadores nem corpo. Ele só repassa os valores.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="topic" id="t6" data-title="Ordem de execução">
+    <div class="topic-head"><div class="file">models/veiculo.dart + screens/ordem_execucao_screen.dart</div><h3>6. Ordem de execução</h3></div>
+    <p class="idea">A lista de inicializadores roda antes do corpo do construtor, sempre.</p>
+    <div class="code" data-src="c-veic" data-file="lib/models/veiculo.dart"></div>
+    <div class="demo" style="grid-template-columns:1fr">
+      <div class="demo-side">
+        <div class="lbl">Acompanhe a construção</div>
+        <button class="btn primary" id="veicBtn">Executar Veiculo.usado('Toyota')</button>
+        <div class="steps" id="veicSteps">
+          <div class="step"><b>1. Parâmetros com this.</b><code>marca = 'Toyota'</code></div>
+          <div class="step"><b>2. Lista de inicializadores</b><code>ano = 2010, log = ['1) Lista de inicializadores...']</code></div>
+          <div class="step"><b>3. Corpo do construtor { }</b><code>log.add('2) Corpo do construtor...')</code></div>
+          <div class="step"><b>Resultado exibido na tela</b><span id="veicRes" style="font-size:.9rem">Toyota - 2010</span></div>
+        </div>
+      </div>
+    </div>
+    <p>A tela cria o objeto uma única vez e percorre <code>carro.log</code> com <code>.map(...)</code>. Como a lista de inicializadores roda primeiro, a mensagem "1)" sempre aparece antes da "2)".</p>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-veicscr" data-file="lib/screens/ordem_execucao_screen.dart"></div></details>
+    <div class="note tip"><b class="t">Ordem completa (com herança)</b><p>Quando a classe estende outra, a sequência é: parâmetros <code>this.</code>, lista de inicializadores, construtor da superclasse (<code>super(...)</code>) e, por último, o corpo. Na lista de inicializadores ainda não se pode usar <code>this</code> para ler outros campos, porque o objeto não terminou de ser montado.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 3 ============ -->
+<section class="part" data-part="Parte 3: Widgets do Flutter">
+  <div class="part-head"><div class="n">Parte 3</div><h2>Widgets do Flutter</h2><p>Estrutura de tela, estado, layout e campos de entrada.</p></div>
+
+  <article class="topic" id="t7" data-title="Scaffold">
+    <div class="topic-head"><div class="file">screens/scaffold_screen.dart</div><h3>7. Scaffold</h3></div>
+    <p class="idea">O <code>Scaffold</code> é o esqueleto de uma tela Material, com áreas prontas para cada parte.</p>
+    <div class="demo">
+      <div class="phone sm"><div class="scr" style="display:flex;flex-direction:column">
+        <div class="appbar" style="background:#2196F3;color:#fff"><span class="ms">arrow_back</span>7. Estrutura do Scaffold</div>
+        <div style="flex:1;display:grid;place-items:center;text-align:center;padding:20px;font-size:.88rem">
+          <div><span class="ms" style="font-size:56px;color:#607D8B">widgets</span><div style="margin-top:10px">Este é o "body" do Scaffold:<br>a área principal de conteúdo.</div></div>
+        </div>
+        <button class="fab" id="scafFab" aria-label="FloatingActionButton"><span class="ms">add</span></button>
+        <div class="snack" id="scafSnack">FloatingActionButton pressionado!</div>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">As três áreas</div>
+        <ul>
+          <li><code>appBar</code>: barra superior, aqui com título e <code>backgroundColor: Colors.blue</code>.</li>
+          <li><code>body</code>: conteúdo principal, um <code>Center</code> com ícone e texto.</li>
+          <li><code>floatingActionButton</code>: botão flutuante. Toque nele.</li>
+        </ul>
+        <p>O <code>SnackBar</code> é mostrado com <code>ScaffoldMessenger.of(context).showSnackBar(...)</code>, a forma padrão de exibir mensagens rápidas na parte de baixo da tela.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-scaf" data-file="lib/screens/scaffold_screen.dart"></div></details>
+  </article>
+
+  <article class="topic" id="t8" data-title="StatefulWidget">
+    <div class="topic-head"><div class="file">screens/contador_screen.dart</div><h3>8. StatefulWidget</h3></div>
+    <p class="idea">O widget é a casca imutável; o <code>State</code> guarda os dados que mudam, e <code>setState()</code> pede para a tela ser redesenhada.</p>
+    <div class="flow"><span>ContadorScreen</span><i>createState() →</i><span>_ContadorScreenState</span><i>guarda</i><span>_contador</span></div>
+    <div class="demo">
+      <div class="phone sm"><div class="scr" style="display:flex;flex-direction:column">
+        <div class="appbar"><span class="ms">arrow_back</span>8. StatefulWidget</div>
+        <div style="flex:1;display:grid;place-items:center;text-align:center">
+          <div><div style="font-size:.9rem">Valor atual:</div><div id="contVal" style="font-size:3.2rem;line-height:1.1">0</div></div>
+        </div>
+        <button class="fab" id="contFab" aria-label="Incrementar"><span class="ms">add</span></button>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">O ciclo a cada toque</div>
+        <div class="steps" id="contSteps">
+          <div class="step"><b>onPressed: _incrementar</b>o botão chama o método</div>
+          <div class="step"><b>setState(() { _contador++; })</b>altera o valor e avisa o Flutter</div>
+          <div class="step"><b>build() roda de novo</b>a tela aparece com o novo número</div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted)">Se o <code>_contador++</code> ficasse fora do <code>setState()</code>, o valor mudaria na memória, mas a tela continuaria mostrando o número antigo.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-cont" data-file="lib/screens/contador_screen.dart"></div></details>
+    
+  </article>
+
+  <article class="topic" id="t9" data-title="Row x Column">
+    <div class="topic-head"><div class="file">screens/row_column_screen.dart</div><h3>9. Row x Column</h3></div>
+    <p class="idea"><code>Row</code> organiza os filhos na horizontal; <code>Column</code>, na vertical. Essa direção é o eixo principal (main axis).</p>
+    <div class="demo">
+      <div class="phone sm"><div class="scr">
+        <div class="appbar"><span class="ms">arrow_back</span>9. Row x Column</div>
+        <div style="padding:10px 14px">
+          <div style="font-weight:700;font-size:.82rem;margin-bottom:6px" id="rcLabel"></div>
+          <div id="rcBox" style="display:flex;gap:8px;align-items:flex-start;transition:all .2s"></div>
+        </div>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">Troque o widget</div>
+        <div class="seg" id="rcSeg" role="group" aria-label="Widget de layout">
+          <button data-k="row" aria-pressed="true">Row</button>
+          <button data-k="col" aria-pressed="false">Column</button>
+        </div>
+        <p>Os mesmos três itens, criados pela mesma função <code>_chip()</code>, mudam só de direção. Essa foi a intenção do professor: deixar a orientação como a única diferença visível.</p>
+        <p><strong>Eixo cruzado</strong> (cross axis) é o perpendicular ao principal: vertical no <code>Row</code>, horizontal no <code>Column</code>. É nele que atua o <code>crossAxisAlignment</code>. O tópico 13 tem um laboratório com todas as opções.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-rc" data-file="lib/screens/row_column_screen.dart"></div></details>
+  </article>
+
+  <article class="topic" id="t10" data-title="MaterialApp e a rota inicial">
+    <div class="topic-head"><div class="file">screens/materialapp_screen.dart</div><h3>10. MaterialApp e a rota inicial</h3></div>
+    <p class="idea">O <code>MaterialApp</code> precisa saber qual tela mostrar primeiro.</p>
+    <p>Os três parâmetros citados no material:</p>
+    <ul>
+      <li><code>home</code>: o widget da tela inicial, direto.</li>
+      <li><code>routes</code>: um mapa de nomes de rota para widgets.</li>
+      <li><code>onGenerateRoute</code>: uma função que gera rotas dinamicamente.</li>
+    </ul>
+    <div class="demo">
+      <div class="phone sm"><div class="scr" id="maScr"></div></div>
+      <div class="demo-side">
+        <div class="lbl">Compare</div>
+        <div class="seg" id="maSeg" role="group" aria-label="Configuração do MaterialApp">
+          <button data-k="ok" aria-pressed="true">home: HomeScreen()</button>
+          <button data-k="err" aria-pressed="false">sem nenhum</button>
+        </div>
+        <p>Sem nenhuma das opções, o código <strong>compila normalmente</strong>, mas falha ao rodar: no modo de depuração aparece a famosa tela vermelha de erro.</p>
+        <p>Como o próprio app precisa de um <code>home</code> válido para chegar a qualquer tela, o professor tratou este tópico de forma explicativa.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-ma" data-file="lib/screens/materialapp_screen.dart"></div></details>
+    <div class="note warn"><b class="t">Complementos</b>
+      <ul>
+        <li>A lista de "três parâmetros" não é exaustiva. O Flutter também aceita <code>onUnknownRoute</code> ou <code>builder</code> como forma de definir o que mostrar. Para a prova, a resposta esperada é a dos três citados.</li>
+        <li>A tela vermelha aparece no modo de depuração (debug), que é o que se usa em aula. Num app compilado em modo release, a falha costuma aparecer como uma tela cinza.</li>
+        <li>O método <code>_linha()</code> fixa a cor <code>Colors.black87</code> no <code>RichText</code>. No tema escuro, esse texto ficaria quase invisível. <code>Text.rich(...)</code> herdaria o estilo do tema automaticamente.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="topic" id="t11" data-title="Center + Button">
+    <div class="topic-head"><div class="file">screens/botao_central_screen.dart</div><h3>11. Center + ElevatedButton</h3></div>
+    <p class="idea">O <code>Center</code> cuida da posição; o <code>ElevatedButton</code>, da aparência; o <code>onPressed</code>, do comportamento.</p>
+    <div class="demo">
+      <div class="phone sm"><div class="scr" style="display:flex;flex-direction:column">
+        <div class="appbar"><span class="ms">arrow_back</span>11. Scaffold + Center + Button</div>
+        <div style="flex:1;display:grid;place-items:center"><button class="mbtn elev" id="btnDemo">Clique Aqui</button></div>
+        <div class="snack" id="btnSnack">Botão pressionado!</div>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">Valor de onPressed</div>
+        <div class="seg" id="btnSeg" role="group" aria-label="Valor de onPressed">
+          <button data-k="fn" aria-pressed="true">() { showSnackBar }</button>
+          <button data-k="empty" aria-pressed="false">() {}</button>
+          <button data-k="null" aria-pressed="false">null</button>
+        </div>
+        <p id="btnExp"></p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-btn" data-file="lib/screens/botao_central_screen.dart"></div></details>
+  </article>
+
+  <article class="topic" id="t12" data-title="TextField e labelText">
+    <div class="topic-head"><div class="file">screens/textfield_screen.dart</div><h3>12. TextField e labelText</h3></div>
+    <p class="idea">O <code>labelText</code> fica dentro do campo quando ele está vazio e sem foco, e sobe para a borda quando o campo recebe foco ou tem texto.</p>
+    <div class="demo">
+      <div class="phone sm"><div class="scr" style="padding:0 14px">
+        <div class="appbar" style="margin:0 -14px"><span class="ms">arrow_back</span>12. TextField e labelText</div>
+        <div class="mfield" style="margin-top:16px"><input id="tfNome" placeholder=" " autocomplete="off"><label for="tfNome">Nome</label></div>
+        <p style="color:#6B6A72;font-size:.82rem;margin-top:14px">Toque no campo acima para ver o rótulo "Nome" subir e a borda mudar de cor (foco). Digite algo e toque fora para ver o rótulo permanecer no topo.</p>
+      </div></div>
+      <div class="demo-side">
+        <div class="lbl">Os três estados</div>
+        <ul>
+          <li><strong>Vazio, sem foco:</strong> o rótulo fica dentro do campo, como se fosse uma dica.</li>
+          <li><strong>Com foco:</strong> o rótulo sobe e a borda ganha a cor primária do tema.</li>
+          <li><strong>Com texto, sem foco:</strong> o rótulo continua em cima, porque o campo não está vazio.</li>
+        </ul>
+        <p>A borda em volta vem de <code>border: OutlineInputBorder()</code> dentro do <code>InputDecoration</code>.</p>
+      </div>
+    </div>
+    <details class="more"><summary>Ver código da tela</summary><div class="code" data-src="c-tf" data-file="lib/screens/textfield_screen.dart"></div></details>
+    <div class="note tip"><b class="t">Não confunda</b><p><code>labelText</code> é o rótulo que flutua. <code>hintText</code> é um texto de exemplo que aparece só com o campo vazio e focado, e some ao digitar.</p></div>
+  </article>
+
+  <article class="topic" id="t13" data-title="Alinhamento: main axis e cross axis">
+    <div class="topic-head"><div class="file">screens/spacebetween_screen.dart</div><h3>13. Alinhamento: main axis e cross axis</h3></div>
+    <p class="idea">Todo <code>Row</code> e <code>Column</code> tem dois eixos. O <code>mainAxisAlignment</code> distribui os filhos ao longo do eixo principal, e o <code>crossAxisAlignment</code> posiciona cada filho no eixo cruzado.</p>
+    <div class="duo-ax">
+      <div><b>Row</b><span>principal: horizontal →</span><span>cruzado: vertical ↓</span></div>
+      <div><b>Column</b><span>principal: vertical ↓</span><span>cruzado: horizontal →</span></div>
+    </div>
+    <p>O app do professor mostra o caso do <code>spaceBetween</code>. O laboratório abaixo deixa combinar todas as opções.</p>
+
+    <div class="lab">
+      <div class="lab-ctrl">
+        <div class="lbl">Widget</div>
+        <div class="seg" id="labW" role="group" aria-label="Widget"><button data-k="row" aria-pressed="true">Row</button><button data-k="col" aria-pressed="false">Column</button></div>
+        <div class="lbl">mainAxisAlignment</div>
+        <div class="seg" id="labM" role="group" aria-label="mainAxisAlignment"></div>
+        <div class="lbl">crossAxisAlignment</div>
+        <div class="seg" id="labC" role="group" aria-label="crossAxisAlignment"></div>
+        <div class="lbl">mainAxisSize</div>
+        <div class="seg" id="labS" role="group" aria-label="mainAxisSize"><button data-k="max" aria-pressed="true">max</button><button data-k="min" aria-pressed="false">min</button></div>
+      </div>
+      <div class="lab-frame" aria-label="Pré-visualização do layout">
+        <div class="lab-flex" id="labFlex"><span class="lab-tag" id="labTag">Row</span>
+          <div class="lab-kid" style="font-size:14px;background:#3F51B5">A</div>
+          <div class="lab-kid" style="font-size:30px;background:#5C6BC0">Bb</div>
+          <div class="lab-kid" style="font-size:20px;background:#7986CB">Cc</div>
+        </div>
+      </div>
+      <p class="lab-legend">A linha tracejada mostra o tamanho que o <span id="labTag2">Row</span> realmente ocupa; o fundo cinza é o espaço disponível.</p>
+      <div class="lab-exp">
+        <p><b>Principal:</b> <span id="labExpM"></span></p>
+        <p><b>Cruzado:</b> <span id="labExpC"></span></p>
+        <p id="labExpS" style="margin:0"></p>
+      </div>
+      <div class="code"><div class="code-top"><span>código equivalente</span></div><pre><code id="labCode"></code></pre></div>
+    </div>
+
+    <h4 class="sub-h">Opções do mainAxisAlignment</h4>
+    <div class="optlist">
+      <div><code>start</code><span>Filhos juntos no início do eixo; a sobra fica no fim. É o <strong>padrão</strong>.</span></div>
+      <div><code>end</code><span>Filhos juntos no fim do eixo; a sobra fica no início.</span></div>
+      <div><code>center</code><span>Filhos juntos no meio; a sobra é dividida igualmente entre as duas pontas.</span></div>
+      <div><code>spaceBetween</code><span>Sobra dividida só entre os filhos. O primeiro encosta no início e o último no fim.</span></div>
+      <div><code>spaceAround</code><span>Cada filho recebe a mesma margem dos dois lados. Por isso, nas pontas fica metade do espaço que há entre dois filhos.</span></div>
+      <div><code>spaceEvenly</code><span>Todos os espaços iguais, inclusive os das pontas.</span></div>
+    </div>
+
+    <h4 class="sub-h">Opções do crossAxisAlignment</h4>
+    <div class="optlist">
+      <div><code>center</code><span>Cada filho centralizado no eixo cruzado. É o <strong>padrão</strong>.</span></div>
+      <div><code>start</code><span>Filhos alinhados no início do eixo cruzado (topo no Row, esquerda no Column).</span></div>
+      <div><code>end</code><span>Filhos alinhados no fim do eixo cruzado (base no Row, direita no Column).</span></div>
+      <div><code>stretch</code><span>Força cada filho a ocupar todo o eixo cruzado. É o que o professor usa na tela de encapsulamento para o card, o campo e os botões ocuparem toda a largura.</span></div>
+      <div><code>baseline</code><span>Alinha os filhos pela linha de base do texto, útil quando há textos de tamanhos diferentes lado a lado. Exige também <code>textBaseline: TextBaseline.alphabetic</code>.</span></div>
+    </div>
+
+    <h4 class="sub-h">mainAxisSize</h4>
+    <div class="optlist">
+      <div><code>max</code><span>O Row/Column ocupa todo o espaço disponível no eixo principal. É o <strong>padrão</strong>.</span></div>
+      <div><code>min</code><span>Ocupa só o necessário para os filhos. Sem sobra de espaço, o <code>mainAxisAlignment</code> deixa de ter efeito visível. Aparece no app nas telas de Scaffold e de contador, junto com o <code>Center</code>.</span></div>
+    </div>
+
+    <div class="note warn"><b class="t">Pegadinhas que costumam cair</b>
+      <ul>
+        <li><strong>O eixo cruzado se ajusta ao maior filho.</strong> Um <code>Row</code> tem a altura do filho mais alto, e um <code>Column</code> tem a largura do filho mais largo. Por isso <code>crossAxisAlignment.center</code> num <code>Row</code> centraliza os filhos entre si, sem centralizar o <code>Row</code> na tela. Com <code>stretch</code>, ele passa a ocupar todo o espaço cruzado disponível.</li>
+        <li><strong>baseline sem textBaseline dá erro.</strong> E num <code>Column</code> o <code>baseline</code> não faz sentido (linhas de base são horizontais), então o Flutter trata como <code>start</code>.</li>
+        <li><strong>stretch em espaço infinito dá erro.</strong> Um <code>Row</code> com <code>stretch</code> dentro de uma lista vertical, por exemplo, tentaria ter altura infinita.</li>
+        <li><strong>Expanded "come" a sobra.</strong> Se algum filho estiver dentro de um <code>Expanded</code> ou houver um <code>Spacer</code>, não sobra espaço livre e o <code>mainAxisAlignment</code> deixa de ter efeito. É o que acontece com os dois botões da tela de encapsulamento.</li>
+        <li><strong>start e end dependem da direção.</strong> No <code>Row</code>, seguem a direção do texto (em idiomas escritos da direita para a esquerda, <code>start</code> fica à direita). No <code>Column</code>, seguem o <code>verticalDirection</code>, que por padrão vai de cima para baixo.</li>
+      </ul>
+    </div>
+
+    <details class="more"><summary>Ver código da tela do app</summary><div class="code" data-src="c-sb" data-file="lib/screens/spacebetween_screen.dart"></div></details>
+  </article>
+</section>
+
+<!-- ============ REVISÃO ============ -->
+<section class="part" data-part="Revisão" id="revisao">
+  <div class="part-head"><div class="n">Revisão</div><h2>Flashcards</h2><p>Toque no cartão para ver a resposta.</p></div>
+  <div class="fc">
+    <button class="fc-card" id="fcCard" aria-live="polite">
+      <div class="fc-face front"><h4 id="fcTerm"></h4><small>Toque para virar</small></div>
+      <div class="fc-face back"><p id="fcDef" style="margin:0;font-size:1.02rem"></p></div>
+    </button>
+    <div class="fc-nav">
+      <button class="btn" id="fcPrev">Anterior</button>
+      <span id="fcCount" style="color:var(--muted);font-size:.9rem"></span>
+      <button class="btn" id="fcNext">Próximo</button>
+    </div>
+  </div>
+
+  <div class="part-head" style="margin-top:44px"><div class="n">Revisão</div><h2>Quiz: leia o código</h2></div>
+  <div id="quiz"></div>
+  <p class="score" id="score"></p>
+  <button class="btn primary" id="quizReset">Refazer o quiz</button>
+</section>
+
+</main>
+
+<footer class="wrap">Baseado no material "Guia de Estudos: Dart &amp; Flutter, código completo". As demonstrações imitam o comportamento do app em HTML; para a prova, o código de referência é o do professor.</footer>
+
+<!-- ============ CÓDIGOS ============ -->
+<script type="text/x-dart" id="c-main">// Aplicativo único que reúne, em um menu de navegação, um exemplo
+// prático de cada tópico estudado: polimorfismo, encapsulamento,
+// parâmetros nomeados, construtores nomeados (e suas regras), ordem
+// de execução em construtores, e os principais widgets do Flutter
+// (Scaffold, StatefulWidget, Row/Column, MaterialApp, ElevatedButton,
+// TextField e MainAxisAlignment).
+import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
+
+void main() {
+  runApp(const MeuApp());
+}
+
+class MeuApp extends StatelessWidget {
+  const MeuApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Guia de Estudos: Dart & Flutter',
+      theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
+      home: const HomeScreen(),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-home">import 'package:flutter/material.dart';
+import 'polimorfismo_screen.dart';
+import 'encapsulamento_screen.dart';
+import 'parametros_nomeados_screen.dart';
+import 'construtor_nomeado_screen.dart';
+import 'regras_construtores_screen.dart';
+import 'ordem_execucao_screen.dart';
+import 'scaffold_screen.dart';
+import 'contador_screen.dart';
+import 'row_column_screen.dart';
+import 'materialapp_screen.dart';
+import 'botao_central_screen.dart';
+import 'textfield_screen.dart';
+import 'spacebetween_screen.dart';
+
+class _Topico {
+  final String titulo;
+  final String subtitulo;
+  final IconData icone;
+  final WidgetBuilder builder;
+
+  const _Topico(this.titulo, this.subtitulo, this.icone, this.builder);
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final topicos = <_Topico>[
+      _Topico('1. Polimorfismo', 'Herança e @override',
+          Icons.diversity_3, (_) => const PolimorfismoScreen()),
+      _Topico('2. Encapsulamento', 'Campos privados e acesso controlado',
+          Icons.lock_outline, (_) => const EncapsulamentoScreen()),
+      _Topico('3. Parâmetros Nomeados', 'Construtores com {chaves}',
+          Icons.label_important_outline, (_) => const ParametrosNomeadosScreen()),
+      _Topico('4. Construtor Nomeado', 'Inicializações alternativas',
+          Icons.badge_outlined, (_) => const ConstrutorNomeadoScreen()),
+      _Topico('5. Regras de Construtores', 'this(), posicional + nomeado',
+          Icons.rule_folder_outlined, (_) => const RegrasConstrutoresScreen()),
+      _Topico('6. Ordem de Execução', 'Lista de inicializadores x corpo',
+          Icons.timeline_outlined, (_) => const OrdemExecucaoScreen()),
+      _Topico('7. Scaffold', 'AppBar, body e FloatingActionButton',
+          Icons.dashboard_outlined, (_) => const ScaffoldExemploScreen()),
+      _Topico('8. StatefulWidget', 'createState() e setState()',
+          Icons.refresh, (_) => const ContadorScreen()),
+      _Topico('9. Row x Column', 'Eixo principal (main axis)',
+          Icons.view_column_outlined, (_) => const RowColumnScreen()),
+      _Topico('10. MaterialApp', 'A rota inicial (home)',
+          Icons.home_outlined, (_) => const MaterialAppScreen()),
+      _Topico('11. Center + Button', 'Posição, aparência e comportamento',
+          Icons.touch_app_outlined, (_) => const BotaoCentralScreen()),
+      _Topico('12. TextField', 'Comportamento do labelText',
+          Icons.text_fields, (_) => const TextFieldScreen()),
+      _Topico('13. spaceBetween', 'Distribuição no eixo principal',
+          Icons.space_bar, (_) => const SpaceBetweenScreen()),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Guia de Estudos: Dart & Flutter')),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(8),
+        itemCount: topicos.length,
+        separatorBuilder: (_, __) => const Divider(height: 1),
+        itemBuilder: (context, index) {
+          final topico = topicos[index];
+          return ListTile(
+            leading: Icon(topico.icone, color: Theme.of(context).colorScheme.primary),
+            title: Text(topico.titulo),
+            subtitle: Text(topico.subtitulo),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: topico.builder),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-pessoa">// Tópico: Polimorfismo (herança + @override)
+import 'package:flutter/material.dart';
+
+class Pessoa {
+  final String nome;
+
+  Pessoa(this.nome);
+
+  String saudacao() => 'Olá, meu nome é $nome.';
+  IconData get icone => Icons.person;
+  Color get cor => Colors.blueGrey;
+}
+
+class Estudante extends Pessoa {
+  final String curso;
+
+  Estudante(String nome, this.curso) : super(nome);
+
+  @override
+  String saudacao() => 'Oi, meu nome é $nome e sou estudante de $curso.';
+
+  @override
+  IconData get icone => Icons.school;
+
+  @override
+  Color get cor => Colors.indigo;
+}</script>
+
+<script type="text/x-dart" id="c-poli">import 'package:flutter/material.dart';
+import '../models/pessoa.dart';
+
+class PolimorfismoScreen extends StatelessWidget {
+  const PolimorfismoScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Pessoa> pessoas = [
+      Pessoa('Ana'),
+      Estudante('João', 'ADS'),
+      Estudante('Maria', 'Ciber'),
+      Pessoa('Carlos'),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('1. Polimorfismo')),
+      body: ListView.builder(
+        itemCount: pessoas.length,
+        itemBuilder: (context, index) {
+          final pessoa = pessoas[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: pessoa.cor,
+                child: Icon(pessoa.icone, color: Colors.white),
+              ),
+              title: Text(pessoa.saudacao()),
+              subtitle: Text(pessoa.runtimeType.toString()),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-conta">// Tópico: Encapsulamento (campos privados + acesso via método público)
+class Conta {
+  final int _numero;
+  double _saldo;
+
+  Conta(this._numero, this._saldo);
+
+  double getSaldo() => _saldo;
+  int get numero => _numero;
+
+  void depositar(double valor) {
+    if (valor <= 0) {
+      throw ArgumentError('O valor do depósito deve ser positivo.');
+    }
+    _saldo += valor;
+  }
+
+  void sacar(double valor) {
+    if (valor <= 0) {
+      throw ArgumentError('O valor do saque deve ser positivo.');
+    }
+    if (valor > _saldo) {
+      throw StateError('Saldo insuficiente.');
+    }
+    _saldo -= valor;
+  }
+}</script>
+
+<script type="text/x-dart" id="c-enc">import 'package:flutter/material.dart';
+import '../models/conta.dart';
+
+class EncapsulamentoScreen extends StatefulWidget {
+  const EncapsulamentoScreen({super.key});
+
+  @override
+  State<EncapsulamentoScreen> createState() => _EncapsulamentoScreenState();
+}
+
+class _EncapsulamentoScreenState extends State<EncapsulamentoScreen> {
+  final Conta _conta = Conta(1234, 1000);
+  final TextEditingController _valorController = TextEditingController();
+  String? _mensagemErro;
+
+  void _depositar() {
+    final valor = double.tryParse(_valorController.text.replaceAll(',', '.'));
+    if (valor == null) {
+      setState(() => _mensagemErro = 'Informe um valor numérico válido.');
+      return;
+    }
+    setState(() {
+      try {
+        _conta.depositar(valor);
+        _mensagemErro = null;
+        _valorController.clear();
+      } catch (e) {
+        _mensagemErro = e.toString();
+      }
+    });
+  }
+
+  void _sacar() {
+    final valor = double.tryParse(_valorController.text.replaceAll(',', '.'));
+    if (valor == null) {
+      setState(() => _mensagemErro = 'Informe um valor numérico válido.');
+      return;
+    }
+    setState(() {
+      try {
+        _conta.sacar(valor);
+        _mensagemErro = null;
+        _valorController.clear();
+      } catch (e) {
+        _mensagemErro = e.toString();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('2. Encapsulamento')),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Card(
+              color: Colors.teal.shade50,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Text('Conta nº ${_conta.numero}'),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Saldo: R\$ ${_conta.getSaldo().toStringAsFixed(2)}',
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: _valorController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
+                labelText: 'Valor',
+                prefixText: 'R\$ ',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            if (_mensagemErro != null) ...[
+              const SizedBox(height: 8),
+              Text(_mensagemErro!, style: const TextStyle(color: Colors.red)),
+            ],
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                      onPressed: _depositar, child: const Text('Depositar')),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton(
+                      onPressed: _sacar, child: const Text('Sacar')),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-produto">// Tópico: Parâmetros nomeados em construtores
+class Produto {
+  String? nome;
+  double? preco;
+
+  Produto({this.nome, this.preco});
+}</script>
+
+<script type="text/x-dart" id="c-prodscr">import 'package:flutter/material.dart';
+import '../models/produto.dart';
+
+class ParametrosNomeadosScreen extends StatelessWidget {
+  const ParametrosNomeadosScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final produtos = [
+      Produto(nome: 'Celular', preco: 1200),
+      Produto(nome: 'Fone de Ouvido', preco: 150),
+      Produto(nome: 'Carregador', preco: 60),
+      Produto(nome: 'Capa Protetora'),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('3. Parâmetros Nomeados')),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(12),
+        itemCount: produtos.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        itemBuilder: (context, index) {
+          final produto = produtos[index];
+          return Card(
+            child: ListTile(
+              leading: const Icon(Icons.shopping_bag_outlined),
+              title: Text(produto.nome ?? '(sem nome)'),
+              trailing: Text(
+                produto.preco != null
+                    ? 'R\$ ${produto.preco!.toStringAsFixed(2)}'
+                    : '-',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-paciente">// Tópico: Construtor nomeado + lista de inicializadores
+class Paciente {
+  String nome;
+  int idade;
+
+  Paciente(this.nome, this.idade);
+
+  Paciente.comIdadeMinima(this.nome) : idade = 18;
+}</script>
+
+<script type="text/x-dart" id="c-pacscr">import 'package:flutter/material.dart';
+import '../models/paciente.dart';
+
+class ConstrutorNomeadoScreen extends StatelessWidget {
+  const ConstrutorNomeadoScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final pacientes = [
+      Paciente('Beatriz', 42),
+      Paciente('Ricardo', 35),
+      Paciente.comIdadeMinima('Carlos'),
+      Paciente.comIdadeMinima('Fernanda'),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('4. Construtor Nomeado')),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: pacientes.length,
+        itemBuilder: (context, index) {
+          final paciente = pacientes[index];
+          return Card(
+            child: ListTile(
+              leading:
+                  const CircleAvatar(child: Icon(Icons.personal_injury_outlined)),
+              title: Text(paciente.nome),
+              subtitle: Text('Idade: ${paciente.idade} anos'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-ret">// Tópico: Regras de construtores nomeados
+// (this. na lista de parâmetros, redirecionamento com this(...),
+// mistura de parâmetro posicional e nomeado)
+class Retangulo {
+  double largura;
+  double altura;
+
+  Retangulo(this.largura, this.altura);
+
+  Retangulo.quadrado(double lado) : this(lado, lado);
+
+  Retangulo.comEscala(double base, {double escala = 1.0})
+      : largura = base * escala,
+        altura = base * escala;
+
+  double get area => largura * altura;
+
+  @override
+  String toString() =>
+      '${largura.toStringAsFixed(1)} x ${altura.toStringAsFixed(1)}';
+}</script>
+
+<script type="text/x-dart" id="c-retscr">import 'package:flutter/material.dart';
+import '../models/retangulo.dart';
+
+class RegrasConstrutoresScreen extends StatelessWidget {
+  const RegrasConstrutoresScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final formas = <String, Retangulo>{
+      'Retangulo(4, 2): construtor principal': Retangulo(4, 2),
+      'Retangulo.quadrado(3): redireciona com this(...)':
+          Retangulo.quadrado(3),
+      'Retangulo.comEscala(2, escala: 3): posicional + nomeado':
+          Retangulo.comEscala(2, escala: 3),
+      'Retangulo.comEscala(5): escala usa valor padrão':
+          Retangulo.comEscala(5),
+    };
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('5. Regras de Construtores')),
+      body: ListView(
+        padding: const EdgeInsets.all(12),
+        children: formas.entries.map((entry) {
+          final retangulo = entry.value;
+          return Card(
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ListTile(
+              leading: const Icon(Icons.crop_square),
+              title: Text(entry.key, style: const TextStyle(fontSize: 13)),
+              subtitle: Text(
+                'Dimensões: $retangulo | Área: ${retangulo.area.toStringAsFixed(1)}',
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-veic">// Tópico: Ordem de execução (lista de inicializadores x corpo do construtor)
+class Veiculo {
+  String marca;
+  int ano;
+  List<String> log;
+
+  Veiculo(this.marca, this.ano) : log = [];
+
+  Veiculo.usado(this.marca)
+      : ano = 2010,
+        log = ['1) Lista de inicializadores: ano definido como 2010'] {
+    log.add('2) Corpo do construtor: instruções adicionais executadas');
+  }
+}</script>
+
+<script type="text/x-dart" id="c-veicscr">import 'package:flutter/material.dart';
+import '../models/veiculo.dart';
+
+class OrdemExecucaoScreen extends StatelessWidget {
+  const OrdemExecucaoScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final carro = Veiculo.usado('Toyota');
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('6. Ordem de Execução')),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Card(
+              color: Colors.brown.shade50,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  '${carro.marca} - ${carro.ano}',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text('Ordem real de execução ao criar o objeto:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            ...carro.log.map(
+              (linha) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(linha),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-scaf">import 'package:flutter/material.dart';
+
+class ScaffoldExemploScreen extends StatelessWidget {
+  const ScaffoldExemploScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('7. Estrutura do Scaffold'),
+        backgroundColor: Colors.blue,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.widgets_outlined, size: 64, color: Colors.blueGrey),
+            SizedBox(height: 12),
+            Text(
+              'Este é o "body" do Scaffold:\na área principal de conteúdo.',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('FloatingActionButton pressionado!')),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-cont">import 'package:flutter/material.dart';
+
+class ContadorScreen extends StatefulWidget {
+  const ContadorScreen({super.key});
+
+  @override
+  State<ContadorScreen> createState() => _ContadorScreenState();
+}
+
+class _ContadorScreenState extends State<ContadorScreen> {
+  int _contador = 0;
+
+  void _incrementar() {
+    setState(() {
+      _contador++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('8. StatefulWidget')),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Valor atual:'),
+            Text('$_contador', style: Theme.of(context).textTheme.displayMedium),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementar,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-rc">import 'package:flutter/material.dart';
+
+Widget _chip(String texto, Color cor) {
+  return Container(
+    margin: const EdgeInsets.all(4),
+    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+    decoration: BoxDecoration(color: cor, borderRadius: BorderRadius.circular(8)),
+    child: Text(texto, style: const TextStyle(color: Colors.white)),
+  );
+}
+
+class RowColumnScreen extends StatelessWidget {
+  const RowColumnScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('9. Row x Column')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Row -> eixo principal HORIZONTAL:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Row(children: [
+              _chip('Item 1', Colors.indigo),
+              _chip('Item 2', Colors.indigo),
+              _chip('Item 3', Colors.indigo),
+            ]),
+            const SizedBox(height: 32),
+            const Text('Column -> eixo principal VERTICAL:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _chip('Item A', Colors.teal),
+                _chip('Item B', Colors.teal),
+                _chip('Item C', Colors.teal),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-ma">// Tela informativa: o próprio app já é um MaterialApp com "home"
+// corretamente definido (é assim que ele consegue navegar até aqui).
+// Esta tela explica o que aconteceria SE "home" não existisse.
+import 'package:flutter/material.dart';
+
+class MaterialAppScreen extends StatelessWidget {
+  const MaterialAppScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('10. MaterialApp e a rota inicial')),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Todo MaterialApp precisa saber qual tela mostrar primeiro, '
+              'através de um destes três parâmetros:',
+            ),
+            const SizedBox(height: 12),
+            _linha('home', 'define diretamente o widget da tela inicial.'),
+            _linha('routes', 'mapa de nomes de rota para widgets.'),
+            _linha('onGenerateRoute',
+                'função que gera rotas dinamicamente.'),
+            const SizedBox(height: 20),
+            Card(
+              color: Colors.red.shade50,
+              child: const Padding(
+                padding: EdgeInsets.all(14),
+                child: Text(
+                  'Se nenhum dos três for definido, o app compila '
+                  'normalmente, mas ao rodar exibe uma tela de erro '
+                  '("tela vermelha"), pois não sabe qual conteúdo mostrar.\n\n'
+                  'Este próprio aplicativo só chega até esta tela porque '
+                  'o MaterialApp em main.dart definiu home: HomeScreen().',
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _linha(String nome, String descricao) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(color: Colors.black87, fontSize: 14),
+          children: [
+            TextSpan(
+                text: '$nome: ',
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontFamily: 'monospace')),
+            TextSpan(text: descricao),
+          ],
+        ),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-btn">import 'package:flutter/material.dart';
+
+class BotaoCentralScreen extends StatelessWidget {
+  const BotaoCentralScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('11. Scaffold + Center + Button')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Botão pressionado!')),
+            );
+          },
+          child: const Text('Clique Aqui'),
+        ),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-tf">import 'package:flutter/material.dart';
+
+class TextFieldScreen extends StatelessWidget {
+  const TextFieldScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('12. TextField e labelText')),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Nome',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Toque no campo acima para ver o rótulo "Nome" subir e a '
+              'borda mudar de cor (foco). Digite algo e toque fora para '
+              'ver o rótulo permanecer no topo.',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}</script>
+
+<script type="text/x-dart" id="c-sb">import 'package:flutter/material.dart';
+
+class SpaceBetweenScreen extends StatelessWidget {
+  const SpaceBetweenScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('13. MainAxisAlignment.spaceBetween')),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(Icons.star, size: 40),
+            Icon(Icons.favorite, size: 40),
+            Icon(Icons.thumb_up, size: 40),
+          ],
+        ),
+      ),
+    );
+  }
+}</script>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  /* ---------- Realce de sintaxe Dart ---------- */
+  const RE=/(\/\/[^\n]*)|('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|(@\w+)|\b(\d+(?:\.\d+)?)\b|\b(import|class|extends|final|const|return|if|else|throw|try|catch|super|this|new|required|get|set|static|late|var|true|false|null)\b|\b(void|int|double|String|bool|dynamic|List|Map|[A-Z]\w*)\b/g;
+  function hl(src){
+    let out='',last=0,m;RE.lastIndex=0;
+    while((m=RE.exec(src))){
+      out+=esc(src.slice(last,m.index));
+      const t=esc(m[0]);
+      const cls=m[1]?'c':m[2]?'s':m[3]?'a':m[4]?'n':m[5]?'k':'ty';
+      out+='<span class="'+cls+'">'+t+'</span>';
+      last=RE.lastIndex;
+    }
+    return out+esc(src.slice(last));
+  }
+  document.querySelectorAll('.code[data-src]').forEach(box=>{
+    const src=$(box.dataset.src).textContent.replace(/^\n/,'');
+    box.innerHTML='<div class="code-top"><span>'+esc(box.dataset.file)+'</span><button type="button">Copiar</button></div><pre><code>'+hl(src)+'</code></pre>';
+    const b=box.querySelector('button');
+    b.addEventListener('click',()=>{
+      const done=()=>{b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar',1500)};
+      try{navigator.clipboard.writeText(src).then(done,()=>{b.textContent='Selecione e copie'})}catch(e){b.textContent='Selecione e copie'}
+    });
+  });
+
+  /* ---------- Menu do celular (hero) ---------- */
+  const menu=[
+    ['1. Polimorfismo','Herança e @override','diversity_3','t1'],
+    ['2. Encapsulamento','Campos privados e acesso controlado','lock','t2'],
+    ['3. Parâmetros Nomeados','Construtores com {chaves}','label_important','t3'],
+    ['4. Construtor Nomeado','Inicializações alternativas','badge','t4'],
+    ['5. Regras de Construtores','this(), posicional + nomeado','rule_folder','t5'],
+    ['6. Ordem de Execução','Lista de inicializadores x corpo','timeline','t6'],
+    ['7. Scaffold','AppBar, body e FloatingActionButton','dashboard','t7'],
+    ['8. StatefulWidget','createState() e setState()','refresh','t8'],
+    ['9. Row x Column','Eixo principal (main axis)','view_column','t9'],
+    ['10. MaterialApp','A rota inicial (home)','home','t10'],
+    ['11. Center + Button','Posição, aparência e comportamento','touch_app','t11'],
+    ['12. TextField','Comportamento do labelText','text_fields','t12'],
+    ['13. spaceBetween','Distribuição no eixo principal','space_bar','t13']
+  ];
+  function menuTiles(target,clickable){
+    menu.forEach(([t,s,i,id])=>{
+      const b=document.createElement(clickable?'button':'div');b.className='tile';
+      b.innerHTML='<span class="ms">'+i+'</span><span class="tt"><span class="t1">'+esc(t)+'</span><br><span class="t2">'+esc(s)+'</span></span><span class="ms" style="color:var(--m-var)">chevron_right</span>';
+      if(clickable)b.addEventListener('click',()=>{$(id).scrollIntoView()});
+      target.appendChild(b);
+    });
+  }
+  menuTiles($('heroMenu'),true);
+
+  /* ---------- Progresso ---------- */
+  const KEY='flutter-guia-estudados';
+  let done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){done={}}
+  const topics=[...document.querySelectorAll('.topic')];
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}};
+  function updateProg(){
+    const n=topics.filter(t=>done[t.id]).length;
+    $('progTxt').textContent=n+' de '+topics.length+' tópicos estudados';
+    $('progFill').style.width=(n/topics.length*100)+'%';
+    buildToc();
+  }
+  topics.forEach(t=>{
+    const b=document.createElement('button');b.className='done-btn';
+    const set=()=>{b.setAttribute('aria-pressed',done[t.id]?'true':'false');b.innerHTML='<span class="box">'+(done[t.id]?'✓':'')+'</span>'+(done[t.id]?'Estudado':'Marcar como estudado')};
+    b.addEventListener('click',()=>{done[t.id]=!done[t.id];save();set();updateProg()});
+    set();t.appendChild(b);
+  });
+  const toc=$('toc'),tocBtn=$('tocBtn');
+  function buildToc(){
+    const list=$('tocList');list.innerHTML='';
+    document.querySelectorAll('.part').forEach(p=>{
+      const h=document.createElement('h4');h.textContent=p.dataset.part;list.appendChild(h);
+      const ts=p.querySelectorAll('.topic');
+      if(!ts.length){const a=document.createElement('a');a.href='#revisao';a.textContent='Flashcards e quiz';list.appendChild(a)}
+      ts.forEach(t=>{const a=document.createElement('a');a.href='#'+t.id;a.innerHTML='<span>'+esc(t.dataset.title)+'</span><span class="ck">'+(done[t.id]?'✓':'')+'</span>';list.appendChild(a)});
+    });
+  }
+  const closeToc=()=>{toc.classList.remove('open');tocBtn.setAttribute('aria-expanded','false');tocBtn.textContent='Tópicos'};
+  tocBtn.addEventListener('click',()=>{const o=toc.classList.toggle('open');tocBtn.setAttribute('aria-expanded',o);tocBtn.textContent=o?'Fechar':'Tópicos'});
+  toc.addEventListener('click',e=>{if(e.target.closest('a'))closeToc()});
+  updateProg();
+
+  /* ---------- Segmentados ---------- */
+  function seg(id,cb){
+    const g=$(id);
+    g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));cb(b.dataset.k)});
+    const first=g.querySelector('[aria-pressed="true"]')||g.querySelector('button');cb(first.dataset.k);
+  }
+  function snack(el){el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2200)}
+
+  /* 1. Polimorfismo */
+  [['Pessoa','Ana'],['Estudante','João','ADS'],['Estudante','Maria','Ciber'],['Pessoa','Carlos']].forEach(([tipo,nome,curso])=>{
+    const est=tipo==='Estudante';
+    const d=document.createElement('div');d.className='mcard';
+    d.innerHTML='<span class="avatar" style="background:'+(est?'#3F51B5':'#607D8B')+'"><span class="ms">'+(est?'school':'person')+'</span></span><div><div style="font-size:.86rem">'+(est?'Oi, meu nome é '+nome+' e sou estudante de '+curso+'.':'Olá, meu nome é '+nome+'.')+'</div><div style="font-size:.76rem;color:var(--m-var)">'+tipo+'</div></div>';
+    $('poliList').appendChild(d);
+  });
+
+  /* 2. Encapsulamento */
+  let saldo=1000;
+  function encOp(tipo){
+    const raw=$('encValor').value.replace(/,/g,'.').trim();
+    const v=raw===''?NaN:Number(raw);
+    if(isNaN(v)){$('encErro').textContent='Informe um valor numérico válido.';return}
+    if(v<=0){$('encErro').textContent='Invalid argument(s): O valor do '+(tipo==='d'?'depósito':'saque')+' deve ser positivo.';return}
+    if(tipo==='s'&&v>saldo){$('encErro').textContent='Bad state: Saldo insuficiente.';return}
+    saldo+=tipo==='d'?v:-v;$('encErro').textContent='';$('encValor').value='';
+    $('encSaldo').textContent='Saldo: R$ '+saldo.toFixed(2);
+  }
+  $('encDep').addEventListener('click',()=>encOp('d'));
+  $('encSac').addEventListener('click',()=>encOp('s'));
+
+  /* 3. Produtos */
+  [['Celular',1200],['Fone de Ouvido',150],['Carregador',60],['Capa Protetora',null]].forEach(([n,p])=>{
+    const d=document.createElement('div');d.className='mcard';
+    d.innerHTML='<span class="ms" style="color:var(--m-var)">shopping_bag</span><div style="flex:1;font-size:.9rem">'+n+'</div><b style="font-size:.88rem">'+(p===null?'-':'R$ '+p.toFixed(2))+'</b>';
+    $('prodList').appendChild(d);
+  });
+
+  /* 4. Pacientes */
+  [['Beatriz',42],['Ricardo',35],['Carlos',18],['Fernanda',18]].forEach(([n,i])=>{
+    const d=document.createElement('div');d.className='mcard';
+    d.innerHTML='<span class="avatar" style="background:var(--m-pc);color:var(--m-onpc)"><span class="ms">personal_injury</span></span><div><div style="font-size:.9rem">'+n+'</div><div style="font-size:.78rem;color:var(--m-var)">Idade: '+i+' anos</div></div>';
+    $('pacList').appendChild(d);
+  });
+
+  /* 5. Retângulo */
+  const retDefs={p:[['largura',4],['altura',2]],q:[['lado',3]],e:[['base',2],['escala',3]]};
+  let retK='p';
+  const fmt=n=>{const s=(Math.round(n*10)/10).toFixed(1);return s};
+  function num(v){return Number.isInteger(v)?String(v):String(v)}
+  function retCalc(){
+    const vals={};
+    $('retInputs').querySelectorAll('input').forEach(i=>{vals[i.dataset.n]=i.value===''?null:Number(i.value.replace(',','.'))});
+    let l,a,call;
+    if(retK==='p'){l=vals.largura;a=vals.altura;call='Retangulo('+num(l)+', '+num(a)+')'}
+    else if(retK==='q'){l=a=vals.lado;call='Retangulo.quadrado('+num(l)+')  // vira this('+num(l)+', '+num(l)+')'}
+    else{const e=vals.escala==null?1.0:vals.escala;l=a=vals.base*e;call=vals.escala==null?'Retangulo.comEscala('+num(vals.base)+')  // escala usa o padrão 1.0':'Retangulo.comEscala('+num(vals.base)+', escala: '+num(vals.escala)+')'}
+    if([l,a].some(x=>x==null||isNaN(x))){$('retCall').textContent='Preencha os valores';$('retOut').textContent='';$('retShape').style.width='0';return}
+    $('retCall').textContent=call;
+    $('retOut').textContent='Dimensões: '+fmt(l)+' x '+fmt(a)+' | Área: '+fmt(l*a);
+    const max=Math.max(l,a,1),k=Math.min(220/max,30);
+    $('retShape').style.width=Math.max(4,l*k)+'px';$('retShape').style.height=Math.max(4,a*k)+'px';
+  }
+  seg('retSeg',k=>{
+    retK=k;const box=$('retInputs');box.innerHTML='';
+    retDefs[k].forEach(([n,v])=>{
+      const w=document.createElement('label');w.style.cssText='display:grid;font-size:.82rem;gap:2px;font-family:var(--mono)';
+      w.innerHTML=n+(k==='e'&&n==='escala'?' (opcional)':'')+'<input data-n="'+n+'" value="'+v+'" inputmode="decimal" style="width:110px;font:inherit;font-size:.95rem;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)">';
+      box.appendChild(w);
+    });
+    box.querySelectorAll('input').forEach(i=>i.addEventListener('input',retCalc));
+    retCalc();
+  });
+
+  /* 6. Ordem de execução */
+  $('veicBtn').addEventListener('click',()=>{
+    const st=[...$('veicSteps').children];st.forEach(s=>s.classList.remove('on'));
+    $('veicRes').innerHTML='Toyota - 2010<br>1) Lista de inicializadores: ano definido como 2010<br>2) Corpo do construtor: instruções adicionais executadas';
+    st.forEach((s,i)=>setTimeout(()=>s.classList.add('on'),i*650));
+  });
+
+  /* 7. Scaffold */
+  $('scafFab').addEventListener('click',()=>snack($('scafSnack')));
+
+  /* 8. Contador */
+  let cont=0;
+  $('contFab').addEventListener('click',()=>{
+    const st=[...$('contSteps').children];st.forEach(s=>s.classList.remove('on'));
+    st[0].classList.add('on');
+    setTimeout(()=>st[1].classList.add('on'),250);
+    setTimeout(()=>{st[2].classList.add('on');cont++;$('contVal').textContent=cont},500);
+  });
+
+  /* 9. Row x Column */
+  seg('rcSeg',k=>{
+    const row=k==='row',box=$('rcBox');
+    $('rcLabel').textContent=row?'Row -> eixo principal HORIZONTAL:':'Column -> eixo principal VERTICAL:';
+    box.style.flexDirection=row?'row':'column';
+    const cor=row?'#3F51B5':'#009688',pre=row?['Item 1','Item 2','Item 3']:['Item A','Item B','Item C'];
+    box.innerHTML=pre.map(t=>'<span style="background:'+cor+';color:#fff;border-radius:8px;padding:9px 12px;font-size:.82rem">'+t+'</span>').join('');
+  });
+
+  /* 10. MaterialApp */
+  seg('maSeg',k=>{
+    const s=$('maScr');s.innerHTML='';
+    if(k==='ok'){const ab=document.createElement('div');ab.className='appbar';ab.textContent='Guia de Estudos: Dart & Flutter';s.appendChild(ab);menuTiles(s,false)}
+    else{s.innerHTML='<div class="red-screen">══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞══<br><br>Failed assertion: \'home != null || routes.containsKey(Navigator.defaultRouteName) || onGenerateRoute != null || onUnknownRoute != null\'<br><br>(mensagem resumida; o texto exato varia com a versão do Flutter)</div>'}
+  });
+
+  /* 11. Botão */
+  const btnTxt={
+    fn:'Botão habilitado e com efeito: o toque mostra o SnackBar. É a versão do app do professor.',
+    empty:'Botão habilitado, com aparência normal e animação de toque, mas sem efeito nenhum. A função existe, só está vazia.',
+    null:'Botão desabilitado: o Flutter desenha o botão acinzentado e ignora os toques. Passar null é a forma de desativar um botão.'
+  };
+  let btnK='fn';
+  seg('btnSeg',k=>{btnK=k;$('btnDemo').disabled=k==='null';$('btnExp').textContent=btnTxt[k]});
+  $('btnDemo').addEventListener('click',()=>{if(btnK==='fn')snack($('btnSnack'))});
+
+  /* 13. Laboratório de alinhamento */
+  const MA={start:'flex-start',end:'flex-end',center:'center',spaceBetween:'space-between',spaceAround:'space-around',spaceEvenly:'space-evenly'};
+  const CA={start:'flex-start',end:'flex-end',center:'center',stretch:'stretch',baseline:'baseline'};
+  const lab={w:'row',m:'spaceBetween',c:'center',s:'max'};
+  function fill(id,obj,def){const g=$(id);Object.keys(obj).forEach(k=>{const b=document.createElement('button');b.dataset.k=k;b.textContent=k;b.setAttribute('aria-pressed',k===def?'true':'false');g.appendChild(b)})}
+  fill('labM',MA,'spaceBetween');fill('labC',CA,'center');
+  function labRender(){
+    const row=lab.w==='row',f=$('labFlex'),name=row?'Row':'Column';
+    const baseCol=!row&&lab.c==='baseline';
+    f.style.flexDirection=row?'row':'column';
+    f.style.justifyContent=MA[lab.m];
+    f.style.alignItems=baseCol?'flex-start':CA[lab.c];
+    const str=lab.c==='stretch',max=lab.s==='max';
+    if(row){f.style.width=max?'100%':'fit-content';f.style.height=str?'100%':'fit-content'}
+    else{f.style.height=max?'100%':'fit-content';f.style.width=str?'100%':'fit-content'}
+    $('labTag').textContent=name;$('labTag2').textContent=name;
+    const P=row?['à esquerda','à direita','horizontal']:['no topo','na base','vertical'];
+    const C=row?['no topo','na base','a altura']:['à esquerda','à direita','a largura'];
+    const em={
+      start:'filhos juntos '+P[0]+', com a sobra no fim.',
+      end:'filhos juntos '+P[1]+', com a sobra no início.',
+      center:'filhos agrupados no meio do eixo '+P[2]+'.',
+      spaceBetween:'primeiro filho '+P[0]+', último '+P[1]+', sobra só entre eles.',
+      spaceAround:'margem igual em volta de cada filho; nas pontas fica metade do espaço interno.',
+      spaceEvenly:'todos os espaços iguais, inclusive nas pontas.'
+    };
+    const ec={
+      start:'filhos alinhados '+C[0]+'.',
+      end:'filhos alinhados '+C[1]+'.',
+      center:'filhos centralizados entre si. Repare que o '+name+' só tem '+C[2]+' do maior filho.',
+      stretch:'cada filho ocupa '+C[2]+' inteira disponível, e o '+name+' também.',
+      baseline:row?'os textos ficam apoiados na mesma linha de base, mesmo com tamanhos diferentes.':'num Column o baseline é tratado como start, porque linhas de base são horizontais.'
+    };
+    $('labExpM').textContent=em[lab.m];
+    $('labExpC').textContent=ec[lab.c];
+    $('labExpS').textContent=max?'':'Com mainAxisSize.min o '+name+' encolhe até o tamanho dos filhos. Sem sobra de espaço, trocar o mainAxisAlignment não muda nada.';
+    $('labExpS').style.display=max?'none':'block';
+    let code=name+'(\n  mainAxisAlignment: MainAxisAlignment.'+lab.m+',\n  crossAxisAlignment: CrossAxisAlignment.'+lab.c+',\n';
+    if(lab.c==='baseline')code+='  textBaseline: TextBaseline.alphabetic, // obrigatório com baseline\n';
+    code+='  mainAxisSize: MainAxisSize.'+lab.s+','+(lab.s==='max'?' // padrão':'')+'\n  children: [\n    Text(\'A\', style: TextStyle(fontSize: 14)),\n    Text(\'Bb\', style: TextStyle(fontSize: 30)),\n    Text(\'Cc\', style: TextStyle(fontSize: 20)),\n  ],\n)';
+    $('labCode').innerHTML=hl(code);
+  }
+  seg('labW',k=>{lab.w=k;labRender()});
+  seg('labM',k=>{lab.m=k;labRender()});
+  seg('labC',k=>{lab.c=k;labRender()});
+  seg('labS',k=>{lab.s=k;labRender()});
+
+  /* ---------- Flashcards ---------- */
+  const cards=[
+    ['main() e runApp()','main() é o ponto de partida do programa; runApp() recebe o widget que vira a raiz da interface.'],
+    ['MaterialApp','Widget que configura o app inteiro: título, tema e rota inicial (home, routes ou onGenerateRoute).'],
+    ['Navigator.push','Empilha uma nova tela sobre a atual. Voltar desempilha (pop).'],
+    ['extends','Cria uma subclasse que herda campos e métodos da classe mãe.'],
+    ['@override','Indica que o método ou getter substitui a versão herdada da superclasse.'],
+    ['Polimorfismo','Uma variável do tipo da superclasse executa a versão do método do tipo real do objeto.'],
+    ['super(nome)','Chama o construtor da superclasse, repassando valores.'],
+    ['_campo','Prefixo que torna o membro privado à biblioteca (o arquivo .dart).'],
+    ['{this.nome}','Parâmetro nomeado: passado pelo nome, opcional, a menos que tenha required.'],
+    ['Classe.nome(...)','Construtor nomeado: uma forma alternativa de criar o objeto.'],
+    [': idade = 18','Lista de inicializadores: define campos antes do corpo do construtor rodar.'],
+    [': this(lado, lado)','Construtor que redireciona para outro construtor da mesma classe.'],
+    ['Ordem no construtor','Parâmetros this., lista de inicializadores, super(...) e por fim o corpo { }.'],
+    ['Scaffold','Esqueleto de tela Material com appBar, body e floatingActionButton.'],
+    ['StatefulWidget','Widget com estado mutável guardado num objeto State criado por createState().'],
+    ['setState()','Altera o estado e pede ao Flutter para executar build() de novo.'],
+    ['Row / Column','Row: eixo principal horizontal. Column: eixo principal vertical.'],
+    ['onPressed: null','Botão desabilitado. Já () {} deixa o botão habilitado, mas sem efeito.'],
+    ['labelText','Rótulo que fica dentro do campo vazio e sobe quando há foco ou texto.'],
+    ['spaceBetween','Espaço só entre os filhos; o primeiro e o último encostam nas pontas.'],
+    ['spaceAround x spaceEvenly','spaceAround: margem igual em volta de cada filho, metade nas pontas. spaceEvenly: todos os espaços iguais, inclusive as pontas.'],
+    ['Padrões de Row/Column','mainAxisAlignment.start, crossAxisAlignment.center e mainAxisSize.max.'],
+    ['CrossAxisAlignment.stretch','Força os filhos a ocupar todo o eixo cruzado (largura num Column, altura num Row).'],
+    ['CrossAxisAlignment.baseline','Alinha pela linha de base do texto. Exige textBaseline; num Column vira start.'],
+    ['MainAxisSize.min','O Row/Column ocupa só o tamanho dos filhos, e o mainAxisAlignment perde o efeito.'],
+    ['?? e !','?? usa um valor alternativo se o da esquerda for null. ! afirma que o valor não é null.']
+  ];
+  let ci=0;const card=$('fcCard');
+  function showCard(){const f=card.classList.contains('flip');card.classList.remove('flip');setTimeout(()=>{$('fcTerm').textContent=cards[ci][0];$('fcDef').textContent=cards[ci][1];$('fcCount').textContent=(ci+1)+' / '+cards.length},f?220:0)}
+  card.addEventListener('click',()=>card.classList.toggle('flip'));
+  $('fcPrev').addEventListener('click',()=>{ci=(ci-1+cards.length)%cards.length;showCard()});
+  $('fcNext').addEventListener('click',()=>{ci=(ci+1)%cards.length;showCard()});
+  showCard();
+
+  /* ---------- Quiz ---------- */
+  const qs=[
+    ['O que este código retorna?',"Pessoa p = Estudante('João', 'ADS');\np.saudacao();",['Olá, meu nome é João.','Oi, meu nome é João e sou estudante de ADS.','Erro de compilação'],1,'Polimorfismo: vale o tipo real do objeto (Estudante), e não o tipo declarado (Pessoa).'],
+    ['Com o construtor Produto({this.nome, this.preco}), qual linha não compila?',null,["Produto(nome: 'Celular', preco: 1200)","Produto(nome: 'Capa')","Produto('Celular', 1200)"],2,'Parâmetros entre chaves são nomeados e precisam ser passados pelo nome.'],
+    ['Qual a idade deste paciente?',"Paciente.comIdadeMinima('Carlos').idade",['null','0','18'],2,'A lista de inicializadores do construtor nomeado fixa idade = 18.'],
+    ['Qual a área?','Retangulo.comEscala(5).area',['5.0','25.0','10.0'],1,'Sem escala, vale o padrão 1.0: largura e altura ficam 5.0, e 5.0 x 5.0 = 25.0.'],
+    ['E aqui, quais as dimensões?','Retangulo.comEscala(2, escala: 3)',['2.0 x 3.0','6.0 x 6.0','5.0 x 5.0'],1,'largura = base * escala = 6.0, e altura também.'],
+    ['Em Veiculo.usado, o que roda primeiro?',null,['O corpo { log.add(...) }','A lista de inicializadores : ano = 2010, log = [...]','Depende da ordem em que os campos foram declarados'],1,'A lista de inicializadores sempre roda antes do corpo.'],
+    ['Em Dart, um campo _saldo é privado a quê?',null,['À classe','Ao arquivo (biblioteca)','Ao pacote inteiro'],1,'A privacidade com _ vale para a biblioteca, que normalmente é o arquivo .dart.'],
+    ['O que faz a tela mostrar o novo valor do contador?',null,['_contador++ sozinho','setState()','createState()'],1,'setState() avisa o Flutter de que o estado mudou e dispara um novo build().'],
+    ['Qual é o eixo principal de um Column?',null,['Horizontal','Vertical'],1,'Column empilha os filhos na vertical; Row, na horizontal.'],
+    ['Um ElevatedButton com onPressed: null fica:',null,['Habilitado, sem efeito','Desabilitado','Invisível'],1,'null desativa o botão. Para habilitado sem efeito, usa-se () {}.'],
+    ['MaterialApp sem home, routes e onGenerateRoute:',null,['Não compila','Compila, mas mostra erro ao rodar','Abre uma tela em branco sem erro'],1,'O erro acontece em tempo de execução: a tela vermelha no modo de depuração.'],
+    ['Com MainAxisAlignment.spaceBetween em um Row de três ícones:',null,['Os ícones ficam juntos no centro','O primeiro e o último encostam nas bordas, com espaço só entre eles','Todos os espaços, inclusive as pontas, ficam iguais'],1,'O último caso descreve o spaceEvenly.'],
+    ['Qual é o crossAxisAlignment padrão de um Row?',null,['start','center','stretch'],1,'O padrão é center, e o mainAxisAlignment padrão é start.'],
+    ['Num Column, qual opção faz os filhos ocuparem toda a largura?',null,['MainAxisAlignment.spaceEvenly','CrossAxisAlignment.stretch','MainAxisSize.max'],1,'A largura é o eixo cruzado do Column, e stretch preenche esse eixo.'],
+    ['O que falta neste código para não dar erro?','Row(\n  crossAxisAlignment: CrossAxisAlignment.baseline,\n  children: [...],\n)',['mainAxisSize: MainAxisSize.min','textBaseline: TextBaseline.alphabetic','mainAxisAlignment: MainAxisAlignment.start'],1,'O alinhamento por linha de base precisa saber qual linha de base usar.'],
+    ['Um Row com mainAxisSize: MainAxisSize.min e mainAxisAlignment.spaceBetween:',null,['Espalha os filhos pela tela','Não mostra diferença, pois não há espaço sobrando','Dá erro de compilação'],1,'Com min, o Row encolhe até os filhos; sem sobra, não há o que distribuir.']
+  ];
+  let answered=0,right=0;
+  function buildQuiz(){
+    const box=$('quiz');box.innerHTML='';answered=0;right=0;$('score').textContent='';
+    qs.forEach((q,qi)=>{
+      const d=document.createElement('div');d.className='q';
+      d.innerHTML='<p>'+(qi+1)+'. '+esc(q[0])+'</p>'+(q[1]?'<pre>'+hl(q[1])+'</pre>':'')+'<div class="opts"></div><div class="fb" hidden></div>';
+      const opts=d.querySelector('.opts'),fb=d.querySelector('.fb');
+      q[2].forEach((o,oi)=>{
+        const b=document.createElement('button');b.className='opt';b.textContent=o;
+        if(/[(){}=]/.test(o))b.style.fontFamily='var(--mono)',b.style.fontSize='.85rem';
+        b.addEventListener('click',()=>{
+          if(d.dataset.done)return;d.dataset.done=1;answered++;
+          if(oi===q[3]){b.classList.add('right');right++;fb.textContent='Correto. '+q[4]}
+          else{b.classList.add('wrong');opts.children[q[3]].classList.add('right');fb.textContent='Resposta certa: '+q[2][q[3]]+'. '+q[4]}
+          fb.hidden=false;
+          if(answered===qs.length)$('score').textContent='Você acertou '+right+' de '+qs.length+'.';
+        });
+        opts.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+  }
+  $('quizReset').addEventListener('click',buildQuiz);
+  buildQuiz();
+})();
+</script>
+<script>
+(function(){
+  var root=document.documentElement,mq=window.matchMedia("(prefers-color-scheme: dark)");
+  function atual(){return root.getAttribute("data-theme")||(mq.matches?"dark":"light")}
+  function pintar(){
+    var escuro=atual()==="dark";
+    document.querySelectorAll(".theme-btn").forEach(function(b){
+      b.textContent=escuro?"☀":"☾";
+      b.setAttribute("aria-label",escuro?"Mudar para tema claro":"Mudar para tema escuro");
+      b.title=b.getAttribute("aria-label");
+    });
+  }
+  document.querySelectorAll(".theme-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var novo=atual()==="dark"?"light":"dark";
+      root.setAttribute("data-theme",novo);
+      try{localStorage.setItem("guias-tema",novo)}catch(e){}
+      pintar();
+    });
+  });
+  if(mq.addEventListener)mq.addEventListener("change",pintar);
+  pintar();
+})();
+</script>
+</body>
+</html>
