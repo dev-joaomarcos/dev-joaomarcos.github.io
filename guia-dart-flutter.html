@@ -143,6 +143,7 @@ details.more[open] summary{margin-bottom:-4px}
 /* Demonstração */
 .demo{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;margin:16px 0}
 @media (max-width:620px){.demo{grid-template-columns:1fr}}
+.demo>*{min-width:0}
 .demo-side{font-size:.95rem}
 .demo-side .lbl{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:.9rem}
 .seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
@@ -191,6 +192,31 @@ details.more[open] summary{margin-bottom:-4px}
 .optlist div:last-child{border-bottom:none}
 .optlist code{background:none;padding:0;color:var(--accent);font-weight:600}
 @media (max-width:480px){.optlist div{grid-template-columns:1fr;gap:2px}}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media (max-width:560px){.cols{grid-template-columns:1fr}}
+.cols>div{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.cols h4{font-size:1.08rem;margin-bottom:4px}
+.lines{background:var(--code-bg);border-radius:10px;padding:8px 0;margin:12px 0;overflow-x:auto}
+.ln{display:block;width:100%;min-width:max-content;text-align:left;background:none;border:none;border-left:3px solid transparent;color:var(--code-ink);font-family:var(--mono);font-size:.8rem;line-height:1.55;padding:2px 14px 2px 8px;white-space:pre;cursor:pointer}
+.ln:hover{background:rgba(255,255,255,.06)}
+.ln .num{color:#5F6E6A;display:inline-block;width:1.8em;user-select:none}
+.ln.sel{background:rgba(79,194,186,.18);border-left-color:#4FC2BA}
+.ln.right{background:rgba(95,203,152,.22);border-left-color:#5FCB98}
+.ln.wrong{background:rgba(240,180,92,.22);border-left-color:#F0B45C}
+.explain{background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:.93rem;min-height:3.2em}
+.hl-on{outline:3px solid #F0B45C;outline-offset:3px;border-radius:6px}
+.ex{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:14px 0}
+.ex-head{display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:.95rem}
+.ex-head span{color:var(--muted);font-weight:400;font-size:.85rem}
+.ex .fb{font-size:.92rem;margin-top:8px}
+.ctrl2{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;font-size:.9rem;margin-bottom:6px}
+.ctrl2 input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.ctrl2 output{font-family:var(--mono);font-weight:600}
+.cpd-frame{height:230px;border:1px solid var(--line);border-radius:10px;background:var(--m-surface);display:flex;overflow:hidden;margin-top:10px}
+.cpd-frame.center{align-items:center;justify-content:center}
+.cpd-box{background:#7E57C2;flex:none;display:flex;align-items:flex-start;justify-content:flex-start;transition:all .15s;overflow:hidden}
+.cpd-box span{background:#EDE7F6;color:#1B1B21;font-family:Roboto,system-ui,sans-serif;font-size:14px;align-self:stretch;flex:1;min-width:0}
 /* Flashcards e quiz */
 .fc{perspective:1000px;margin:16px 0}
 .fc-card{position:relative;min-height:180px;cursor:pointer;transition:transform .45s;transform-style:preserve-3d;border:none;background:none;width:100%;padding:0;text-align:left}
@@ -224,7 +250,7 @@ footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
 <header class="wrap hero">
   <div>
     <h1>Dart &amp; Flutter</h1>
-    <p class="sub">Guia de estudo montado sobre o app do professor. Cada tópico traz a ideia central, o código, uma demonstração que funciona aqui mesmo e as explicações.</p>
+    <p class="sub">Guia de estudo que reúne o resumo para a prova e o app do professor. Cada tópico traz a ideia central, o código, uma demonstração que funciona aqui mesmo e as explicações.</p>
     <p class="hint">O celular reproduz o menu do app. Toque em um item para ir direto ao tópico. As caixas amarelas marcam pontos do material que merecem correção ou complemento.</p>
   </div>
   <div class="phone" aria-label="Reprodução do menu do aplicativo">
@@ -248,9 +274,132 @@ footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
 
 <main class="wrap">
 
+<!-- ============ PARTE 1: FUNDAMENTOS ============ -->
+<section class="part" data-part="Parte 1: Fundamentos">
+  <div class="part-head"><div class="n">Parte 1</div><h2>Fundamentos</h2><p>Os conceitos básicos do resumo para a prova, do que é o Flutter até orientação a objetos.</p></div>
+
+  <div class="note sum"><b class="t">Foco da prova</b><p>Segundo o resumo, não será preciso escrever código do zero. O que cai é <strong>interpretar código pronto</strong>: reconhecer widgets e o que fazem, identificar Row/Column e alinhamentos, entender Stateless/Stateful e <code>setState()</code>, encontrar erros e dominar os conceitos de orientação a objetos. A Parte 5 tem exercícios exatamente nesse formato.</p></div>
+
+  <article class="topic" id="f1" data-title="Flutter, Dart e widgets">
+    <div class="topic-head"><div class="file">resumo, seção 1</div><h3>Flutter, Dart e widgets</h3></div>
+    <p class="idea"><strong>Dart</strong> é a linguagem de programação. <strong>Flutter</strong> é o framework que usa Dart para criar apps e interfaces.</p>
+    <p>No Flutter, praticamente tudo o que aparece na tela é um <strong>widget</strong>, ou seja, um componente da interface. Uma tela inteira é uma árvore de widgets, um dentro do outro.</p>
+    <div class="optlist">
+      <div><code>Text</code><span>Mostra um texto.</span></div>
+      <div><code>Row</code><span>Organiza elementos na horizontal.</span></div>
+      <div><code>Column</code><span>Organiza elementos na vertical.</span></div>
+      <div><code>Container</code><span>Área que pode receber tamanho, margem, cor, decoração etc.</span></div>
+      <div><code>Padding</code><span>Cria espaçamento ao redor de um elemento.</span></div>
+      <div><code>Center</code><span>Centraliza um widget.</span></div>
+      <div><code>Scaffold</code><span>Estrutura básica de uma tela.</span></div>
+      <div><code>AppBar</code><span>Barra superior da tela.</span></div>
+      <div><code>ElevatedButton</code><span>Botão com elevação (sombra).</span></div>
+      <div><code>TextField</code><span>Campo de entrada de texto.</span></div>
+    </div>
+  </article>
+
+  <article class="topic" id="f2" data-title="Estrutura básica de um app">
+    <div class="topic-head"><div class="file">resumo, seções 2 e 3</div><h3>Estrutura básica de um app</h3></div>
+    <p class="idea">Todo app segue o mesmo caminho: <code>main()</code> chama <code>runApp()</code>, que recebe o widget raiz, que monta o <code>MaterialApp</code> com a tela inicial em <code>home</code>.</p>
+    <div class="code" data-src="c-base" data-file="exemplo do resumo"></div>
+    <div class="optlist">
+      <div><code>import</code><span>Traz os recursos do Flutter (os widgets do Material).</span></div>
+      <div><code>main()</code><span>Ponto inicial da execução.</span></div>
+      <div><code>runApp()</code><span>Inicia a aplicação com o widget raiz.</span></div>
+      <div><code>MaterialApp</code><span>Estrutura geral do app; <code>home</code> indica a tela inicial.</span></div>
+      <div><code>Scaffold</code><span>Estrutura da tela: <code>appBar</code> em cima e <code>body</code> com o conteúdo principal.</span></div>
+    </div>
+    <div class="note warn"><b class="t">Erro no código do resumo</b><p>O <code>main()</code> usa <code>runApp(const MeuApp())</code>, mas a classe <code>MeuApp</code> não declara um construtor <code>const</code>. Sem ele, o Dart cria um construtor padrão comum, e a palavra <code>const</code> na chamada gera <strong>erro de compilação</strong>. A correção é a mesma que o app do professor usa:</p><p><code>const MeuApp({super.key});</code> logo abaixo da linha <code>class MeuApp extends StatelessWidget {</code>.</p><p>A outra saída seria tirar o <code>const</code> da chamada: <code>runApp(MeuApp())</code>.</p></div>
+    <div class="note tip"><b class="t">Mais detalhes</b><p>O <code>main.dart</code> do app do professor está no primeiro tópico da Parte 2, e o Scaffold com <code>appBar</code>, <code>body</code> e botão flutuante tem uma demonstração no tópico 7.</p></div>
+  </article>
+
+  <article class="topic" id="f3" data-title="child x children">
+    <div class="topic-head"><div class="file">resumo, seções 5 e 17</div><h3>child x children</h3></div>
+    <p class="idea"><code>child</code> recebe <strong>um</strong> widget. <code>children</code> recebe <strong>vários</strong>, dentro de uma lista <code>[ ]</code>.</p>
+    <div class="cols">
+      <div><h4>child (um filho)</h4><p style="margin:0;font-size:.93rem">Center, Padding, Container, ElevatedButton, Card, Expanded, SizedBox.</p></div>
+      <div><h4>children (vários)</h4><p style="margin:0;font-size:.93rem">Row, Column, ListView, Stack, Wrap.</p></div>
+    </div>
+    <div class="code" data-src="c-child" data-file="exemplo"></div>
+    <div class="note tip"><b class="t">Truque para a prova</b><p>Viu <code>children:</code>, procure os colchetes <code>[ ]</code> logo depois. Viu <code>child:</code>, deve vir um único widget, sem colchetes. Trocar um pelo outro (por exemplo, <code>Row(child: ...)</code> ou <code>Center(children: ...)</code>) é um dos erros mais comuns em questões de "o que está errado".</p></div>
+  </article>
+
+  <article class="topic" id="f4" data-title="Center, Padding e Container">
+    <div class="topic-head"><div class="file">resumo, seção 7</div><h3>Center, Padding e Container</h3></div>
+    <p class="idea"><code>Center</code> posiciona, <code>Padding</code> afasta o conteúdo das bordas e <code>Container</code> dá tamanho e aparência a uma área.</p>
+    <div class="demo" style="grid-template-columns:1fr">
+      <div class="demo-side">
+        <div class="lbl">Ajuste e veja</div>
+        <div class="ctrl2"><label for="cpdW">Container width</label><output id="oW"></output><input type="range" id="cpdW" min="60" max="240" value="200"></div>
+        <div class="ctrl2"><label for="cpdH">Container height</label><output id="oH"></output><input type="range" id="cpdH" min="40" max="160" value="100"></div>
+        <div class="ctrl2"><label for="cpdP">Padding (EdgeInsets.all)</label><output id="oP"></output><input type="range" id="cpdP" min="0" max="40" value="20"></div>
+        <label style="display:flex;gap:8px;align-items:center;font-size:.92rem;margin:6px 0"><input type="checkbox" id="cpdC" checked style="width:18px;height:18px;accent-color:var(--accent)"> Envolver com <code>Center</code></label>
+        <div class="cpd-frame" id="cpdFrame"><div class="cpd-box" id="cpdBox"><span id="cpdTxt">Olá</span></div></div>
+        <p style="font-size:.8rem;color:var(--muted);margin:6px 0 0">Área roxa: o Container. Área clara dentro dele: onde o texto fica depois do espaçamento do Padding.</p>
+        <div class="code"><div class="code-top"><span>código equivalente</span></div><pre><code id="cpdCode"></code></pre></div>
+      </div>
+    </div>
+    <div class="note warn"><b class="t">Ajuste fino</b><p>O resumo diz que o Container serve para "agrupar elementos". Ele recebe só um <code>child</code>. Para agrupar vários, coloca-se um <code>Row</code> ou <code>Column</code> dentro dele. O Container também tem a propriedade <code>padding</code> própria, então muitas vezes dispensa o widget <code>Padding</code>.</p></div>
+  </article>
+
+  <article class="topic" id="f5" data-title="Stateless x Stateful, build e BuildContext">
+    <div class="topic-head"><div class="file">resumo, seções 8, 9 e 10</div><h3>Stateless x Stateful, build() e BuildContext</h3></div>
+    <div class="cols">
+      <div><h4>StatelessWidget</h4><p style="margin:0;font-size:.93rem">O conteúdo não muda enquanto o app é usado. Ex.: um título, um texto fixo, um ícone.</p></div>
+      <div><h4>StatefulWidget</h4><p style="margin:0;font-size:.93rem">Tem um estado que pode mudar. Ex.: contador, caixa marcada, item selecionado, saldo.</p></div>
+    </div>
+    <ul>
+      <li><strong><code>build()</code>:</strong> descreve a interface do widget e retorna uma árvore de widgets. Roda de novo sempre que a tela precisa ser atualizada.</li>
+      <li><strong><code>BuildContext</code>:</strong> representa a posição do widget dentro da árvore. É por ele que se acessa o que está acima, como em <code>Theme.of(context)</code>, <code>Navigator.of(context)</code> e <code>ScaffoldMessenger.of(context)</code>.</li>
+      <li><strong><code>setState()</code>:</strong> avisa o Flutter de que o estado mudou e que <code>build()</code> precisa rodar de novo. Existe só dentro da classe <code>State</code> de um StatefulWidget. A demonstração está no tópico 8.</li>
+    </ul>
+    <div class="note warn"><b class="t">Cuidado com o exemplo do resumo</b><p>O trecho <code>int contador = 0;</code> seguido de <code>setState(...)</code> só funciona se <code>contador</code> for um <strong>campo da classe State</strong>, como no app do professor (<code>int _contador = 0;</code>). Se a variável for criada dentro do <code>build()</code>, ela volta a 0 em toda reconstrução, e o contador nunca sai do lugar.</p></div>
+  </article>
+
+  <article class="topic" id="f6" data-title="Variáveis e tipos">
+    <div class="topic-head"><div class="file">resumo, seção 11</div><h3>Variáveis e tipos</h3></div>
+    <div class="optlist">
+      <div><code>String</code><span>Texto: <code>'Ana'</code></span></div>
+      <div><code>int</code><span>Número inteiro: <code>42</code></span></div>
+      <div><code>double</code><span>Número decimal: <code>9.90</code></span></div>
+      <div><code>bool</code><span>Verdadeiro ou falso: <code>true</code>, <code>false</code></span></div>
+      <div><code>var</code><span>O Dart deduz o tipo pelo valor. Depois disso, o tipo fica fixo.</span></div>
+      <div><code>final</code><span>Recebe valor uma única vez, que pode ser calculado durante a execução.</span></div>
+      <div><code>const</code><span>Constante já conhecida na compilação, antes de o app rodar.</span></div>
+    </div>
+    <div class="code" data-src="c-vars" data-file="exemplos"></div>
+    <div class="note tip"><b class="t">final x const em uma frase</b><p>Os dois impedem reatribuição. A diferença é <strong>quando</strong> o valor é conhecido: <code>final</code> aceita algo que só se sabe com o app rodando (como a hora atual), e <code>const</code> exige um valor fixo já no código. Por isso widgets que nunca mudam, como <code>const Text('Olá')</code>, podem ser <code>const</code>.</p></div>
+  </article>
+
+  <article class="topic" id="f7" data-title="Null safety e interpolação">
+    <div class="topic-head"><div class="file">resumo, seções 12 e 13</div><h3>Null safety e interpolação</h3></div>
+    <p class="idea">Por padrão, uma variável em Dart não aceita <code>null</code>. O <code>?</code> depois do tipo libera.</p>
+    <div class="code" data-src="c-null" data-file="null safety"></div>
+    <p>O app do professor usa isso no tópico 3 (<code>String? nome</code>, <code>??</code> e <code>!</code>).</p>
+    <p><strong>Interpolação</strong> coloca valores dentro de textos. Use <code>$</code> para uma variável simples e <code>${ }</code> para qualquer expressão.</p>
+    <div class="code" data-src="c-interp" data-file="interpolação"></div>
+    <div class="note warn"><b class="t">Pegadinha clássica</b><p><code>'$pessoa.nome'</code> só interpola <code>pessoa</code> e depois escreve ".nome" como texto, resultando em algo como "Instance of 'Pessoa'.nome". Para acessar uma propriedade ou fazer uma conta, as chaves são obrigatórias: <code>'${pessoa.nome}'</code>.</p></div>
+  </article>
+
+  <article class="topic" id="f8" data-title="Orientação a objetos">
+    <div class="topic-head"><div class="file">resumo, seções 14 e 15</div><h3>Orientação a objetos</h3></div>
+    <div class="optlist">
+      <div><code>Classe</code><span>Modelo (molde) para criar objetos.</span></div>
+      <div><code>Objeto</code><span>Uma instância de uma classe, criada a partir do molde.</span></div>
+      <div><code>Construtor</code><span>Inicializa o objeto no momento da criação. Detalhes nos tópicos 3 a 6.</span></div>
+      <div><code>Encapsulamento</code><span>Controla e protege o acesso aos dados internos. Ver tópico 2.</span></div>
+      <div><code>Herança</code><span>Uma classe aproveita características de outra, com <code>extends</code>. Ver tópico 1.</span></div>
+      <div><code>Polimorfismo</code><span>Objetos relacionados respondem de formas diferentes à mesma operação. Ver tópico 1.</span></div>
+      <div><code>@override</code><span>Marca que um método herdado está sendo sobrescrito (redefinido).</span></div>
+    </div>
+    <div class="code" data-src="c-oop" data-file="exemplo do resumo"></div>
+    <p>Na linha <code>Animal a = Cachorro();</code>, a variável é do tipo <code>Animal</code>, mas o objeto é um <code>Cachorro</code>. Chamar <code>a.emitirSom()</code> imprime "Au au": isso é polimorfismo.</p>
+  </article>
+</section>
+
 <!-- ============ PARTE 1 ============ -->
-<section class="part" data-part="Parte 1: Estrutura do app">
-  <div class="part-head"><div class="n">Parte 1</div><h2>Estrutura do app</h2><p>Por onde o aplicativo começa e como o menu leva a cada tela.</p></div>
+<section class="part" data-part="Parte 2: Estrutura do app">
+  <div class="part-head"><div class="n">Parte 2</div><h2>Estrutura do app</h2><p>Por onde o aplicativo começa e como o menu leva a cada tela.</p></div>
 
   <article class="topic" id="e1" data-title="Ponto de entrada (main.dart)">
     <div class="topic-head"><div class="file">lib/main.dart</div><h3>Ponto de entrada</h3></div>
@@ -281,8 +430,8 @@ footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
 </section>
 
 <!-- ============ PARTE 2 ============ -->
-<section class="part" data-part="Parte 2: Dart e orientação a objetos">
-  <div class="part-head"><div class="n">Parte 2</div><h2>Dart e orientação a objetos</h2><p>Os modelos em <code>lib/models/</code> concentram as regras de cada conceito. As telas correspondentes apenas exibem o resultado.</p></div>
+<section class="part" data-part="Parte 3: Dart e orientação a objetos">
+  <div class="part-head"><div class="n">Parte 3</div><h2>Dart e orientação a objetos</h2><p>Os modelos em <code>lib/models/</code> concentram as regras de cada conceito. As telas correspondentes apenas exibem o resultado.</p></div>
 
   <article class="topic" id="t1" data-title="Polimorfismo">
     <div class="topic-head"><div class="file">models/pessoa.dart + screens/polimorfismo_screen.dart</div><h3>1. Polimorfismo</h3></div>
@@ -453,8 +602,8 @@ footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
 </section>
 
 <!-- ============ PARTE 3 ============ -->
-<section class="part" data-part="Parte 3: Widgets do Flutter">
-  <div class="part-head"><div class="n">Parte 3</div><h2>Widgets do Flutter</h2><p>Estrutura de tela, estado, layout e campos de entrada.</p></div>
+<section class="part" data-part="Parte 4: Widgets do Flutter">
+  <div class="part-head"><div class="n">Parte 4</div><h2>Widgets do Flutter</h2><p>Estrutura de tela, estado, layout e campos de entrada.</p></div>
 
   <article class="topic" id="t7" data-title="Scaffold">
     <div class="topic-head"><div class="file">screens/scaffold_screen.dart</div><h3>7. Scaffold</h3></div>
@@ -682,8 +831,60 @@ footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
   </article>
 </section>
 
+<!-- ============ PARTE 5: TREINO ============ -->
+<section class="part" data-part="Parte 5: Treino para a prova">
+  <div class="part-head"><div class="n">Parte 5</div><h2>Treino para a prova</h2><p>Leitura e correção de código pronto, que é o formato que o resumo indica para a prova.</p></div>
+
+  <article class="topic" id="p1" data-title="Como analisar um código">
+    <div class="topic-head"><div class="file">resumo, seção 16</div><h3>Como analisar um código</h3></div>
+    <p class="idea">Leia de fora para dentro: primeiro o widget externo, depois o que está dentro dele, nível por nível.</p>
+    <p>Toque em cada linha para ver o que ela faz e onde aparece na tela.</p>
+    <div class="demo">
+      <div>
+        <div class="lines" id="anLines"></div>
+        <div class="explain" id="anExp">Toque em uma linha do código.</div>
+      </div>
+      <div class="phone sm"><div class="scr" id="anScr" style="display:flex;flex-direction:column">
+        <div id="anCol" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 16px;gap:10px">
+          <div id="anTxt" style="font-size:.95rem">Login</div>
+          <div id="anTf" style="align-self:stretch;border-bottom:1px solid var(--m-outline);height:34px"></div>
+          <button class="mbtn elev" id="anBtn" type="button">Entrar</button>
+        </div>
+      </div></div>
+    </div>
+    <div class="note tip"><b class="t">Repare</b><p>O <code>Text</code> e o botão aparecem centralizados na horizontal mesmo sem nenhuma instrução para isso. É o <code>crossAxisAlignment</code> padrão da Column, que é <code>center</code>. Já o <code>TextField</code> ocupa toda a largura disponível por conta própria.</p></div>
+  </article>
+
+  <article class="topic" id="p2" data-title="Encontre o erro">
+    <div class="topic-head"><div class="file">resumo, seção 17</div><h3>Encontre o erro</h3></div>
+    <p class="idea">Em cada trecho, toque na linha que tem o problema.</p>
+    <p style="font-size:.92rem;color:var(--muted)">Os tipos de erro listados no resumo: <code>child</code>/<code>children</code> trocados, parênteses, chaves ou colchetes faltando, tipos incompatíveis, <code>null</code> sem <code>?</code>, propriedade no widget errado e problemas na árvore de widgets.</p>
+    <div id="errList"></div>
+    <p class="score" id="errScore" style="font-size:1.1rem"></p>
+    <button class="btn" id="errReset" type="button">Recomeçar exercícios</button>
+  </article>
+</section>
+
 <!-- ============ REVISÃO ============ -->
 <section class="part" data-part="Revisão" id="revisao">
+  <div class="part-head"><div class="n">Revisão</div><h2>Revisão relâmpago</h2><p>Se aparecer na prova, pense imediatamente:</p></div>
+  <div class="optlist" style="margin-bottom:40px">
+    <div><code>Flutter</code><span>Framework para criar apps e interfaces</span></div>
+    <div><code>Dart</code><span>Linguagem usada pelo Flutter</span></div>
+    <div><code>Widget</code><span>Componente da interface</span></div>
+    <div><code>Row / Column</code><span>Horizontal / vertical</span></div>
+    <div><code>Scaffold</code><span>Estrutura básica da tela</span></div>
+    <div><code>AppBar / body</code><span>Barra superior / conteúdo principal</span></div>
+    <div><code>Center / Padding</code><span>Centralização / espaçamento</span></div>
+    <div><code>child / children</code><span>Um filho / vários filhos em lista</span></div>
+    <div><code>Stateless / Stateful</code><span>Estado não muda / estado pode mudar</span></div>
+    <div><code>setState()</code><span>Atualiza o estado e reconstrói a interface</span></div>
+    <div><code>build()</code><span>Constrói e descreve a interface</span></div>
+    <div><code>BuildContext</code><span>Posição do widget na árvore</span></div>
+    <div><code>?</code><span>Pode ser null</span></div>
+    <div><code>extends / @override</code><span>Herança / sobrescrita</span></div>
+    <div><code>main() / runApp()</code><span>Início do programa / inicia a aplicação</span></div>
+  </div>
   <div class="part-head"><div class="n">Revisão</div><h2>Flashcards</h2><p>Toque no cartão para ver a resposta.</p></div>
   <div class="fc">
     <button class="fc-card" id="fcCard" aria-live="polite">
@@ -708,6 +909,78 @@ footer{color:var(--muted);font-size:.85rem;padding:40px 0 60px}
 <footer class="wrap">Baseado no material "Guia de Estudos: Dart &amp; Flutter, código completo". As demonstrações imitam o comportamento do app em HTML; para a prova, o código de referência é o do professor.</footer>
 
 <!-- ============ CÓDIGOS ============ -->
+<script type="text/x-dart" id="c-base">import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MeuApp()); // atenção: veja a nota abaixo
+}
+
+class MeuApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Meu aplicativo')),
+        body: const Center(child: Text('Olá!')),
+      ),
+    );
+  }
+}</script>
+<script type="text/x-dart" id="c-child">// Um único filho: child
+Center(
+  child: Text('Olá'),
+)
+
+// Vários filhos: children + lista
+Column(
+  children: [
+    Text('Nome'),
+    Text('Telefone'),
+    Text('E-mail'),
+  ],
+)</script>
+<script type="text/x-dart" id="c-vars">String nome = 'Ana';
+int idade = 20;
+double altura = 1.65;
+bool ativo = true;
+
+var cidade = 'Campinas'; // o Dart deduz: String
+cidade = 10;             // erro: cidade continua sendo String
+
+final agora = DateTime.now(); // ok: valor definido ao rodar
+const pi = 3.14;              // ok: valor fixo no código
+const hora = DateTime.now();  // erro: não é conhecido na compilação
+
+pi = 3.1416;                  // erro: const não pode ser reatribuída</script>
+<script type="text/x-dart" id="c-null">double valor = null;   // erro: double não aceita null
+double? desconto = null; // ok: o ? permite null
+
+String? apelido;
+print(apelido ?? 'sem apelido'); // ?? usa o valor da direita se for null
+print(apelido?.length);          // ?. só acessa se não for null</script>
+<script type="text/x-dart" id="c-interp">String nome = 'Ana';
+print('Olá, $nome');            // Olá, Ana
+print('Resultado: ${10 + 5}');  // Resultado: 15
+print('Letras: ${nome.length}'); // Letras: 3</script>
+<script type="text/x-dart" id="c-oop">class Animal {
+  void emitirSom() {}
+}
+
+class Cachorro extends Animal {
+  @override
+  void emitirSom() {
+    print('Au au');
+  }
+}
+
+class Pessoa {
+  String nome;
+  Pessoa(this.nome); // construtor
+}
+
+Pessoa pessoa = Pessoa('Matheus'); // objeto (instância)
+Animal a = Cachorro();
+a.emitirSom(); // Au au</script>
 <script type="text/x-dart" id="c-main">// Aplicativo único que reúne, em um menu de navegação, um exemplo
 // prático de cada tópico estudado: polimorfismo, encapsulamento,
 // parâmetros nomeados, construtores nomeados (e suas regras), ordem
@@ -1763,8 +2036,96 @@ class SpaceBetweenScreen extends StatelessWidget {
   seg('labC',k=>{lab.c=k;labRender()});
   seg('labS',k=>{lab.s=k;labRender()});
 
+  /* ---------- Center, Padding, Container ---------- */
+  function cpd(){
+    const w=+$('cpdW').value,hh=+$('cpdH').value,pd=+$('cpdP').value,c=$('cpdC').checked;
+    $('oW').textContent=w;$('oH').textContent=hh;$('oP').textContent=pd;
+    $('cpdFrame').classList.toggle('center',c);
+    const b=$('cpdBox');b.style.width=w+'px';b.style.height=hh+'px';b.style.padding=pd+'px';
+    let inner='Container(\n  width: '+w+',\n  height: '+hh+',\n  color: Colors.deepPurple,\n  child: Padding(\n    padding: EdgeInsets.all('+pd+'),\n    child: Text(\'Olá\'),\n  ),\n)';
+    const code=c?'Center(\n  child: '+inner.replace(/\n/g,'\n  ')+',\n)':inner;
+    $('cpdCode').innerHTML=hl(code);
+  }
+  ['cpdW','cpdH','cpdP','cpdC'].forEach(id=>$(id).addEventListener('input',cpd));
+  cpd();
+
+  /* ---------- Analisar código ---------- */
+  const an=[
+    ['Scaffold(','Scaffold: a estrutura da tela inteira. Este exemplo não tem appBar, só body.','anScr'],
+    ['  body: Column(','body: o conteúdo principal. Column: organiza os filhos na vertical, um embaixo do outro.','anCol'],
+    ['    mainAxisAlignment: MainAxisAlignment.center,','Centraliza no eixo principal da Column, que é o vertical. Por isso o bloco fica no meio da altura da tela.','anCol'],
+    ['    children: [','Column recebe vários filhos, então usa children com uma lista entre colchetes.','anCol'],
+    ["      Text('Login'),",'Text: mostra o texto "Login".','anTxt'],
+    ['      TextField(),','TextField: campo de entrada de texto. Sem decoração, aparece só com a linha de baixo.','anTf'],
+    ['      ElevatedButton(','ElevatedButton: um botão com elevação.','anBtn'],
+    ['        onPressed: () {},','onPressed: a ação executada ao pressionar. Aqui é uma função vazia: o botão fica habilitado, mas não faz nada.','anBtn'],
+    ["        child: Text('Entrar'),",'child: o botão tem um único filho, o texto "Entrar".','anBtn'],
+    ['      ),','Fecha o ElevatedButton.','anBtn'],
+    ['    ],','Fecha a lista de children da Column.','anCol'],
+    ['  ),','Fecha a Column.','anCol'],
+    [')','Fecha o Scaffold.','anScr']
+  ];
+  const anBox=$('anLines');
+  an.forEach((l,i)=>{
+    const b=document.createElement('button');b.type='button';b.className='ln';
+    b.innerHTML='<span class="num">'+(i+1)+'</span>'+hl(l[0]);
+    b.addEventListener('click',()=>{
+      anBox.querySelectorAll('.ln').forEach(x=>x.classList.toggle('sel',x===b));
+      $('anExp').textContent=l[1];
+      ['anScr','anCol','anTxt','anTf','anBtn'].forEach(id=>$(id).classList.toggle('hl-on',id===l[2]));
+    });
+    anBox.appendChild(b);
+  });
+
+  /* ---------- Encontre o erro ---------- */
+  const errs=[
+    ['child no lugar de children',["Row(","  child: Text('Olá'),",")"],1,"Row recebe vários filhos, então usa children com lista: children: [Text('Olá')]."],
+    ['Widget de um filho só',["Center(","  children: [Text('Olá')],",")"],1,"Center aceita um único filho: child: Text('Olá')."],
+    ['Null safety',["String nome = 'Ana';","double preco = null;","bool ativo = true;"],1,'double não aceita null. O correto seria double? preco = null;'],
+    ['Tipo incompatível',["String nome = 'Ana';","int idade = 'vinte';","double altura = 1.65;"],1,"idade é int, mas recebe um texto. Seria int idade = 20; ou String idade = 'vinte';"],
+    ['Propriedade no widget errado',["Column(","  mainAxisAlignment: MainAxisAlignment.center,","  children: [","    Text('Nome', mainAxisAlignment: MainAxisAlignment.start),","  ],",")"],3,'mainAxisAlignment pertence a Row e Column. O Text não tem essa propriedade.'],
+    ['Colchete trocado',["Column(","  children: [","    Text('A'),","    Text('B'),","  ),",")"],4,'A lista aberta com [ precisa ser fechada com ]. Aqui foi fechada com ), o que quebra a estrutura.'],
+    ['setState no lugar errado',["class Tela extends StatelessWidget {","  int contador = 0;","","  void somar() {","    setState(() { contador++; });","  }","}"],4,'setState() só existe na classe State de um StatefulWidget. A tela precisaria ser StatefulWidget, com o contador dentro da classe State.'],
+    ['O erro do próprio resumo',["void main() {","  runApp(const MeuApp());","}","","class MeuApp extends StatelessWidget {","  @override","  Widget build(BuildContext context) { /* ... */ }","}"],1,'const MeuApp() exige um construtor const na classe, que não foi declarado. Faltou const MeuApp({super.key}); dentro da classe (ou tirar o const da chamada).']
+  ];
+  let errOk=0,errDone=0;
+  function buildErr(){
+    const box=$('errList');box.innerHTML='';errOk=0;errDone=0;$('errScore').textContent='';
+    errs.forEach((e,ei)=>{
+      const d=document.createElement('div');d.className='ex';
+      d.innerHTML='<div class="ex-head">'+(ei+1)+'. Qual linha tem o erro?</div><div class="lines"></div><div class="fb" hidden></div>';
+      const L=d.querySelector('.lines'),fb=d.querySelector('.fb');
+      e[1].forEach((t,li)=>{
+        const b=document.createElement('button');b.type='button';b.className='ln';
+        b.innerHTML='<span class="num">'+(li+1)+'</span>'+(t?hl(t):' ');
+        b.addEventListener('click',()=>{
+          if(d.dataset.done)return;d.dataset.done=1;errDone++;
+          if(li===e[2]){b.classList.add('right');errOk++;fb.innerHTML='<strong style="color:var(--ok)">Isso: '+esc(e[0])+'.</strong> '+esc(e[3])}
+          else{b.classList.add('wrong');L.children[e[2]].classList.add('right');fb.innerHTML='<strong style="color:var(--warn)">O erro está na linha '+(e[2]+1)+' ('+esc(e[0])+').</strong> '+esc(e[3])}
+          fb.hidden=false;
+          if(errDone===errs.length)$('errScore').textContent='Você encontrou '+errOk+' de '+errs.length+' erros.';
+        });
+        L.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+  }
+  $('errReset').addEventListener('click',buildErr);
+  buildErr();
+
   /* ---------- Flashcards ---------- */
   const cards=[
+    ['Flutter x Dart','Dart é a linguagem de programação; Flutter é o framework que usa Dart para criar interfaces.'],
+    ['child x children','child: um único filho. children: vários filhos, dentro de uma lista [ ].'],
+    ['Container','Área com tamanho, margem, cor e decoração. Recebe um único child.'],
+    ['Padding','Adiciona espaçamento ao redor do conteúdo, com EdgeInsets.'],
+    ['build()','Descreve a interface e retorna uma árvore de widgets.'],
+    ['BuildContext','Posição do widget na árvore. Usado em Theme.of(context), Navigator.of(context) etc.'],
+    ['var','O tipo é deduzido pelo valor e depois fica fixo.'],
+    ['final x const','final: valor definido uma vez, pode ser calculado ao rodar. const: valor fixo, conhecido na compilação.'],
+    ['double?','O ? indica que a variável pode receber null.'],
+    ["'$nome' e '${expr}'",'Interpolação: $ para variável simples, ${ } para expressões e propriedades.'],
+    ['Classe x objeto','Classe é o molde; objeto é uma instância criada a partir dele.'],
     ['main() e runApp()','main() é o ponto de partida do programa; runApp() recebe o widget que vira a raiz da interface.'],
     ['MaterialApp','Widget que configura o app inteiro: título, tema e rota inicial (home, routes ou onGenerateRoute).'],
     ['Navigator.push','Empilha uma nova tela sobre a atual. Voltar desempilha (pop).'],
@@ -1801,6 +2162,12 @@ class SpaceBetweenScreen extends StatelessWidget {
 
   /* ---------- Quiz ---------- */
   const qs=[
+    ['Qual widget organiza os filhos na vertical?',null,['Row','Column','Center'],1,'Column é vertical; Row é horizontal.'],
+    ['Qual destes usa children?',null,['Center','Padding','Row'],2,'Row e Column recebem vários filhos; Center e Padding recebem um child.'],
+    ['O que este código imprime?',"int a = 10;\nprint('Resultado: ${a + 5}');",['Resultado: a + 5','Resultado: 15','Resultado: 105'],1,'Dentro de ${ } a expressão é calculada antes de entrar no texto.'],
+    ['Qual declaração aceita null?',null,['double valor','double? valor','final double valor'],1,'O ? depois do tipo indica que a variável pode ser null.'],
+    ['Qual linha dá erro?',null,['final agora = DateTime.now();','const agora = DateTime.now();','var agora = DateTime.now();'],1,'const exige valor conhecido na compilação, e a hora atual só existe com o app rodando.'],
+    ['O que o BuildContext representa?',null,['O estado do widget','A posição do widget na árvore','O tema do aplicativo'],1,'É por meio dele que se acessa o que está acima na árvore, como o tema e o Navigator.'],
     ['O que este código retorna?',"Pessoa p = Estudante('João', 'ADS');\np.saudacao();",['Olá, meu nome é João.','Oi, meu nome é João e sou estudante de ADS.','Erro de compilação'],1,'Polimorfismo: vale o tipo real do objeto (Estudante), e não o tipo declarado (Pessoa).'],
     ['Com o construtor Produto({this.nome, this.preco}), qual linha não compila?',null,["Produto(nome: 'Celular', preco: 1200)","Produto(nome: 'Capa')","Produto('Celular', 1200)"],2,'Parâmetros entre chaves são nomeados e precisam ser passados pelo nome.'],
     ['Qual a idade deste paciente?',"Paciente.comIdadeMinima('Carlos').idade",['null','0','18'],2,'A lista de inicializadores do construtor nomeado fixa idade = 18.'],
