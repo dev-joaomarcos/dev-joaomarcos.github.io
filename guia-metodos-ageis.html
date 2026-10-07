@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("guias-tema");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Métodos Ágeis: guia de estudo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F4F5; --surface:#FFFFFF; --ink:#22171D; --muted:#6B5D64; --line:#E4D9DE;
+  --accent:#8A2E66; --accent-soft:#F6E4EF;
+  --ok:#1F7A55; --ok-soft:#E0F3EA;
+  --warn:#995400; --warn-soft:#FFF1DB; --warn-line:#EBC27A;
+  --po:#C2410C; --sm:#0E7490; --dev:#4D7C0F;
+  --font:"Source Sans 3",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  box-sizing:border-box;color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161114; --surface:#211A1E; --ink:#EEE6EA; --muted:#A8999F; --line:#3A2E34;
+    --accent:#E78BBE; --accent-soft:#3A1F2F;
+    --ok:#5FCB98; --ok-soft:#14302A;
+    --warn:#F0B45C; --warn-soft:#2D2313; --warn-line:#6A4C1C;
+    --po:#FB923C; --sm:#22D3EE; --dev:#A3E635;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161114; --surface:#211A1E; --ink:#EEE6EA; --muted:#A8999F; --line:#3A2E34;
+  --accent:#E78BBE; --accent-soft:#3A1F2F;
+  --ok:#5FCB98; --ok-soft:#14302A;
+  --warn:#F0B45C; --warn-soft:#2D2313; --warn-line:#6A4C1C;
+  --po:#FB923C; --sm:#22D3EE; --dev:#A3E635;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:740px;margin:0 auto;padding-left:20px;padding-right:20px}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.12;margin:0;font-weight:800}
+p{margin:0 0 .9em}
+strong{font-weight:700}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.on-accent{color:#fff}
+:root[data-theme="dark"] .on-accent{color:#161114}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .on-accent{color:#161114}}
+
+/* Topo */
+.back{display:inline-block;padding-top:16px;color:var(--accent);font-weight:600;font-size:.92rem;text-decoration:none}
+.hero{padding-top:30px;padding-bottom:26px}
+.hero h1{font-size:clamp(2.6rem,10vw,4.2rem);letter-spacing:-.02em}
+.hero .sub{color:var(--muted);font-size:1.08rem;margin-top:10px;max-width:36em}
+.loop{display:flex;flex-wrap:wrap;gap:6px;margin-top:22px}
+.loop span{border:1.5px solid var(--accent);color:var(--accent);border-radius:999px;padding:4px 12px;font-weight:600;font-size:.9rem;opacity:0;animation:pop .4s ease forwards}
+.loop span:nth-child(2){animation-delay:.12s}.loop span:nth-child(3){animation-delay:.24s}.loop span:nth-child(4){animation-delay:.36s}.loop span:nth-child(5){animation-delay:.48s}.loop span:nth-child(6){animation-delay:.6s}
+.loop span:last-child{background:var(--accent);color:var(--surface)}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+.hero-meta{color:var(--muted);font-size:.93rem;margin-top:16px}
+
+/* Barra fixa */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:10px;height:56px}
+.prog{flex:1;min-width:0}
+.prog-txt{font-size:.85rem;color:var(--muted)}
+.prog-track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.92rem}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:38px;height:36px;display:inline-grid;place-items:center;cursor:pointer;font-size:1.05rem;line-height:1;flex:none}
+.theme-btn:hover{border-color:var(--accent)}
+.toc{display:none;position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 56px);bottom:0;background:var(--bg);z-index:19;overflow-y:auto;padding:16px 0 calc(32px + env(safe-area-inset-bottom,0px))}
+.toc.open{display:block}
+.toc h4{font-family:var(--font);font-size:.95rem;margin:18px 0 6px;color:var(--muted);font-weight:700}
+.toc a{display:flex;justify-content:space-between;gap:10px;padding:8px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a .ck{color:var(--ok);font-weight:700}
+
+/* Partes e tópicos */
+.part{margin-top:56px}
+.part-head{margin-bottom:22px}
+.part-head .n{color:var(--accent);font-weight:700;font-size:.9rem;letter-spacing:.02em}
+.part-head h2{font-size:2.05rem;letter-spacing:-.01em}
+.part-head p{color:var(--muted);margin-top:6px}
+.topic{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 20px 18px;margin-bottom:18px}
+.topic-head{margin-bottom:12px}
+.topic-head .src{font-size:.8rem;color:var(--accent);font-weight:600}
+.topic-head h3{font-size:1.55rem;margin-top:2px}
+.topic ul,.topic ol{padding-left:1.2em;margin:0 0 .9em}
+.topic li{margin-bottom:.35em}
+.idea{font-size:1.1rem;border-left:3px solid var(--accent);padding-left:12px;margin:0 0 14px}
+.done-btn{margin-top:10px;display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px;font-size:.86rem;color:var(--muted);cursor:pointer}
+.done-btn[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.done-btn .box{width:14px;height:14px;border:1.5px solid currentColor;border-radius:3px;display:inline-grid;place-items:center;font-size:11px;line-height:1}
+h4.sub-h{font-size:1.15rem;margin:20px 0 8px}
+
+/* Componentes */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.cols.three{grid-template-columns:repeat(3,1fr)}
+@media (max-width:560px){.cols,.cols.three{grid-template-columns:1fr}}
+.cols>div{border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.95rem}
+.cols h4{font-size:1.1rem;margin-bottom:4px}
+.cols p:last-child,.cols ul:last-child{margin-bottom:0}
+.optlist{display:grid;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:14px 0}
+.optlist div{display:grid;grid-template-columns:9.5em 1fr;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:.95rem;align-items:baseline}
+.optlist div:last-child{border-bottom:none}
+.optlist b{color:var(--accent)}
+@media (max-width:480px){.optlist div{grid-template-columns:1fr;gap:2px}}
+.vs{display:grid;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:14px 0;font-size:.93rem}
+.vs>div{display:grid;grid-template-columns:7.5em 1fr 1fr;border-bottom:1px solid var(--line)}
+.vs>div:last-child{border-bottom:none}
+.vs>div>*{padding:8px 10px}
+.vs>div>*:first-child{font-weight:700;color:var(--muted)}
+.vs .h{background:var(--accent-soft);font-weight:700}
+.vs .h>*{color:var(--ink)!important}
+@media (max-width:480px){.vs>div{grid-template-columns:5.5em 1fr 1fr;font-size:.86rem}.vs>div>*{padding:7px 7px}}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0}
+.flow span{background:var(--accent-soft);border-radius:6px;padding:5px 10px;font-weight:600;font-size:.9rem}
+.flow i{font-style:normal;color:var(--muted)}
+.quote{font-family:var(--display);font-weight:600;font-size:1.15rem;line-height:1.35;margin:16px 0;padding:14px 16px;background:var(--accent-soft);border-radius:10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 13px;font-size:.88rem;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface);font-weight:600}
+.lab{border:2px solid var(--accent);border-radius:14px;padding:14px;margin:16px 0}
+.lab .lbl{font-weight:700;color:var(--accent);font-size:.9rem;margin-bottom:4px}
+
+/* Caixas */
+.note{border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.96rem}
+.note b.t{display:block;font-family:var(--display);font-size:1.05rem;margin-bottom:2px}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.sum{background:var(--ok-soft)}
+.note.sum b.t{color:var(--ok)}
+.note.warn{background:var(--warn-soft);border:1px solid var(--warn-line)}
+.note.warn b.t{color:var(--warn)}
+.note.tip{background:var(--accent-soft)}
+.note.tip b.t{color:var(--accent)}
+
+/* Classificador */
+.cls-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
+.cls-item>p{margin:0 0 6px;font-weight:600}
+.cls-opts{display:flex;flex-wrap:wrap;gap:6px}
+.cls-opts button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 11px;font-size:.88rem;cursor:pointer}
+.cls-opts button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:700}
+.cls-opts button.wrong{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.cls-fb{font-size:.9rem;color:var(--muted);margin-top:6px}
+.cls-score{font-weight:700;margin-top:8px}
+
+/* Modelos de processo */
+.mdl{display:grid;gap:8px;margin-top:10px}
+.mdl-row{display:grid;grid-template-columns:5.6em 1fr;gap:8px;align-items:center;font-size:.85rem}
+.mdl-row>span:first-child{color:var(--muted);font-weight:600}
+.blocks{display:flex;flex-wrap:wrap;gap:4px}
+.blk{border-radius:5px;padding:4px 8px;font-size:.78rem;font-weight:600;background:var(--accent);color:var(--surface)}
+.blk.faint{background:var(--accent-soft);color:var(--ink)}
+.blk.mid{opacity:.7}
+.blk.star::after{content:" ★"}
+
+/* Kanban */
+.kb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+.kb-col{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:6px;min-height:170px;transition:border-color .2s}
+.kb-col.full{border-color:var(--warn)}
+.kb-col h5{margin:0 0 6px;font-size:.72rem;font-family:var(--font);line-height:1.2;color:var(--muted);display:flex;justify-content:space-between;gap:2px;flex-wrap:wrap}
+.kb-card{display:block;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 4px;margin-bottom:5px;font-size:.8rem;font-weight:600;cursor:pointer;text-align:center}
+.kb-card:hover{border-color:var(--accent)}
+.kb-card.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.kb-msg{min-height:1.5em;font-size:.9rem;margin-top:8px}
+
+/* Scrum */
+.tb{display:grid;gap:6px;margin-top:10px}
+.tb-row{display:grid;grid-template-columns:9.5em 1fr auto;gap:8px;align-items:center;font-size:.92rem}
+.tb-track{height:12px;background:var(--line);border-radius:6px;overflow:hidden}
+.tb-fill{height:100%;background:var(--accent);transition:width .3s}
+@media (max-width:480px){.tb-row{grid-template-columns:7.4em 1fr auto;font-size:.85rem;gap:6px}}
+.tb-row b{font-variant-numeric:tabular-nums;min-width:5.2em;text-align:right}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+@media (max-width:560px){.roles{grid-template-columns:1fr}}
+.role{border-radius:10px;padding:12px 14px;border:1px solid var(--line);border-top:5px solid var(--c)}
+.role h4{font-size:1.1rem;margin-bottom:6px;color:var(--c)}
+.role ul{padding-left:1.1em;margin:0;font-size:.92rem}
+.role .no{color:var(--muted);font-size:.88rem;margin-top:6px}
+
+/* História */
+.story-out{font-family:var(--display);font-weight:600;font-size:1.12rem;line-height:1.4;background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin:10px 0}
+.story-in{display:grid;gap:8px}
+.story-in label{display:grid;font-size:.86rem;font-weight:600;color:var(--muted);gap:3px}
+.story-in input{font:inherit;font-size:1rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.story-warn{font-size:.9rem;min-height:1.3em}
+
+/* Quiz e flashcards */
+.q{margin:14px 0 22px}
+.q>p{font-weight:600}
+.q .tag{display:inline-block;font-size:.75rem;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:1px 9px;margin-bottom:4px}
+.q .opts{display:grid;gap:6px}
+.q .opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:.95rem}
+.q .opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.q .opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
+.q .fb{font-size:.92rem;color:var(--muted);margin-top:6px}
+.score{font-family:var(--display);font-size:1.3rem;font-weight:800}
+details.dis{border:1px solid var(--line);border-radius:10px;margin:10px 0;padding:0 14px}
+details.dis>summary{cursor:pointer;font-weight:700;padding:12px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details.dis>summary::-webkit-details-marker{display:none}
+details.dis>summary::after{content:"+";color:var(--accent);font-size:1.3rem;line-height:1}
+details.dis[open]>summary::after{content:"−"}
+details.dis .enun{font-size:.94rem;color:var(--muted);margin-bottom:10px}
+details.dis .rot{font-size:.95rem;padding-bottom:12px}
+details.dis .rot h5{font-family:var(--display);font-size:1rem;margin:12px 0 4px;color:var(--accent)}
+.fc{perspective:1000px;margin:16px 0}
+.fc-card{position:relative;min-height:190px;cursor:pointer;transition:transform .45s;transform-style:preserve-3d;border:none;background:none;width:100%;padding:0;text-align:left}
+.fc-card.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line);background:var(--surface)}
+.fc-face.back{transform:rotateY(180deg);background:var(--accent-soft)}
+.fc-face h4{font-size:1.5rem}
+.fc-face small{color:var(--muted);margin-top:8px}
+.fc-nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+footer{color:var(--muted);font-size:.86rem;padding:40px 0 60px}
+</style>
+</head>
+<body>
+<div class="wrap"><a class="back" href="index.html">‹ Todos os guias</a></div>
+<header class="wrap hero">
+  <h1>Métodos Ágeis</h1>
+  <p class="sub">Guia de estudo das quatro aulas, do conteúdo complementar e do questionário. Dos fundamentos de projetos até Scrum, histórias de usuário e RUP, com exercícios no formato da prova.</p>
+  <div class="loop" aria-label="Ciclo ágil"><span>Planejar</span><span>Executar</span><span>Entregar</span><span>Feedback</span><span>Aprender</span><span>Adaptar</span></div>
+  <p class="hero-meta">As caixas amarelas marcam pontos do material que merecem correção ou complemento. A Parte 7 traz o questionário completo com respostas comentadas e roteiros para as dissertativas.</p>
+</header>
+
+<nav class="bar" aria-label="Progresso e tópicos">
+  <div class="wrap">
+    <div class="prog">
+      <div class="prog-txt" id="progTxt"></div>
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    </div>
+    <button class="theme-btn" type="button" aria-label="Alternar tema"></button>
+    <button class="btn" id="tocBtn" aria-expanded="false" aria-controls="toc">Tópicos</button>
+  </div>
+</nav>
+<div class="toc" id="toc"><div class="wrap" id="tocList"></div></div>
+
+<main class="wrap">
+
+<!-- ============ PARTE 1 ============ -->
+<section class="part" data-part="Parte 1: Fundamentos de projetos">
+  <div class="part-head"><div class="n">Parte 1 · Aula 1</div><h2>Fundamentos de projetos</h2><p>A agilidade muda a forma de aplicar os fundamentos de gestão de projetos, mas não os dispensa.</p></div>
+
+  <article class="topic" id="a1" data-title="Projeto, operação, produto e processo">
+    <div class="topic-head"><div class="src">Aula 1</div><h3>Projeto, operação, produto e processo</h3></div>
+    <p class="idea"><strong>Projeto</strong> é um esforço temporário realizado para criar um produto, serviço ou resultado único.</p>
+    <p>Características de um projeto: tem início e fim, objetivos definidos, usa recursos, tem restrições, envolve riscos e incertezas e produz um resultado específico.</p>
+    <div class="vs">
+      <div class="h"><span></span><span>Projeto</span><span>Operação</span></div>
+      <div><span>Duração</span><span>Temporário</span><span>Contínua</span></div>
+      <div><span>Resultado</span><span>Único</span><span>Repetitivo</span></div>
+      <div><span>Natureza</span><span>Mudança</span><span>Manutenção</span></div>
+      <div><span>Incerteza</span><span>Maior</span><span>Mais previsível</span></div>
+      <div><span>Exemplo</span><span>Desenvolver um app de vendas</span><span>Manter e atender os usuários do app</span></div>
+    </div>
+    <p>Um projeto pode criar uma operação que continua depois que ele termina. Por isso, uma atividade contínua não é considerada projeto.</p>
+    <div class="cols three">
+      <div><h4>Projeto</h4><p>Organiza o esforço para criar ou modificar algo.</p></div>
+      <div><h4>Processo</h4><p>Conjunto estruturado de atividades que transforma entradas em saídas.</p></div>
+      <div><h4>Produto</h4><p>O resultado que será usado e entregará valor.</p></div>
+    </div>
+    <div class="flow"><span>Projeto: desenvolver o app</span><i>↓</i><span>Processos: requisitos, projeto, desenvolvimento, testes, implantação</span><i>↓</i><span>Produto: app disponível aos usuários</span></div>
+    <p>Um produto pode ser físico (máquina), digital (aplicativo), um serviço (consultoria) ou um sistema que combina os três. Sob a perspectiva ágil, ele é avaliado continuamente pelo <strong>valor</strong>: quem vai usar, que problema resolve, como saber se é útil, o que fazer primeiro e o que descartar.</p>
+    <div class="note sum"><b class="t">Para memorizar</b><p>Projeto ≠ produto ≠ processo. Uma organização pode executar vários projetos ao longo da vida de um mesmo produto.</p></div>
+  </article>
+
+  <article class="topic" id="a2" data-title="Ciclo de vida: preditivo x adaptativo">
+    <div class="topic-head"><div class="src">Aula 1</div><h3>Ciclo de vida: preditivo x adaptativo</h3></div>
+    <p class="idea">O ciclo de vida é a evolução do projeto do início ao encerramento. A diferença está em quanto se define antes de começar.</p>
+    <div class="flow"><span>Iniciação</span><i>→</i><span>Planejamento</span><i>→</i><span>Execução</span><i>→</i><span>Monitoramento e controle</span><i>→</i><span>Encerramento</span></div>
+    <div class="vs">
+      <div class="h"><span></span><span>Preditivo</span><span>Adaptativo</span></div>
+      <div><span>Escopo</span><span>Definido no início</span><span>Evolui</span></div>
+      <div><span>Planejamento</span><span>Antecipado</span><span>Contínuo, progressivo</span></div>
+      <div><span>Mudanças</span><span>Controladas formalmente</span><span>Esperadas</span></div>
+      <div><span>Entregas</span><span>Concentradas no fim</span><span>Frequentes</span></div>
+      <div><span>Feedback</span><span>Tardio</span><span>Contínuo</span></div>
+      <div><span>Ponto forte</span><span>Previsibilidade</span><span>Adaptação</span></div>
+      <div><span>Exemplo</span><span>Edificação: fundação, estrutura, acabamento</span><span>App: ideia, MVP, feedback, nova versão</span></div>
+    </div>
+    <div class="note tip"><b class="t">Frase-chave da aula</b><p>Nenhuma abordagem é universalmente melhor. A escolha depende do contexto: quanto maior a previsibilidade, mais faz sentido planejar antes; quanto maior a incerteza, mais importante é aprender no caminho.</p></div>
+  </article>
+
+  <article class="topic" id="a3" data-title="Escopo, requisitos e stakeholders">
+    <div class="topic-head"><div class="src">Aula 1</div><h3>Escopo, requisitos e stakeholders</h3></div>
+    <p><strong>Escopo</strong> define o que está incluído e o que <em>não</em> está incluído no projeto ou produto, e quais critérios mostram que o trabalho está concluído. No tradicional, busca-se fixá-lo antes; no ágil, ele evolui com o aprendizado.</p>
+    <p><strong>Requisitos</strong> são necessidades, condições ou capacidades que o produto deve atender.</p>
+    <div class="cols">
+      <div><h4>Funcional</h4><p>O que o sistema deve <strong>fazer</strong>.</p><p style="color:var(--muted)">“Permitir pagamentos via PIX.”</p></div>
+      <div><h4>Não funcional</h4><p><strong>Como</strong> o sistema deve funcionar: desempenho, segurança, usabilidade.</p><p style="color:var(--muted)">“Processar o pagamento em até 3 segundos.”</p></div>
+    </div>
+    <p><strong>Stakeholders</strong> são pessoas, grupos ou organizações que influenciam, são influenciados ou se percebem afetados pelo projeto: cliente, usuário, patrocinador, gestores, equipe, fornecedores, governo, comunidade, investidores.</p>
+    <div class="quote">Quem ganha, quem perde, quem influencia e quem será impactado pelo projeto?</div>
+  </article>
+
+  <article class="topic" id="a4" data-title="Do planejamento ao encerramento">
+    <div class="topic-head"><div class="src">Aula 1</div><h3>Do planejamento ao encerramento</h3></div>
+    <p><strong>Planejar</strong> é definir como o trabalho será feito: objetivos, escopo, requisitos, cronograma, recursos, custos, riscos, responsabilidades, comunicação e critérios de sucesso.</p>
+    <div class="cols">
+      <div><h4>Tradicional</h4><p>Planejar → executar</p></div>
+      <div><h4>Ágil</h4><p>Planejar → executar → avaliar → aprender → adaptar</p></div>
+    </div>
+    <div class="optlist">
+      <div><b>Execução</b><span>Transformar o plano em trabalho realizado.</span></div>
+      <div><b>Monitoramento</b><span>Observar o desempenho (prazo, custo, escopo, qualidade, riscos, valor).</span></div>
+      <div><b>Controle</b><span>Comparar resultados, identificar desvios e decidir.</span></div>
+      <div><b>Encerramento</b><span>Validar entregas, obter aceite, encerrar contratos, liberar recursos e registrar aprendizados.</span></div>
+    </div>
+    <p>Na agilidade, o acompanhamento acontece em ciclos curtos e o aprendizado não fica guardado para o fim: <strong>feedback → reflexão → adaptação → melhoria</strong> durante todo o projeto.</p>
+    <div class="note sum"><b class="t">O que levar desta aula</b><ul>
+      <li>Métodos ágeis não significam ausência de planejamento; o planejamento passa a ser recorrente.</li>
+      <li>Agilidade é a capacidade de responder às mudanças.</li>
+      <li>Por que surgiram: requisitos mudando, cliente ainda descobrindo o que quer, tecnologia e mercado mudando rápido. A resposta é pequenas entregas + feedback + aprendizado + adaptação.</li>
+    </ul></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 2 ============ -->
+<section class="part" data-part="Parte 2: Engenharia de software">
+  <div class="part-head"><div class="n">Parte 2 · Aula 2 e complementar</div><h2>Engenharia de software</h2><p>Da Crise do Software aos modelos de processo, chegando ao desenvolvimento iterativo e incremental.</p></div>
+
+  <article class="topic" id="b1" data-title="Crise do Software e relatório CHAOS">
+    <div class="topic-head"><div class="src">Complementar · Questionário 1, 2 e 3</div><h3>Crise do Software e relatório CHAOS</h3></div>
+    <p class="idea">A <strong>Crise do Software</strong> descreve dificuldades recorrentes para produzir software confiável dentro de prazo, custo e requisitos acordados.</p>
+    <div class="cols">
+      <div><h4>Sintomas</h4><ul><li>Atrasos e custos acima do previsto</li><li>Produtos que não atendem às necessidades reais</li><li>Defeitos surgindo em operação</li><li>Manutenção cada vez mais cara</li></ul></div>
+      <div><h4>Causa de fundo</h4><p>A complexidade dos sistemas cresceu mais rápido que as práticas usadas para coordená-los. Programar deixou de bastar.</p></div>
+    </div>
+    <div class="cols">
+      <div><h4>Causas gerenciais</h4><ul><li>Esforço subestimado</li><li>Cronograma fechado antes de entender o problema</li><li>Comunicação fragmentada</li><li>Controle por “percentual concluído”</li></ul></div>
+      <div><h4>Causas de requisitos</h4><ul><li>Necessidades ambíguas</li><li>Pouca participação dos usuários</li><li>Mudança tratada só como desvio</li><li>Validação tardia</li></ul></div>
+    </div>
+    <h4 class="sub-h">Relatório CHAOS (1994)</h4>
+    <div class="tb" aria-label="Resultados do CHAOS 1994">
+      <div class="tb-row"><span>Cancelados</span><div class="tb-track"><div class="tb-fill" style="width:31.1%"></div></div><b>31,1%</b></div>
+      <div class="tb-row"><span>Desafiados</span><div class="tb-track"><div class="tb-fill" style="width:52.7%;opacity:.7"></div></div><b>52,7%</b></div>
+      <div class="tb-row"><span>No prazo e orçamento</span><div class="tb-track"><div class="tb-fill" style="width:16.2%;background:var(--ok)"></div></div><b>16,2%</b></div>
+    </div>
+    <div class="note warn"><b class="t">Como a prova cobra</b><p>Os números valem para a amostra, os critérios e o período da pesquisa. Devem ser lidos como <strong>evidência histórica condicionada ao contexto</strong>, e nunca como taxa universal ou atual de fracasso.</p></div>
+    <p>A <strong>Engenharia de Software</strong> surgiu como resposta, organizando requisitos, arquitetura, desenvolvimento, testes, implantação e manutenção. Quando o conhecimento muda no meio do projeto, porém, a resposta puramente sequencial ainda deixa a validação para o fim, o que abriu caminho para o iterativo, o incremental e os métodos ágeis.</p>
+  </article>
+
+  <article class="topic" id="b2" data-title="Engenharia e processo de software">
+    <div class="topic-head"><div class="src">Aula 2</div><h3>Engenharia e processo de software</h3></div>
+    <p class="idea">Engenharia de Software aplica uma abordagem sistemática, disciplinada e mensurável ao desenvolvimento, operação, manutenção e evolução de software.</p>
+    <div class="flow"><span>Software =</span><span>Código</span><i>+</i><span>Dados</span><i>+</i><span>Configurações</span><i>+</i><span>Interfaces</span><i>+</i><span>Documentação</span><i>+</i><span>Serviços</span></div>
+    <p>Um <strong>processo de software</strong> é o conjunto estruturado de atividades para especificar, desenvolver, validar, entregar e evoluir um sistema. Ele responde: <em>quem faz o quê, quando, como e com qual resultado?</em></p>
+    <div class="flow"><span>Necessidade</span><i>→</i><span>Especificação</span><i>→</i><span>Desenvolvimento</span><i>→</i><span>Validação</span><i>→</i><span>Entrega</span><i>→</i><span>Evolução</span></div>
+    <p>Essas atividades existem em quase qualquer abordagem. O que muda é <strong>como são organizadas</strong>.</p>
+    <div class="note tip"><b class="t">Processo sem burocracia</b><p>Um bom processo organiza o trabalho, reduz riscos, aumenta a qualidade, favorece a comunicação e permite adaptação. Documentação excessiva e aprovações intermináveis são sintomas de um processo mal ajustado.</p></div>
+    <p>Requisitos vêm de clientes, usuários, gestores, especialistas, legislação, sistemas existentes e mercado, e <strong>não são estáticos</strong>: num projeto de 18 meses, o que era prioritário no mês 1 pode ter perdido sentido no mês 10.</p>
+  </article>
+
+  <article class="topic" id="b3" data-title="Testes, qualidade, verificação e validação">
+    <div class="topic-head"><div class="src">Aula 2</div><h3>Testes, qualidade, verificação e validação</h3></div>
+    <p class="idea">Testar revela defeitos, mas não prova que eles não existem.</p>
+    <div class="optlist">
+      <div><b>Unitário</b><span>Componente individual.</span></div>
+      <div><b>Integração</b><span>Interação entre componentes.</span></div>
+      <div><b>Sistema</b><span>O sistema completo.</span></div>
+      <div><b>Aceitação</b><span>Adequação às necessidades do usuário ou cliente.</span></div>
+    </div>
+    <div class="cols">
+      <div><h4>Verificação</h4><p><strong>Estamos construindo o produto corretamente?</strong></p><p>Conformidade com especificações.</p></div>
+      <div><h4>Validação</h4><p><strong>Estamos construindo o produto certo?</strong></p><p>Atendimento às necessidades reais.</p></div>
+    </div>
+    <div class="note sum"><b class="t">Caso típico de prova</b><p>Sistema feito exatamente como especificado, passou em todos os testes, mas os usuários dizem que não resolve o problema: <strong>verificação ok, validação falhou</strong>.</p></div>
+    <p>Qualidade vai além da ausência de bugs (confiabilidade, segurança, desempenho, usabilidade, manutenibilidade) e precisa ser <strong>construída ao longo do processo</strong>, sem ficar para uma etapa final.</p>
+    <h4 class="sub-h">Custo de corrigir um erro de requisito</h4>
+    <div class="tb">
+      <div class="tb-row"><span>Na especificação</span><div class="tb-track"><div class="tb-fill" style="width:10%"></div></div><b>simples</b></div>
+      <div class="tb-row"><span>Na programação</span><div class="tb-track"><div class="tb-fill" style="width:32%"></div></div><b>altera código</b></div>
+      <div class="tb-row"><span>Nos testes</span><div class="tb-track"><div class="tb-fill" style="width:62%"></div></div><b>+ testes, docs</b></div>
+      <div class="tb-row"><span>Após implantar</span><div class="tb-track"><div class="tb-fill" style="width:100%"></div></div><b>+ usuários</b></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--muted);margin-top:6px">Barras ilustrativas da tendência descrita na aula, sem valores medidos.</p>
+  </article>
+
+  <article class="topic" id="b4" data-title="Versões, entregas e feedback">
+    <div class="topic-head"><div class="src">Aula 2</div><h3>Versões, entregas e feedback</h3></div>
+    <div class="optlist">
+      <div><b>Versão</b><span>Estado identificável do software (1.0, 1.1, 2.0).</span></div>
+      <div><b>Entrega</b><span>Disponibilizar um resultado para avaliação ou uso: protótipo, incremento, release, MVP. Nem toda versão interna vira entrega.</span></div>
+      <div><b>Feedback</b><span>Comparação entre o que se imaginava e o que de fato aconteceu.</span></div>
+    </div>
+    <div class="cols">
+      <div><h4>Grandes entregas</h4><p>Feedback tardio e muitas hipóteses acumuladas sem teste.</p></div>
+      <div><h4>Pequenas entregas</h4><p>Feedback cedo, lotes menores, aprendizado frequente, chance de adaptar.</p></div>
+    </div>
+    <div class="note tip"><b class="t">Frase da aula</b><p>Feedback sem possibilidade de adaptação tem valor limitado.</p></div>
+  </article>
+
+  <article class="topic" id="b5" data-title="Sequencial, iterativo e incremental">
+    <div class="topic-head"><div class="src">Aula 2 · Questionário 15 a 17</div><h3>Sequencial, iterativo e incremental</h3></div>
+    <p class="idea"><strong>Iteração = melhorar.</strong> <strong>Incremento = acrescentar.</strong> Juntos, o produto cresce e melhora ao mesmo tempo.</p>
+    <div class="lab">
+      <div class="lbl">Veja cada modelo</div>
+      <div class="seg" id="mdlSeg" role="group" aria-label="Modelo de processo">
+        <button data-k="seq" aria-pressed="true">Sequencial</button>
+        <button data-k="it" aria-pressed="false">Iterativo</button>
+        <button data-k="inc" aria-pressed="false">Incremental</button>
+        <button data-k="both" aria-pressed="false">Iterativo + incremental</button>
+      </div>
+      <div id="mdlView"></div>
+      <p id="mdlTxt" style="margin:10px 0 0;font-size:.95rem"></p>
+    </div>
+    <div class="vs">
+      <div class="h"><span></span><span>Sequencial</span><span>Iterativo / Incremental</span></div>
+      <div><span>Organiza por</span><span>Fases</span><span>Ciclos / partes</span></div>
+      <div><span>Feedback</span><span>Tende a ser posterior</span><span>Frequente</span></div>
+      <div><span>Adaptação</span><span>Menor</span><span>Maior</span></div>
+      <div><span>Planejamento</span><span>Evento inicial</span><span>Atividade recorrente</span></div>
+    </div>
+    <p><strong>Quando o sequencial funciona bem:</strong> requisitos estáveis, tecnologia conhecida, baixa incerteza, produto bem compreendido, muita documentação exigida, restrições regulatórias.</p>
+    <p><strong>Planejamento em ondas sucessivas:</strong> longo prazo em visão geral, médio prazo mais detalhado, curto prazo bem detalhado.</p>
+    <div class="note warn"><b class="t">Iterativo e incremental já é ágil?</b><p>Não necessariamente. Uma equipe pode trabalhar em ciclos de duas semanas e ainda ter prioridades fixas, usuários que só avaliam a cada seis meses e nenhuma adaptação. Agilidade soma aos ciclos curtos a colaboração, o feedback, a priorização por valor e a adaptação. Essa é a lógica da questão 8 da aula 2 (Equipe X x Equipe Y).</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 3 ============ -->
+<section class="part" data-part="Parte 3: Complexidade, incerteza e valor">
+  <div class="part-head"><div class="n">Parte 3 · Aula 3</div><h2>Complexidade, incerteza e valor</h2><p>Por que nem tudo pode ser previsto, e como produzir valor mesmo assim.</p></div>
+
+  <article class="topic" id="c1" data-title="Complicado x complexo">
+    <div class="topic-head"><div class="src">Aula 3</div><h3>Complicado x complexo</h3></div>
+    <p class="idea">Complexo vai além de “difícil”: é quando muitos elementos interagem, causa e efeito só ficam claros depois e o comportamento emerge das interações.</p>
+    <div class="vs">
+      <div class="h"><span></span><span>Complicado</span><span>Complexo</span></div>
+      <div><span>Abordagem</span><span>Decompor e especializar</span><span>Experimentar</span></div>
+      <div><span>Causa e efeito</span><span>Analisáveis antes</span><span>Percebidos depois</span></div>
+      <div><span>Solução</span><span>Reproduzível</span><span>Depende do contexto</span></div>
+      <div><span>Previsão</span><span>Relativamente possível</span><span>Limitada</span></div>
+      <div><span>Exemplo</span><span>Projetar uma ponte</span><span>Plataforma digital para milhares de usuários</span></div>
+    </div>
+    <p>Software é um <strong>sistema sociotécnico</strong>: combina pessoas, processos, regras, cultura, dados, infraestrutura e código. Mexer em um afeta os outros, e usuários usam funções de jeitos imprevistos (comportamento emergente).</p>
+    <div class="flow"><span>Hipótese</span><i>→</i><span>Experimento seguro</span><i>→</i><span>Observar</span><i>→</i><span>Aprender</span><i>→</i><span>Adaptar</span><i>→</i><span>Repetir</span></div>
+    <div class="lab"><div class="lbl">Atividade da aula: classifique</div><div class="cls" data-set="cx"></div></div>
+  </article>
+
+  <article class="topic" id="c2" data-title="Incerteza">
+    <div class="topic-head"><div class="src">Aula 3</div><h3>Incerteza</h3></div>
+    <p class="idea">Incerteza é a falta de conhecimento suficiente sobre o problema, a solução, o esforço ou o futuro. Ela não pode ser eliminada no início, só reduzida com aprendizado.</p>
+    <div class="optlist">
+      <div><b>Negócio</b><span>Haverá demanda?</span></div>
+      <div><b>Usuário</b><span>A solução será útil e utilizável?</span></div>
+      <div><b>Tecnologia</b><span>A arquitetura funcionará?</span></div>
+      <div><b>Execução</b><span>Quanto esforço será necessário?</span></div>
+      <div><b>Organização</b><span>A empresa conseguirá adotar a solução?</span></div>
+      <div><b>Ambiente</b><span>Que mudanças externas vão ocorrer?</span></div>
+    </div>
+    <p><strong>“O cliente não sabe o que quer”</strong> simplifica demais: muitas vezes ele conhece o problema mas não a solução, descobre necessidades ao experimentar e tem dificuldade de expressar conhecimento tácito.</p>
+    <p><strong>Cone da incerteza:</strong> no início as estimativas variam muito; com dados reais, a faixa tende a estreitar.</p>
+    <p><strong>Hipóteses ocultas</strong> estão em todo plano (“a integração será simples”, “a regra não vai mudar”). A agilidade as torna visíveis e testáveis, com protótipos, provas de conceito, testes de usabilidade, incrementos e métricas de uso.</p>
+    <div class="note sum"><b class="t">Conhecimento validado</b><p>Opinião: usuários querem relatórios detalhados. Experimento: liberar um relatório mínimo. Métrica: frequência de uso. Aprendizado: usuários priorizam alertas. Adaptação: reordenar o trabalho.</p></div>
+    <div class="quote">O plano é uma hipótese, e não uma garantia.</div>
+  </article>
+
+  <article class="topic" id="c3" data-title="Mudança, adaptação e feedback">
+    <div class="topic-head"><div class="src">Aula 3</div><h3>Mudança, adaptação e feedback</h3></div>
+    <p class="idea">Em ambientes complexos, a mudança é esperada. As abordagens ágeis tentam torná-la menor, detectá-la cedo e incorporá-la com controle, preservando a qualidade.</p>
+    <div class="cols">
+      <div><h4>Improvisar</h4><p>Agir sem fundamento.</p></div>
+      <div><h4>Adaptar</h4><p>Decidir com novas evidências, objetivos claros, critérios, priorização e disciplina técnica.</p></div>
+    </div>
+    <p><strong>Ciclos curtos</strong> servem para aprender mais cedo, limitar perdas e redefinir prioridades. O objetivo vai além de trabalhar mais rápido.</p>
+    <p>Um <strong>incremento utilizável</strong> acrescenta valor, está integrado, atende aos critérios de qualidade, é verificável e mantém o produto usável. Trabalho iniciado não equivale a valor entregue.</p>
+    <p>Um <strong>feedback útil</strong> é oportuno, específico, baseado em observação, ligado a objetivos e utilizável para decidir. Vem de usuários, clientes, equipe, métricas, testes automatizados, operação, mercado, revisões e retrospectivas.</p>
+    <div class="quote">Sem feedback, a equipe pode executar perfeitamente a solução errada.</div>
+  </article>
+
+  <article class="topic" id="c4" data-title="Valor e desperdício">
+    <div class="topic-head"><div class="src">Aula 3</div><h3>Valor e desperdício</h3></div>
+    <p class="idea"><strong>Valor</strong> é o benefício percebido por clientes, usuários ou organização. Uma funcionalidade pronta, testada e implantada pode, mesmo assim, não gerar valor.</p>
+    <div class="cols">
+      <div><h4>Saída (output)</h4><p>Tela criada, relatório entregue, funcionalidade implantada, tarefas concluídas.</p></div>
+      <div><h4>Resultado (outcome)</h4><p>Menos tempo de atendimento, menos erros, mais adesão, mais satisfação.</p></div>
+    </div>
+    <p><strong>Desperdício</strong> é consumir recursos sem gerar valor ou aprendizado proporcional: funcionalidades não usadas, esperas, retrabalho, trabalho parcialmente concluído, transferências excessivas, defeitos, reuniões sem propósito, documentação inútil.</p>
+    <p><strong>Muito trabalho em andamento</strong> aumenta o tempo de conclusão, a troca de contexto e o risco acumulado. Começar menos ajuda a terminar mais.</p>
+    <h4 class="sub-h">Exemplo de priorização da aula</h4>
+    <div class="vs" style="font-size:.88rem">
+      <div class="h" style="grid-template-columns:1fr 4.5em 4.5em 4.5em"><span>Item</span><span>Benefício</span><span>Urgência</span><span>Incerteza</span></div>
+      <div style="grid-template-columns:1fr 4.5em 4.5em 4.5em"><span>Cadastro básico</span><span>Alto</span><span>Alta</span><span>Baixa</span></div>
+      <div style="grid-template-columns:1fr 4.5em 4.5em 4.5em"><span>Tema de cores</span><span>Baixo</span><span>Baixa</span><span>Baixa</span></div>
+      <div style="grid-template-columns:1fr 4.5em 4.5em 4.5em"><span>Integração externa</span><span>Alto</span><span>Média</span><span>Alta</span></div>
+      <div style="grid-template-columns:1fr 4.5em 4.5em 4.5em"><span>Relatório avançado</span><span>Médio</span><span>Baixa</span><span>Média</span></div>
+    </div>
+    <p>Decisão: fazer o cadastro primeiro e um <strong>experimento técnico</strong> da integração, que tem alto valor mas alta incerteza.</p>
+    <div class="note tip"><b class="t">MVP</b><p>Um produto mínimo contém o necessário para testar uma hipótese e obter feedback confiável. “Mínimo” não significa defeituoso ou sem qualidade.</p></div>
+    <div class="note sum"><b class="t">Agilidade além da velocidade</b><p>Ser ágil não é trabalhar com pressa, eliminar documentação, aceitar toda mudança, abandonar o planejamento ou reduzir qualidade. É responder de forma disciplinada às evidências.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 4 ============ -->
+<section class="part" data-part="Parte 4: Manifesto e abordagens">
+  <div class="part-head"><div class="n">Parte 4 · Aulas 3 e 4</div><h2>Manifesto Ágil e abordagens</h2><p>Os valores e princípios, os modelos tradicionais e os principais métodos ágeis.</p></div>
+
+  <article class="topic" id="d1" data-title="Manifesto Ágil: os 4 valores">
+    <div class="topic-head"><div class="src">Aulas 3 e 4</div><h3>Manifesto Ágil: os 4 valores</h3></div>
+    <p class="idea">Em 2001, dezessete profissionais reuniram-se para discutir alternativas aos processos pesados de desenvolvimento. O resultado: 4 valores e 12 princípios.</p>
+    <div class="quote">Embora haja valor nos itens à direita, valorizamos mais os itens à esquerda.</div>
+    <p>A estrutura expressa <strong>preferência</strong>, sem excluir nada: processos, documentação, contratos e planos continuam necessários.</p>
+    <div class="vs">
+      <div class="h"><span></span><span>Valorizamos mais</span><span>que</span></div>
+      <div><span>1</span><span><strong>Indivíduos e interações</strong></span><span>Processos e ferramentas</span></div>
+      <div><span>2</span><span><strong>Software funcionando</strong></span><span>Documentação abrangente</span></div>
+      <div><span>3</span><span><strong>Colaboração com o cliente</strong></span><span>Negociação de contratos</span></div>
+      <div><span>4</span><span><strong>Responder a mudanças</strong></span><span>Seguir um plano</span></div>
+    </div>
+    <div class="optlist">
+      <div><b>1. Pessoas</b><span>Um quadro registra tarefas mas não resolve conflitos e bloqueios; a conversa revela as causas. Ferramentas apoiam as pessoas.</span></div>
+      <div><b>2. Software</b><span>Produto funcional permite verificar progresso e obter feedback. Documentação continua, mas útil, atualizada e proporcional ao risco.</span></div>
+      <div><b>3. Cliente</b><span>Contratos definem limites, mas não antecipam todas as mudanças. A colaboração complementa o contrato.</span></div>
+      <div><b>4. Mudança</b><span>O plano orienta; as evidências atualizam o caminho. Responder exige análise de impacto, valor e risco.</span></div>
+    </div>
+  </article>
+
+  <article class="topic" id="d2" data-title="Os 12 princípios">
+    <div class="topic-head"><div class="src">Aulas 3 e 4</div><h3>Os 12 princípios</h3></div>
+    <div class="optlist">
+      <div><b>1. Satisfação</b><span>Satisfazer o cliente com entrega contínua e antecipada de software com valor.</span></div>
+      <div><b>2. Mudanças</b><span>Mudanças são bem-vindas, mesmo tarde, quando aumentam a vantagem competitiva.</span></div>
+      <div><b>3. Entregas</b><span>Entregar software funcionando com frequência, preferindo períodos curtos.</span></div>
+      <div><b>4. Colaboração</b><span>Negócio e desenvolvimento trabalham juntos diariamente.</span></div>
+      <div><b>5. Motivação</b><span>Projetos em torno de pessoas motivadas, com ambiente, apoio e confiança.</span></div>
+      <div><b>6. Conversa direta</b><span>Comunicação face a face é a mais eficaz.</span></div>
+      <div><b>7. Progresso</b><span>Software funcionando é a principal medida de progresso.</span></div>
+      <div><b>8. Ritmo</b><span>Ritmo sustentável: patrocinadores, equipe e usuários conseguem manter um ritmo constante indefinidamente.</span></div>
+      <div><b>9. Excelência</b><span>Excelência técnica e bom design aumentam a agilidade.</span></div>
+      <div><b>10. Simplicidade</b><span>A arte de maximizar o trabalho que não precisa ser feito.</span></div>
+      <div><b>11. Auto-organização</b><span>As melhores soluções emergem de equipes auto-organizadas.</span></div>
+      <div><b>12. Reflexão</b><span>Em intervalos regulares, a equipe reflete e ajusta seu comportamento.</span></div>
+    </div>
+    <div class="note warn"><b class="t">Ponto de atenção na aula 3</b><p>No slide 62, “patrocinadores, equipe e usuários devem manter colaboração contínua” aparece como um item à parte. No Manifesto, essa frase faz parte do <strong>princípio 8 (ritmo sustentável)</strong>: o que eles devem manter é um <em>ritmo constante</em>. Colaboração diária é o princípio 4.</p><p>As duas aulas também agrupam os princípios de forma diferente (aula 3: entrega, pessoas, qualidade, adaptação; aula 4: valor, adaptação, pessoas, sustentabilidade). Os agrupamentos são didáticos e não fazem parte do Manifesto, então vale saber os 12 individualmente.</p></div>
+    <div class="note tip"><b class="t">Três que mais confundem</b><ul>
+      <li><strong>Simplicidade</strong> é evitar trabalho desnecessário, e não fazer de qualquer jeito.</li>
+      <li><strong>Auto-organização</strong> não significa ausência de gestão: exige objetivos claros, limites conhecidos e responsabilidade.</li>
+      <li><strong>Progresso</strong> se mede por software funcionando, e não por documentos aprovados ou código iniciado.</li>
+    </ul></div>
+  </article>
+
+  <article class="topic" id="d3" data-title="Modelo Cascata">
+    <div class="topic-head"><div class="src">Aulas 2 e 4</div><h3>Modelo Cascata</h3></div>
+    <p class="idea">Representação clássica da abordagem sequencial: cada etapa gera a entrada da seguinte.</p>
+    <div class="flow"><span>Requisitos</span><i>→</i><span>Análise</span><i>→</i><span>Projeto</span><i>→</i><span>Implementação</span><i>→</i><span>Testes</span><i>→</i><span>Implantação</span><i>→</i><span>Manutenção</span></div>
+    <div class="cols">
+      <div><h4>Pontos favoráveis</h4><ul><li>Etapas e marcos claros</li><li>Documentação estruturada</li><li>Facilidade de auditoria</li><li>Aderência a ambientes regulados</li></ul></div>
+      <div><h4>Limitações</h4><ul><li>Feedback tardio</li><li>Mudanças caras</li><li>Erros de requisito se propagam</li><li>Progresso confundido com documentos</li><li>Riscos concentrados no fim</li></ul></div>
+    </div>
+    <div class="note sum"><b class="t">Exemplo da aula</b><p>3 meses de requisitos, 2 de projeto, 5 de desenvolvimento, 2 de testes. O cliente vê o produto no mês 11 e diz: “não era exatamente isso”. Muito trabalho foi feito, mas quanto valor foi gerado?</p></div>
+  </article>
+
+  <article class="topic" id="d4" data-title="RUP (Rational Unified Process)">
+    <div class="topic-head"><div class="src">Aula 4 e complementar · Questionário 15 a 17</div><h3>RUP (Rational Unified Process)</h3></div>
+    <p class="idea">Processo <strong>iterativo e incremental</strong>, orientado por casos de uso, centrado na arquitetura e dirigido por riscos, com papéis, disciplinas e artefatos.</p>
+    <div class="optlist">
+      <div><b>1. Concepção</b><span>Visão, escopo, viabilidade, interessados e riscos iniciais.</span></div>
+      <div><b>2. Elaboração</b><span>Estabilizar a arquitetura (arquitetura executável) e reduzir os principais riscos técnicos.</span></div>
+      <div><b>3. Construção</b><span>Desenvolver, integrar e testar em incrementos sucessivos.</span></div>
+      <div><b>4. Transição</b><span>Implantar, treinar, corrigir e obter aceitação dos usuários.</span></div>
+    </div>
+    <p>Cada fase pode ter <strong>várias iterações</strong>. As disciplinas (requisitos, análise e projeto, implementação, testes, implantação, gestão de mudanças, gestão de projetos) atravessam todas as fases, com ênfases diferentes.</p>
+    <div class="flow"><span>Cascata</span><i>←</i><span>RUP: posição intermediária</span><i>→</i><span>Scrum</span></div>
+    <div class="cols">
+      <div><h4>RUP não é Cascata</h4><p>É iterativo: riscos orientam as iterações e a arquitetura evolui por evidências.</p></div>
+      <div><h4>RUP não é Scrum</h4><p>É mais prescritivo e documental. Scrum é um framework mínimo.</p></div>
+    </div>
+    <div class="note tip"><b class="t">Quando escolher RUP na prova</b><p>Enunciado com <strong>riscos arquiteturais altos, integrações complexas, documentação obrigatória e entregas intermediárias</strong>: a resposta tende a ser RUP adaptado ao projeto. O risco do RUP é ficar pesado (muitos artefatos, aprovações lentas) se não for ajustado ao contexto.</p></div>
+  </article>
+
+  <article class="topic" id="d5" data-title="Tradicional x ágil">
+    <div class="topic-head"><div class="src">Aula 4</div><h3>Tradicional x ágil</h3></div>
+    <div class="vs">
+      <div class="h"><span></span><span>Tradicional</span><span>Ágil</span></div>
+      <div><span>Planejamento</span><span>Antecipado e detalhado</span><span>Progressivo</span></div>
+      <div><span>Escopo</span><span>Busca estabilidade</span><span>Aceita evolução</span></div>
+      <div><span>Entrega</span><span>Grandes versões</span><span>Incrementos frequentes</span></div>
+      <div><span>Cliente</span><span>Participa em marcos</span><span>Colaboração contínua</span></div>
+      <div><span>Controle</span><span>Conformidade ao plano</span><span>Resultados e adaptação</span></div>
+      <div><span>Progresso</span><span>Etapas e documentos aprovados</span><span>Incrementos e valor entregue</span></div>
+      <div><span>Qualidade</span><span>Testes em etapas específicas</span><span>Testes e integração contínuos</span></div>
+      <div><span>Mudança</span><span>Desvio do plano</span><span>Nova evidência, a avaliar</span></div>
+    </div>
+    <p><strong>Critérios para escolher:</strong> estabilidade dos requisitos, incerteza tecnológica, necessidade de feedback, possibilidade de entregas incrementais, regulação, tamanho da equipe, riscos e cultura.</p>
+    <p><strong>Abordagens híbridas</strong> combinam planejamento global e marcos contratuais com desenvolvimento iterativo e entregas incrementais, desde que as práticas sejam coerentes entre si.</p>
+  </article>
+
+  <article class="topic" id="d6" data-title="Scrum, Kanban, XP e Lean">
+    <div class="topic-head"><div class="src">Aula 4</div><h3>Scrum, Kanban, XP e Lean</h3></div>
+    <div class="optlist">
+      <div><b>Scrum</b><span><strong>Framework</strong> para problemas complexos, com Sprints, responsabilidades, eventos e artefatos. Detalhes na Parte 5.</span></div>
+      <div><b>Kanban</b><span><strong>Método</strong> de gestão e melhoria do fluxo: visualizar o trabalho, limitar o WIP, políticas explícitas.</span></div>
+      <div><b>XP</b><span><strong>Método</strong> focado em práticas de engenharia e qualidade técnica.</span></div>
+      <div><b>Lean</b><span><strong>Filosofia</strong> de geração de valor e redução de desperdícios.</span></div>
+    </div>
+    <div class="lab">
+      <div class="lbl">Quadro Kanban com limite de WIP</div>
+      <p style="font-size:.9rem;margin:0">Toque num cartão para movê-lo para a próxima coluna. As colunas do meio aceitam no máximo 2 itens.</p>
+      <div class="kb" id="kb"></div>
+      <div class="kb-msg" id="kbMsg" aria-live="polite"></div>
+      <button class="btn" id="kbReset" type="button">Reiniciar quadro</button>
+    </div>
+    <div class="optlist">
+      <div><b>Lead time</b><span>Da solicitação até a conclusão.</span></div>
+      <div><b>Cycle time</b><span>Do início do trabalho até a conclusão.</span></div>
+      <div><b>Throughput</b><span>Quantidade concluída por período.</span></div>
+      <div><b>WIP</b><span>Quantidade de itens em andamento.</span></div>
+    </div>
+    <p style="font-size:.92rem;color:var(--muted)">As métricas apoiam decisões sobre o fluxo, e não avaliações individuais.</p>
+    <div class="cols">
+      <div><h4>Práticas do XP</h4><ul><li>Programação em pares</li><li>TDD (testes antes do código)</li><li>Integração contínua</li><li>Refatoração</li><li>Design simples</li><li>Propriedade coletiva do código</li><li>Pequenas versões</li><li>Ritmo sustentável</li></ul></div>
+      <div><h4>Princípios do Lean</h4><ul><li>Eliminar desperdícios</li><li>Ampliar a aprendizagem</li><li>Adiar decisões irreversíveis</li><li>Entregar rápido</li><li>Respeitar as pessoas</li><li>Incorporar qualidade</li><li>Otimizar o todo</li></ul></div>
+    </div>
+    <div class="note tip"><b class="t">Valores do XP</b><p>Os cinco valores oficiais são comunicação, simplicidade, feedback, coragem e respeito. A aula 4 lista também “qualidade técnica” e “entregas frequentes” junto deles, mas esses são objetivos e práticas.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 5 ============ -->
+<section class="part" data-part="Parte 5: Scrum a fundo">
+  <div class="part-head"><div class="n">Parte 5 · Complementar</div><h2>Scrum a fundo</h2><p>As regras formais do Guia do Scrum que ajudam a eliminar alternativas na prova.</p></div>
+
+  <article class="topic" id="e1" data-title="Empirismo e os três pilares">
+    <div class="topic-head"><div class="src">Complementar · Questionário 4 a 6</div><h3>Empirismo e os três pilares</h3></div>
+    <p class="idea"><strong>Empirismo:</strong> o conhecimento vem da experiência, e as decisões se baseiam no que é observado. O Scrum também usa o <strong>pensamento Lean</strong>: reduzir desperdício e focar no essencial.</p>
+    <div class="cols three">
+      <div><h4>Transparência</h4><p>Informação relevante visível, <strong>atualizada</strong> e compreendida por quem decide.</p></div>
+      <div><h4>Inspeção</h4><p>Examinar artefatos e progresso com frequência para detectar diferenças.</p></div>
+      <div><h4>Adaptação</h4><p>Ajustar produto ou processo quando a inspeção revela desvio.</p></div>
+    </div>
+    <div class="flow"><span>Transparência: enxergar</span><i>→</i><span>Inspeção: compreender</span><i>→</i><span>Adaptação: melhorar</span><i>↺</i></div>
+    <div class="note warn"><b class="t">As armadilhas que a prova usa</b><ul>
+      <li>Backlog <strong>acessível mas desatualizado</strong> ainda é falha de transparência: as pessoas decidem com entendimentos diferentes.</li>
+      <li>Inspeção sem transparência produz conclusões frágeis.</li>
+      <li>Retrospectivas que identificam problemas mas não geram mudança: <strong>falha de adaptação</strong>. A inspeção aconteceu.</li>
+    </ul></div>
+    <div class="lab"><div class="lbl">Qual pilar está comprometido?</div><div class="cls" data-set="pil"></div></div>
+  </article>
+
+  <article class="topic" id="e2" data-title="Eventos e time-boxes">
+    <div class="topic-head"><div class="src">Complementar · Questionário 7 a 9</div><h3>Eventos e time-boxes</h3></div>
+    <div class="optlist">
+      <div><b>Sprint</b><span>Contém todos os eventos. Duração fixa de até 1 mês; a próxima começa logo após a anterior.</span></div>
+      <div><b>Sprint Planning</b><span>Por que a Sprint é valiosa? O que pode ser feito? Como será feito? Até <strong>8 h</strong>.</span></div>
+      <div><b>Daily Scrum</b><span>Developers inspecionam o progresso rumo ao Objetivo da Sprint e adaptam o plano. <strong>15 min</strong>, todo dia.</span></div>
+      <div><b>Sprint Review</b><span>Scrum Team <strong>e interessados</strong> inspecionam o resultado e decidem os próximos passos. Até <strong>4 h</strong>.</span></div>
+      <div><b>Retrospective</b><span>Melhorar qualidade e efetividade: pessoas, processos, ferramentas, Definição de Pronto. Até <strong>3 h</strong>.</span></div>
+    </div>
+    <div class="lab">
+      <div class="lbl">Duração da Sprint</div>
+      <div class="seg" id="tbSeg" role="group" aria-label="Duração da Sprint">
+        <button data-k="1" aria-pressed="false">1 semana</button>
+        <button data-k="2" aria-pressed="false">2 semanas</button>
+        <button data-k="3" aria-pressed="false">3 semanas</button>
+        <button data-k="4" aria-pressed="true">1 mês</button>
+      </div>
+      <div class="tb" id="tbRows"></div>
+      <p id="tbNote" style="font-size:.86rem;color:var(--muted);margin:10px 0 0"></p>
+    </div>
+    <div class="note warn"><b class="t">Erros frequentes sobre a Daily</b><ul>
+      <li>Ela pertence aos <strong>Developers</strong> e não é relatório ao Scrum Master.</li>
+      <li>Não precisa seguir as três perguntas fixas; o formato é escolhido pelos Developers.</li>
+      <li>Não serve para distribuir tarefas e não substitui conversas ao longo do dia.</li>
+      <li>Dura 15 minutos em qualquer tamanho de Sprint. Dailys de 30, 45 ou 60 minutos estão erradas.</li>
+    </ul></div>
+    <h4 class="sub-h">Regras durante a Sprint</h4>
+    <ul>
+      <li>Nenhuma mudança pode ameaçar o <strong>Objetivo da Sprint</strong>.</li>
+      <li>A <strong>qualidade não diminui</strong>; a Definição de Pronto continua valendo.</li>
+      <li>O Product Backlog pode ser refinado.</li>
+      <li>O escopo pode ser esclarecido e <strong>renegociado com o Product Owner</strong> conforme se aprende mais (questão 8 do questionário).</li>
+    </ul>
+    <div class="note tip"><b class="t">Complemento: cancelar a Sprint</b><p>Uma Sprint só pode ser cancelada se o Objetivo da Sprint se tornar obsoleto, e <strong>apenas o Product Owner</strong> tem autoridade para isso. Esforço maior que o previsto não é motivo: o caminho é renegociar o escopo.</p></div>
+  </article>
+
+  <article class="topic" id="e3" data-title="Responsabilidades e autonomia">
+    <div class="topic-head"><div class="src">Complementar · Questionário 10</div><h3>Responsabilidades e autonomia</h3></div>
+    <p class="idea">Um Scrum Team tem um Product Owner, um Scrum Master e Developers, <strong>sem subequipes nem hierarquia interna</strong>.</p>
+    <div class="roles">
+      <div class="role" style="--c:var(--po)"><h4>Product Owner</h4><ul><li>Maximiza o valor do produto</li><li>Comunica o Objetivo do Produto</li><li>Cria, ordena e torna transparente o Product Backlog</li><li>Pode delegar, mas continua responsável</li></ul><p class="no">Não distribui tarefas nem decide como fazer.</p></div>
+      <div class="role" style="--c:var(--sm)"><h4>Scrum Master</h4><ul><li>Estabelece o Scrum conforme o Guia</li><li>Ensina teoria e prática</li><li>Ajuda a remover impedimentos</li><li>Facilita eventos quando necessário</li></ul><p class="no">Não é gerente: não aprova trabalho nem atribui tarefas.</p></div>
+      <div class="role" style="--c:var(--dev)"><h4>Developers</h4><ul><li>Criam o plano da Sprint (Sprint Backlog)</li><li>Decidem como realizar o trabalho</li><li>Garantem a qualidade pela Definição de Pronto</li><li>Adaptam o plano diariamente</li></ul><p class="no">Não precisam de autorização para ajustar o plano.</p></div>
+    </div>
+    <p><strong>Autogestão:</strong> o Scrum Team decide internamente quem faz o quê, quando e como. A organização continua definindo propósito e limites.</p>
+    <div class="lab"><div class="lbl">Quem decide?</div><div class="cls" data-set="rol"></div></div>
+  </article>
+
+  <article class="topic" id="e4" data-title="Artefatos e compromissos">
+    <div class="topic-head"><div class="src">Aula 4 e complementar</div><h3>Artefatos e compromissos</h3></div>
+    <p class="idea">Cada artefato tem um compromisso que aumenta foco e transparência.</p>
+    <div class="vs">
+      <div class="h"><span></span><span>Artefato</span><span>Compromisso</span></div>
+      <div><span>Produto</span><span>Product Backlog</span><span>Objetivo do Produto</span></div>
+      <div><span>Sprint</span><span>Sprint Backlog</span><span>Objetivo da Sprint</span></div>
+      <div><span>Entrega</span><span>Incremento</span><span>Definição de Pronto</span></div>
+    </div>
+    <ul>
+      <li><strong>Product Backlog:</strong> lista ordenada, emergente, de tudo que pode melhorar o produto. Ordenada pelo Product Owner.</li>
+      <li><strong>Sprint Backlog:</strong> Objetivo da Sprint + itens selecionados + plano para entregá-los. Pertence aos Developers.</li>
+      <li><strong>Incremento:</strong> passo concreto rumo ao Objetivo do Produto, que precisa ser utilizável. Trabalho que não atende à Definição de Pronto não entra no Incremento.</li>
+    </ul>
+    <div class="note tip"><b class="t">Backlog e histórias</b><p>O Guia do Scrum não exige histórias de usuário. O backlog pode conter defeitos, pesquisas e melhorias; o importante é cada item ser transparente. O <strong>refinamento</strong> acrescenta detalhes, tamanho e ordem.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 6 ============ -->
+<section class="part" data-part="Parte 6: Requisitos e histórias">
+  <div class="part-head"><div class="n">Parte 6 · Complementar</div><h2>Requisitos e histórias</h2><p>Vocabulário de planejamento e a forma ágil de registrar necessidades.</p></div>
+
+  <article class="topic" id="f1" data-title="Requisito, restrição e premissa">
+    <div class="topic-head"><div class="src">Complementar · Questionário 11, 12 e 18</div><h3>Requisito, restrição e premissa</h3></div>
+    <div class="cols three">
+      <div><h4>Requisito</h4><p><strong>O que deve ser atendido?</strong></p><p>Capacidade necessária. Ex.: emitir relatórios em tempo real.</p></div>
+      <div><h4>Restrição</h4><p><strong>Que limite respeitar?</strong></p><p>Reduz as opções. Ex.: terminar até dezembro, orçamento máximo.</p></div>
+      <div><h4>Premissa</h4><p><strong>O que aceitamos como verdadeiro?</strong></p><p>Base do plano sem garantia. Ex.: fornecedor entrega os servidores.</p></div>
+    </div>
+    <div class="note warn"><b class="t">Premissa instável vira risco</b><p>Uma premissa não confirmada deve ser acompanhada: registrar o responsável pela confirmação, definir data de verificação, avaliar o impacto se for falsa e preparar uma resposta ao risco. Ignorar até o problema acontecer é a alternativa errada típica.</p></div>
+    <div class="lab"><div class="lbl">Classifique cada informação</div><div class="cls" data-set="rrp"></div></div>
+  </article>
+
+  <article class="topic" id="f2" data-title="Histórias de usuário">
+    <div class="topic-head"><div class="src">Complementar · Questionário 13 e 14</div><h3>Histórias de usuário</h3></div>
+    <p class="idea">Descrevem uma necessidade do ponto de vista de quem espera um benefício. O texto é um <strong>lembrete para uma conversa</strong>, e não uma especificação completa.</p>
+    <div class="quote">Como [tipo de usuário], quero [capacidade], para [benefício].</div>
+    <div class="cols three">
+      <div><h4>Cartão</h4><p>Registro curto, um lembrete.</p></div>
+      <div><h4>Conversa</h4><p>Constrói o entendimento entre negócio e equipe.</p></div>
+      <div><h4>Confirmação</h4><p>Critérios de aceitação e exemplos que tornam o resultado verificável.</p></div>
+    </div>
+    <div class="lab">
+      <div class="lbl">Monte uma história</div>
+      <div class="story-in">
+        <label>Como... <input id="stA" value="estudante" autocomplete="off"></label>
+        <label>quero... <input id="stB" value="receber alertas antes do vencimento das atividades" autocomplete="off"></label>
+        <label>para... <input id="stC" value="evitar entregas atrasadas" autocomplete="off"></label>
+      </div>
+      <div class="story-out" id="stOut"></div>
+      <div class="story-warn" id="stWarn" aria-live="polite"></div>
+    </div>
+    <div class="cols">
+      <div><h4>Técnica demais</h4><p style="color:var(--muted)">“Implementar endpoint POST /ratings e persistir em tabela relacional.”</p><p>Descreve solução, sem usuário nem benefício. Pode virar <strong>tarefa técnica</strong> de uma história.</p></div>
+      <div><h4>Boa história</h4><p style="color:var(--muted)">“Como usuário do app, quero avaliar o entregador após o pedido, para que outros conheçam a qualidade do serviço.”</p><p>Critério: após uma entrega, o usuário dá de 1 a 5 estrelas e pode comentar.</p></div>
+    </div>
+    <p><strong>Critérios de aceitação</strong> são específicos, verificáveis, ligados à história e compreensíveis por negócio e equipe. Servem de base para testes e demonstração.</p>
+    <p><strong>Dividir histórias:</strong> separar fluxos alternativos e regras complexas, entregar primeiro o caminho principal, e evitar dividir só por camada técnica (tela, banco, API).</p>
+    <div class="note tip"><b class="t">Complemento: INVEST</b><p>Um acrônimo muito usado para avaliar histórias: Independente, Negociável, Valiosa, Estimável, Pequena (small) e Testável. Não está nos slides, mas ajuda a justificar respostas dissertativas.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 7 ============ -->
+<section class="part" data-part="Parte 7: Treino para a prova">
+  <div class="part-head"><div class="n">Parte 7 · Questionário</div><h2>Treino para a prova</h2><p>As questões do questionário e da aula 2, com respostas comentadas, e roteiros para as dissertativas.</p></div>
+
+  <article class="topic" id="g1" data-title="Questões de múltipla escolha">
+    <div class="topic-head"><div class="src">Questionário (19) + aula 2 (8)</div><h3>Questões de múltipla escolha</h3></div>
+    <p style="font-size:.95rem;color:var(--muted)">Enunciados resumidos. Toque numa alternativa para ver a resposta comentada.</p>
+    <div class="seg" id="qFilter" role="group" aria-label="Filtrar questões">
+      <button data-k="all" aria-pressed="true">Todas</button>
+      <button data-k="Questionário" aria-pressed="false">Questionário</button>
+      <button data-k="Aula 2" aria-pressed="false">Aula 2</button>
+    </div>
+    <div id="quiz"></div>
+    <p class="score" id="score"></p>
+    <button class="btn primary" id="quizReset" type="button">Refazer as questões</button>
+  </article>
+
+  <article class="topic" id="g2" data-title="Dissertativas com roteiro">
+    <div class="topic-head"><div class="src">Questionário, parte 2</div><h3>Dissertativas com roteiro</h3></div>
+    <p style="font-size:.95rem">Tente responder antes de abrir. Cada roteiro lista os pontos que uma boa resposta deve cobrir.</p>
+    <div id="dis"></div>
+  </article>
+</section>
+
+<!-- ============ REVISÃO ============ -->
+<section class="part" data-part="Revisão" id="revisao">
+  <div class="part-head"><div class="n">Revisão</div><h2>Mapa de decisão</h2><p>Leia o enunciado e identifique qual conceito está sendo avaliado.</p></div>
+  <div class="optlist">
+    <div><b>História e causas</b><span>Crise do Software</span></div>
+    <div><b>Iterações com processo estruturado</b><span>RUP</span></div>
+    <div><b>Regras formais</b><span>Guia do Scrum</span></div>
+    <div><b>Limites e hipóteses</b><span>Requisito, restrição e premissa</span></div>
+    <div><b>Necessidade e valor</b><span>História de usuário</span></div>
+  </div>
+  <div class="part-head" style="margin-top:36px"><div class="n">Revisão</div><h2>Revisão relâmpago</h2></div>
+  <div class="optlist">
+    <div><b>Daily Scrum</b><span>15 minutos, dos Developers</span></div>
+    <div><b>Planning / Review / Retro</b><span>8 h / 4 h / 3 h (Sprint de 1 mês)</span></div>
+    <div><b>Pilares</b><span>Transparência, inspeção, adaptação</span></div>
+    <div><b>Product Owner</b><span>Ordena o Product Backlog, maximiza valor</span></div>
+    <div><b>Scrum Master</b><span>Promove o Scrum, sem chefiar</span></div>
+    <div><b>Developers</b><span>Decidem como trabalhar</span></div>
+    <div><b>RUP</b><span>Concepção, elaboração, construção, transição</span></div>
+    <div><b>Iterar / incrementar</b><span>Melhorar / acrescentar</span></div>
+    <div><b>Verificação / validação</b><span>Produto correto / produto certo</span></div>
+    <div><b>Premissa instável</b><span>Monitorar como risco</span></div>
+    <div><b>CHAOS</b><span>Evidência histórica, dependente do contexto</span></div>
+  </div>
+  <div class="part-head" style="margin-top:36px"><div class="n">Revisão</div><h2>Flashcards</h2><p>Toque no cartão para ver a resposta.</p></div>
+  <div class="fc">
+    <button class="fc-card" id="fcCard" aria-live="polite">
+      <div class="fc-face front"><h4 id="fcTerm"></h4><small>Toque para virar</small></div>
+      <div class="fc-face back"><p id="fcDef" style="margin:0;font-size:1.04rem"></p></div>
+    </button>
+    <div class="fc-nav">
+      <button class="btn" id="fcPrev">Anterior</button>
+      <span id="fcCount" style="color:var(--muted);font-size:.9rem"></span>
+      <button class="btn" id="fcNext">Próximo</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">Baseado nas aulas 1 a 4, no material complementar de Métodos Ágeis e no questionário adicional da aula 5. Bibliografia citada nas aulas: Massari (2018), Pressman e Maxim, Gomes (2014) e o Guia do Scrum.</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var esc=function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};
+
+  /* ---------- Progresso e sumário ---------- */
+  var KEY="ageis-guia-estudados",done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
+  var topics=[].slice.call(document.querySelectorAll(".topic"));
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
+  function buildToc(){
+    var list=$("tocList");list.innerHTML="";
+    document.querySelectorAll(".part").forEach(function(p){
+      var h=document.createElement("h4");h.textContent=p.dataset.part;list.appendChild(h);
+      var ts=p.querySelectorAll(".topic");
+      if(!ts.length){var a0=document.createElement("a");a0.href="#revisao";a0.textContent="Mapa, revisão relâmpago e flashcards";list.appendChild(a0)}
+      ts.forEach(function(t){var a=document.createElement("a");a.href="#"+t.id;a.innerHTML="<span>"+esc(t.dataset.title)+"</span><span class=\"ck\">"+(done[t.id]?"✓":"")+"</span>";list.appendChild(a)});
+    });
+  }
+  function updateProg(){
+    var n=topics.filter(function(t){return done[t.id]}).length;
+    $("progTxt").textContent=n+" de "+topics.length+" tópicos estudados";
+    $("progFill").style.width=(n/topics.length*100)+"%";
+    buildToc();
+  }
+  topics.forEach(function(t){
+    var b=document.createElement("button");b.className="done-btn";b.type="button";
+    function set(){b.setAttribute("aria-pressed",done[t.id]?"true":"false");b.innerHTML="<span class=\"box\">"+(done[t.id]?"✓":"")+"</span>"+(done[t.id]?"Estudado":"Marcar como estudado")}
+    b.addEventListener("click",function(){done[t.id]=!done[t.id];save();set();updateProg()});
+    set();t.appendChild(b);
+  });
+  var toc=$("toc"),tocBtn=$("tocBtn");
+  function closeToc(){toc.classList.remove("open");tocBtn.setAttribute("aria-expanded","false");tocBtn.textContent="Tópicos"}
+  tocBtn.addEventListener("click",function(){var o=toc.classList.toggle("open");tocBtn.setAttribute("aria-expanded",o);tocBtn.textContent=o?"Fechar":"Tópicos"});
+  toc.addEventListener("click",function(e){if(e.target.closest("a"))closeToc()});
+  updateProg();
+
+  function seg(id,cb){
+    var g=$(id);
+    g.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;g.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});cb(b.dataset.k)});
+    var first=g.querySelector("[aria-pressed=\"true\"]")||g.querySelector("button");cb(first.dataset.k);
+  }
+
+  /* ---------- Classificadores ---------- */
+  var SETS={
+    cx:{opts:["Complicado","Complexo"],items:[
+      ["Calcular a capacidade de um servidor",0,"Há fórmulas e dados conhecidos; um especialista consegue prever o resultado."],
+      ["Criar um aplicativo para um mercado ainda desconhecido",1,"Demanda e comportamento dos usuários só ficam claros experimentando."],
+      ["Instalar equipamentos conforme um projeto validado",0,"O caminho já está definido e é reproduzível."],
+      ["Redesenhar a experiência de estudantes",1,"Envolve pessoas, preferências e reações que emergem do uso."],
+      ["Corrigir uma fórmula conhecida",0,"Causa e efeito analisáveis antes de agir."],
+      ["Transformar a cultura de uma organização",1,"Sistema social com interações imprevisíveis; exige experimentação."]
+    ]},
+    pil:{opts:["Transparência","Inspeção","Adaptação"],items:[
+      ["O Product Backlog está acessível, mas com prioridades antigas e descrições desatualizadas",0,"Informação disponível mas desatualizada gera entendimentos diferentes sobre prioridades."],
+      ["A equipe cancela a Daily Scrum com frequência",1,"Sem a Daily, o progresso rumo ao Objetivo da Sprint deixa de ser examinado diariamente."],
+      ["A Retrospectiva identifica sempre os mesmos problemas, mas nenhuma melhoria é implementada",2,"A inspeção ocorreu; faltou transformar a descoberta em mudança."],
+      ["Cada integrante usa uma versão diferente da Definição de Pronto",0,"Não há entendimento comum do que significa “pronto”."],
+      ["A Sprint Review acontece sem usuários nem interessados",1,"O resultado não é examinado por quem pode avaliar o valor e o contexto."],
+      ["A Daily revela que o plano não vai funcionar, mas o Sprint Backlog continua igual",2,"O plano deveria ser ajustado após a inspeção."]
+    ]},
+    rol:{opts:["Product Owner","Scrum Master","Developers"],items:[
+      ["Ordenar os itens do Product Backlog",0,"O PO é responsável pela gestão efetiva do Product Backlog e pela maximização do valor."],
+      ["Decidir como implementar um item selecionado",2,"Os Developers decidem como transformar itens em Incremento."],
+      ["Ajudar a organização a entender o Scrum",1,"O Scrum Master estabelece o Scrum e ensina teoria e prática."],
+      ["Ajustar o plano da Sprint após a Daily",2,"O Sprint Backlog pertence aos Developers, que o adaptam ao longo da Sprint."],
+      ["Comunicar o Objetivo do Produto",0,"Faz parte da responsabilidade do PO."],
+      ["Apoiar a remoção de impedimentos",1,"O Scrum Master ajuda a remover impedimentos ao progresso do time."],
+      ["Garantir que o trabalho atende à Definição de Pronto",2,"Os Developers são responsáveis pela qualidade do Incremento."],
+      ["Cancelar a Sprint quando o objetivo fica obsoleto",0,"Somente o Product Owner pode cancelar uma Sprint."]
+    ]},
+    rrp:{opts:["Requisito","Restrição","Premissa"],items:[
+      ["O sistema deve processar pagamentos em até três segundos",0,"Descreve uma capacidade do sistema (requisito não funcional de desempenho)."],
+      ["A implantação deve ocorrer até dezembro",1,"Limita o cronograma; não é função do produto."],
+      ["O fornecedor entregará os servidores antes dos testes",2,"Considerada verdadeira para planejar, mas a equipe não controla sua confirmação."],
+      ["O orçamento não pode ultrapassar R$ 500 mil",1,"Limite financeiro que reduz as opções do projeto."],
+      ["O sistema deve emitir relatórios de estoque em tempo real",0,"Capacidade esperada do produto."],
+      ["Um especialista estará disponível durante a integração",2,"Ainda não confirmada: deve ser monitorada como fonte de risco."],
+      ["O sistema deve usar a tecnologia já licenciada pela empresa",1,"Tecnologia obrigatória limita as escolhas de solução."]
+    ]}
+  };
+  document.querySelectorAll(".cls").forEach(function(box){
+    var S=SETS[box.dataset.set],ok=0,n=0;
+    var score=document.createElement("div");score.className="cls-score";
+    S.items.forEach(function(it){
+      var d=document.createElement("div");d.className="cls-item";
+      d.innerHTML="<p>"+esc(it[0])+"</p><div class=\"cls-opts\"></div><div class=\"cls-fb\" hidden></div>";
+      var o=d.querySelector(".cls-opts"),fb=d.querySelector(".cls-fb");
+      S.opts.forEach(function(op,i){
+        var b=document.createElement("button");b.type="button";b.textContent=op;
+        b.addEventListener("click",function(){
+          if(d.dataset.done)return;d.dataset.done=1;n++;
+          if(i===it[1]){b.classList.add("right");ok++;fb.textContent="Certo. "+it[2]}
+          else{b.classList.add("wrong");o.children[it[1]].classList.add("right");fb.textContent="Resposta: "+S.opts[it[1]]+". "+it[2]}
+          fb.hidden=false;
+          if(n===S.items.length)score.textContent="Você acertou "+ok+" de "+n+".";
+        });
+        o.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+    box.appendChild(score);
+  });
+
+  /* ---------- Modelos de processo ---------- */
+  function blocks(arr){return "<div class=\"blocks\">"+arr.map(function(x){return "<span class=\"blk "+(x[1]||"")+"\">"+esc(x[0])+"</span>"}).join("")+"</div>"}
+  function rows(r){return "<div class=\"mdl\">"+r.map(function(x){return "<div class=\"mdl-row\"><span>"+esc(x[0])+"</span>"+blocks(x[1])+"</div>"}).join("")+"</div>"}
+  var MDL={
+    seq:[[["Mês 1 a 3",[["Requisitos"]]],["Mês 4 a 5",[["Projeto"]]],["Mês 6 a 10",[["Implementação"]]],["Mês 11 a 12",[["Testes"],["Implantação"]]]],"Cada fase acontece depois da anterior. O usuário só vê o produto funcionando perto do fim, e é aí que aparece o “não era isso”."],
+    it:[[["Ciclo 1",[["Interface v1","faint"]]],["Ciclo 2",[["Interface v2","mid"]]],["Ciclo 3",[["Interface v3"]]]],"A mesma solução é refinada a cada ciclo com o feedback anterior (exemplo da aula: interface industrial que ganha prioridade de alarmes). Não necessariamente surgem funções novas."],
+    inc:[[["Incr. 1",[["Cadastro"]]],["Incr. 2",[["Cadastro"],["Ordens"]]],["Incr. 3",[["Cadastro"],["Ordens"],["Peças"]]],["Incr. 4",[["Cadastro"],["Ordens"],["Peças"],["Indicadores"]]]],"O produto cresce por partes funcionais (exemplo da aula: sistema de manutenção industrial). Cada parte gera valor antes do produto completo."],
+    both:[[["Ciclo 1",[["Saldo"],["Extrato"]]],["Ciclo 2",[["Saldo"],["Extrato","star"],["PIX"]]],["Ciclo 3",[["Saldo"],["Extrato"],["PIX","star"],["Contas"]]],["Ciclo 4",[["Saldo","star"],["Extrato","star"],["PIX","star"],["Contas","star"],["Investimentos"]]]],"Exemplo do aplicativo bancário: a cada ciclo algo novo entra (incremento) e o que já existia melhora, marcado com ★ (iteração)."]
+  };
+  seg("mdlSeg",function(k){$("mdlView").innerHTML=rows(MDL[k][0]);$("mdlTxt").textContent=MDL[k][1]});
+
+  /* ---------- Kanban ---------- */
+  var KCOLS=["A fazer","Em desenvolvimento","Em teste","Concluído"],KSHORT=["A fazer","Desenv.","Teste","Feito"],LIM=[null,2,2,null],kb;
+  function kbInit(){kb=[["A","B","C","D","E"],[],[],[]];$("kbMsg").textContent="";kbDraw()}
+  function kbDraw(){
+    var root=$("kb");root.innerHTML="";
+    KCOLS.forEach(function(name,ci){
+      var col=document.createElement("div");col.className="kb-col"+(LIM[ci]&&kb[ci].length>=LIM[ci]?" full":"");
+      col.innerHTML="<h5><span title=\""+name+"\">"+KSHORT[ci]+"</span>"+(LIM[ci]?"<span>"+kb[ci].length+"/"+LIM[ci]+"</span>":"")+"</h5>";
+      kb[ci].forEach(function(it){
+        var b=document.createElement("button");b.type="button";b.className="kb-card";b.textContent=it;b.setAttribute("aria-label","Item "+it+", em "+name);
+        if(ci===3){b.disabled=true;b.style.cursor="default";b.style.opacity=".7"}
+        b.addEventListener("click",function(){kbMove(ci,it,b)});
+        col.appendChild(b);
+      });
+      root.appendChild(col);
+    });
+  }
+  function kbMove(ci,it,el){
+    var to=ci+1;if(to>3)return;
+    if(LIM[to]&&kb[to].length>=LIM[to]){
+      el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake");
+      $("kbMsg").innerHTML="<strong style=\"color:var(--warn)\">Limite de WIP atingido em “"+KCOLS[to]+"”.</strong> Termine um item antes de puxar outro: é assim que o limite revela gargalos e reduz a troca de contexto.";
+      return;
+    }
+    kb[ci].splice(kb[ci].indexOf(it),1);kb[to].push(it);
+    $("kbMsg").textContent=kb[3].length===5?"Fluxo concluído: 5 itens entregues (esse é o throughput do período).":"";
+    kbDraw();
+  }
+  $("kbReset").addEventListener("click",kbInit);kbInit();
+
+  /* ---------- Time-boxes ---------- */
+  var TB=[["Sprint Planning",8*60],["Daily Scrum",15],["Sprint Review",4*60],["Retrospective",3*60]];
+  function fmt(m){if(m<60)return m+" min";var h=Math.floor(m/60),r=Math.round(m%60);return r?h+" h "+r+" min":h+" h"}
+  seg("tbSeg",function(k){
+    var w=+k,f=w/4;
+    $("tbRows").innerHTML=TB.map(function(t){
+      var v=t[0]==="Daily Scrum"?15:t[1]*f;
+      var pct=t[0]==="Daily Scrum"?(15/480*100):(v/480*100);
+      return "<div class=\"tb-row\"><span>"+t[0]+"</span><div class=\"tb-track\"><div class=\"tb-fill\" style=\"width:"+Math.max(pct,3)+"%\"></div></div><b>"+(w===4||t[0]==="Daily Scrum"?"":"≈ ")+fmt(v)+"</b></div>";
+    }).join("");
+    $("tbNote").textContent=w===4?"Valores máximos oficiais do Guia do Scrum para uma Sprint de um mês. A Daily é sempre de 15 minutos.":"O Guia do Scrum só fixa os máximos para Sprints de um mês e diz que, em Sprints menores, os eventos costumam ser mais curtos. Os valores com ≈ seguem a proporção usual, mas não são regra oficial. A Daily continua com 15 minutos.";
+  });
+
+  /* ---------- História de usuário ---------- */
+  var TECH=/\b(endpoint|tabela|banco|api|implementar|criar tabela|persistir|servi[cç]o ass[ií]ncrono|m[oó]dulo|post|get|sql|deploy|backend|frontend)\b/i;
+  function story(){
+    var a=$("stA").value.trim(),b=$("stB").value.trim(),c=$("stC").value.trim();
+    $("stOut").textContent="Como "+(a||"[tipo de usuário]")+", quero "+(b||"[capacidade]")+", para "+(c||"[benefício]")+".";
+    var w=[];
+    if(!a)w.push("falta dizer quem tem a necessidade");
+    if(!c)w.push("falta o benefício: sem ele, não dá para avaliar o valor");
+    if(TECH.test(b)||TECH.test(c))w.push("parece descrever a solução técnica; registre isso como tarefa e mantenha a história na necessidade");
+    $("stWarn").innerHTML=w.length?"<span style=\"color:var(--warn)\">Atenção: "+esc(w.join("; "))+".</span>":"<span style=\"color:var(--ok)\">Tem ator, capacidade e benefício. Próximo passo: critérios de aceitação.</span>";
+  }
+  ["stA","stB","stC"].forEach(function(id){$(id).addEventListener("input",story)});story();
+
+  /* ---------- Quiz ---------- */
+  var QS=[
+    ["Questionário","01. Qual dificuldade caracteriza a Crise do Software?",["Redução contínua da complexidade dos sistemas.","Excesso de produtos entregues antes do prazo.","Projetos com atrasos, custos elevados e resultados inadequados.","Substituição completa do software por processos manuais."],2,"A crise descreve a dificuldade recorrente de entregar software confiável dentro de prazo, custo e requisitos."],
+    ["Questionário","02. Como interpretar os dados do relatório CHAOS?",["Como prova de que todos os projetos atuais fracassam.","Como evidência histórica condicionada ao contexto da pesquisa.","Como demonstração de que planejamento sempre prejudica projetos.","Como confirmação de que métodos ágeis eliminam qualquer fracasso."],1,"Os percentuais valem para a amostra, a metodologia e o período de 1994."],
+    ["Questionário","03. Sistema complexo sem usuários na definição, requisitos ambíguos, testes adiados e integração só no fim. O que explica o retrabalho?",["Validação tardia, requisitos ambíguos e integração postergada.","Comunicação frequente, testes antecipados e entregas incrementais.","Requisitos validados, arquitetura modular e usuários participativos.","Automação de testes, integração contínua e feedback rápido."],0,"As outras alternativas descrevem práticas que reduzem retrabalho, o oposto do caso."],
+    ["Questionário","04. Quais são os três pilares do Scrum?",["Escopo, prazo e custo.","Planejamento, execução e encerramento.","Transparência, inspeção e adaptação.","Requisitos, implementação e manutenção."],2,"São os pilares do controle empírico."],
+    ["Questionário","05. Backlog acessível, mas com prioridades antigas e integrantes usando versões diferentes. Por que isso compromete a transparência?",["Porque impede a existência de qualquer documentação.","Porque produz entendimentos diferentes sobre prioridades e necessidades.","Porque transfere automaticamente decisões aos Developers.","Porque transforma o Product Backlog em Sprint Backlog."],1,"Transparência exige informação atualizada e compreendida igualmente por quem decide."],
+    ["Questionário","06. Retrospectivas identificam sempre os mesmos problemas, mas nada muda. Qual pilar está comprometido?",["Transparência.","Inspeção.","Adaptação.","Previsibilidade."],2,"A inspeção acontece; falta transformar a descoberta em mudança."],
+    ["Questionário","07. Qual é a duração máxima da Daily Scrum?",["15 minutos.","30 minutos.","Uma hora.","Duas horas."],0,"15 minutos, independentemente do tamanho da Sprint."],
+    ["Questionário","08. Um item exige mais esforço que o previsto, mas o Objetivo da Sprint continua relevante. O que fazer?",["Reduzir a qualidade para concluir todos os itens.","Manter o plano original, mesmo que o objetivo fracasse.","Renegociar o escopo e atualizar o Sprint Backlog.","Encerrar a Sprint sem analisar alternativas."],2,"O escopo pode ser renegociado com o PO, preservando qualidade e Objetivo da Sprint."],
+    ["Questionário","09. Daily de uma hora, Review sem interessados, Retro sem melhorias. Qual o melhor redesenho?",["Daily de 15 minutos, Review colaborativa e Retrospectiva com melhoria selecionada.","Daily semanal, Review apenas técnica e Retrospectiva anual.","Daily de uma hora, Review opcional e Retrospectiva sem decisões.","Daily conduzida pelo diretor e cancelamento dos demais eventos."],0,"Respeita os time-boxes e devolve a cada evento sua finalidade."],
+    ["Questionário","10. O PO distribui tarefas diariamente e o Scrum Master aprova o trabalho antes de atualizar o Sprint Backlog. Qual o problema?",["Os Developers passaram a controlar o Product Backlog.","Product Owner e Scrum Master receberam autoridade hierárquica inadequada.","A organização eliminou todos os papéis do Scrum.","O Scrum Master passou a ordenar corretamente o Product Backlog."],1,"Não há hierarquia interna; os Developers decidem como trabalhar."],
+    ["Questionário","11. Classifique: relatórios em tempo real; terminar até dezembro; fornecedor entregará servidores antes dos testes.",["Requisito, restrição e premissa.","Restrição, premissa e requisito.","Premissa, requisito e restrição.","Requisito, premissa e restrição."],0,"Capacidade, limite e condição aceita como verdadeira, nessa ordem."],
+    ["Questionário","12. O plano considera que um especialista estará disponível, mas isso não foi confirmado. Qual tratamento?",["Ignorar a incerteza até que o atraso aconteça.","Converter a disponibilidade em requisito funcional.","Monitorar a premissa e preparar uma resposta ao risco.","Retirar os testes críticos do escopo sem avaliação."],2,"Premissa instável é fonte de risco e precisa de acompanhamento."],
+    ["Questionário","13. Qual a principal finalidade do formato de história de usuário?",["Definir antecipadamente toda a arquitetura do sistema.","Relacionar necessidade, usuário e valor esperado.","Substituir critérios de aceitação por decisões técnicas.","Impedir o detalhamento progressivo dos requisitos."],1,"Quem, o quê e para quê, deixando detalhes para a conversa."],
+    ["Questionário","14. Qual história foi mais bem formulada?",["Como estudante, quero receber alertas para evitar entregas atrasadas.","Criar tabela de alertas no banco de dados institucional.","Implementar serviço assíncrono para envio de mensagens.","RF-025: desenvolver módulo completo de notificações acadêmicas."],0,"Única com ator, capacidade e benefício; as outras descrevem solução."],
+    ["Questionário","15. Quais são as quatro fases do RUP?",["Requisitos, projeto, código e manutenção.","Planejamento, execução, controle e encerramento.","Concepção, elaboração, construção e transição.","Backlog, Sprint, Review e Retrospectiva."],2,"Cada fase pode ter várias iterações."],
+    ["Questionário","16. Integrações complexas, riscos arquiteturais, documentação exigida e entregas intermediárias, mantendo papéis e artefatos. Qual abordagem?",["Cascata estritamente sequencial.","RUP adaptado ao projeto.","Processo sem documentação ou arquitetura.","Desenvolvimento sem ciclos de validação."],1,"RUP combina iteração com estrutura, arquitetura e tratamento de riscos."],
+    ["Questionário","17. Sistema regulado, requisitos legais estáveis, riscos técnicos de integração reduzíveis por protótipos. Qual plano?",["Fixar todas as decisões e testar somente depois da implementação completa.","Eliminar documentos e iniciar funcionalidades sem análise de riscos.","Utilizar fases do RUP, priorizando riscos e incrementos arquiteturais.","Construir o sistema inteiro antes de envolver especialistas regulatórios."],2,"Governança e documentação com arquitetura executável e iterações dirigidas por risco."],
+    ["Questionário","18. Backlog desatualizado, Dailys canceladas e premissa sobre fornecedor sem acompanhamento. Qual análise?",["Há falhas de transparência, inspeção e gestão de premissas.","Há apenas uma restrição de qualidade do produto.","Há excesso de adaptação e ausência de requisitos funcionais.","Há problemas exclusivamente relacionados ao modelo Cascata."],0,"Backlog: transparência. Daily: inspeção. Fornecedor: premissa não monitorada."],
+    ["Questionário","19. Requisitos ambíguos, histórias técnicas, Dailys de 45 min, retros sem ação. Qual proposta é mais completa?",["Fixar o escopo, cancelar revisões e aumentar a documentação técnica.","Reescrever histórias, respeitar time-boxes e implementar melhorias das retrospectivas.","Transferir todas as decisões ao Scrum Master e eliminar feedback.","Adiar testes, manter histórias técnicas e ampliar a duração das Dailys."],1,"Ataca cada problema: histórias de valor, Daily de 15 min e adaptação real."],
+    ["Aula 2","1. Qual alternativa define corretamente um projeto?",["Atividades contínuas e repetitivas de manutenção das operações.","Resultado físico ou digital disponibilizado permanentemente.","Esforço temporário para criar um produto, serviço ou resultado único.","Atividades que transformam continuamente entradas em saídas."],2,"A e D descrevem operação e processo; B descreve produto."],
+    ["Aula 2","2. O que é um requisito funcional?",["Descreve uma funcionalidade ou comportamento que o sistema deve realizar.","Determina os recursos financeiros do projeto.","Estabelece critérios para medir o desempenho da equipe.","Define características como segurança, disponibilidade e desempenho."],0,"D descreve requisitos não funcionais."],
+    ["Aula 2","3. Cadastro primeiro, depois ordens de manutenção, depois peças e indicadores. Qual conceito?",["Desenvolvimento sequencial.","Desenvolvimento incremental.","Operação contínua.","Desenvolvimento exclusivamente preditivo."],1,"O produto cresce por partes funcionais sucessivas."],
+    ["Aula 2","4. Por que a abordagem adaptativa combina com um app inovador cujos usuários não sabem especificar tudo?",["Permite eliminar o planejamento e decidir tudo no final.","Pressupõe que os requisitos iniciais não mudarão.","Concentra a entrega no final, evitando interferência dos usuários.","Permite usar entregas e feedback para aprender e adaptar ao longo do projeto."],3,"Adaptativo continua planejando, mas de forma progressiva."],
+    ["Aula 2","5. Sistema feito conforme a especificação, aprovado nos testes, mas que não resolve o problema dos usuários.",["Falhou na verificação por seguir as especificações.","Pode ter passado na verificação, mas falhou na validação.","Verificação e validação são equivalentes.","Validação avalia só a qualidade do código."],1,"Produto correto (verificação) não garante produto certo (validação)."],
+    ["Aula 2","6. Especificação estável, tecnologia conhecida, requisitos regulatórios claros, documentação e marcos formais. Qual abordagem?",["Predominantemente sequencial, pela previsibilidade e estabilidade.","Adaptativa sem planejamento inicial.","Processo sem documentação.","Só protótipos sucessivos, ignorando a regulação."],0,"É exatamente o contexto em que o sequencial funciona bem."],
+    ["Aula 2","7. App bancário: a cada ciclo melhora o que existe e acrescenta algo novo. Como classificar?",["Exclusivamente sequencial.","Exclusivamente iterativo.","Iterativo e incremental.","Exclusivamente incremental."],2,"Cresce (incremento) e melhora (iteração) ao mesmo tempo."],
+    ["Aula 2","8. Equipe X: ciclos de 2 semanas, avaliação a cada 6 meses, prioridades fixas. Equipe Y: ciclos curtos com feedback e revisão de prioridades.",["As duas têm o mesmo grau de agilidade.","A Equipe X é mais ágil por preservar o plano.","A Equipe Y não usa planejamento.","A Equipe Y está mais alinhada à agilidade."],3,"Ciclos curtos sozinhos não bastam; a Y soma feedback, valor e adaptação."]
+  ];
+  var filt="all",ans=0,hit=0;
+  function buildQuiz(){
+    var box=$("quiz");box.innerHTML="";ans=0;hit=0;$("score").textContent="";
+    var list=QS.filter(function(q){return filt==="all"||q[0]===filt});
+    list.forEach(function(q){
+      var d=document.createElement("div");d.className="q";
+      d.innerHTML="<span class=\"tag\">"+q[0]+"</span><p>"+esc(q[1])+"</p><div class=\"opts\"></div><div class=\"fb\" hidden></div>";
+      var o=d.querySelector(".opts"),fb=d.querySelector(".fb");
+      q[2].forEach(function(t,i){
+        var b=document.createElement("button");b.type="button";b.className="opt";b.textContent=String.fromCharCode(65+i)+". "+t;
+        b.addEventListener("click",function(){
+          if(d.dataset.done)return;d.dataset.done=1;ans++;
+          if(i===q[3]){b.classList.add("right");hit++;fb.textContent="Correto. "+q[4]}
+          else{b.classList.add("wrong");o.children[q[3]].classList.add("right");fb.textContent="Resposta: "+String.fromCharCode(65+q[3])+". "+q[4]}
+          fb.hidden=false;
+          if(ans===list.length)$("score").textContent="Você acertou "+hit+" de "+list.length+".";
+        });
+        o.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+  }
+  seg("qFilter",function(k){filt=k;buildQuiz()});
+  $("quizReset").addEventListener("click",buildQuiz);
+
+  /* ---------- Dissertativas ---------- */
+  var DIS=[
+    ["01. Crise do Software","Sistema concluído com atraso, custo acima do previsto e funções que não atendem aos usuários. Requisitos ambíguos, testes só no final e pouca comunicação. Relacione à Crise do Software, com três causas, duas consequências e duas práticas.",
+     "<h5>Relação</h5><p>O caso reproduz os sintomas clássicos da crise: dificuldade de entregar software confiável dentro de prazo, custo e requisitos.</p><h5>Causas (escolha ao menos três)</h5><ul><li>Requisitos ambíguos, sem validação com usuários.</li><li>Testes concentrados no final, revelando defeitos tarde.</li><li>Pouca comunicação com interessados, gerando entendimentos divergentes.</li><li>Validação tardia: o usuário só vê o produto pronto.</li></ul><h5>Consequências</h5><ul><li>Atraso e custo acima do previsto.</li><li>Produto que não gera valor (falha de validação) e retrabalho em código, testes e documentação.</li></ul><h5>Práticas</h5><ul><li>Engenharia de requisitos com participação dos usuários e critérios de aceitação.</li><li>Testes ao longo do desenvolvimento (unitário, integração, aceitação) e integração contínua.</li><li>Entregas incrementais com feedback frequente; verificação e validação em cada ciclo.</li></ul>"],
+    ["02. Fundamentos do Scrum","Artefatos acessíveis mas desatualizados; eventos realizados sem gerar mudanças. Explique empirismo e pensamento Lean e como os pilares deveriam atuar juntos.",
+     "<h5>Conceitos</h5><ul><li><strong>Empirismo:</strong> conhecimento vem da experiência; decisões se baseiam no que é observado.</li><li><strong>Pensamento Lean:</strong> reduzir desperdícios e focar no essencial.</li></ul><h5>Análise do caso</h5><ul><li>Artefatos acessíveis mas desatualizados: <strong>falha de transparência</strong>, pois as decisões se apoiam em informação errada.</li><li>Eventos ocorrem, mas inspecionam dados ruins: <strong>inspeção frágil</strong>.</li><li>Problemas identificados sem mudança: <strong>falha de adaptação</strong>.</li></ul><h5>Atuação conjunta</h5><ul><li>Refinar e atualizar o Product Backlog e o Sprint Backlog (transparência).</li><li>Daily, Review e Retro examinam essa informação real (inspeção).</li><li>Cada Retrospectiva seleciona ao menos uma melhoria, incluída no trabalho da Sprint seguinte, e o efeito é verificado depois (adaptação).</li><li>Os pilares formam um ciclo: sem transparência, a inspeção engana; sem adaptação, a inspeção vira ritual.</li></ul>"],
+    ["03. Eventos, regras e time-boxes","Dailys de 45 minutos para prestar contas ao Scrum Master, Review sem interessados e Retro sem ação. Analise os erros e explique finalidade e duração de cada evento (Sprint de um mês).",
+     "<h5>Erros</h5><ul><li>Daily acima de 15 minutos.</li><li>Daily como prestação de contas ao Scrum Master: ela pertence aos Developers.</li><li>Review sem interessados: perde o feedback sobre valor.</li><li>Retro sem ação: falta adaptação.</li></ul><h5>Eventos (Sprint de um mês)</h5><ul><li><strong>Sprint Planning (até 8 h):</strong> por que a Sprint é valiosa, o que será feito e como.</li><li><strong>Daily Scrum (15 min):</strong> Developers inspecionam o progresso rumo ao Objetivo da Sprint e adaptam o plano.</li><li><strong>Sprint Review (até 4 h):</strong> Scrum Team e interessados inspecionam o Incremento e ajustam o Product Backlog.</li><li><strong>Sprint Retrospective (até 3 h):</strong> planejar melhorias de qualidade e efetividade.</li></ul>"],
+    ["04. Responsabilidades e autonomia","O PO distribui tarefas, o Scrum Master aprova o trabalho e os Developers pedem autorização para mudar o plano. Explique os papéis e por que isso contraria a autogestão.",
+     "<h5>Responsabilidades</h5><ul><li><strong>Product Owner:</strong> maximiza o valor, comunica o Objetivo do Produto, ordena o Product Backlog. Decide o quê e em que ordem.</li><li><strong>Scrum Master:</strong> estabelece o Scrum, ensina, facilita, ajuda a remover impedimentos. Atua por serviço e influência.</li><li><strong>Developers:</strong> criam o plano da Sprint, decidem como trabalhar, garantem a Definição de Pronto e adaptam o plano diariamente.</li></ul><h5>Por que o caso contraria o Scrum</h5><ul><li>PO distribuindo tarefas invade a decisão de como fazer.</li><li>SM aprovando trabalho o transforma em gerente, o que o papel não é.</li><li>Pedir autorização para mudar o plano tira dos Developers a posse do Sprint Backlog.</li><li>O Scrum Team não tem hierarquia nem subequipes; autogestão significa decidir internamente quem faz o quê, quando e como.</li></ul>"],
+    ["05. Requisito, restrição e premissa","Pagamentos em até 3 segundos; implantação até dezembro; fornecedor entrega servidores antes dos testes; orçamento até R$ 500 mil. Classifique, justifique e explique o acompanhamento da premissa.",
+     "<h5>Classificação</h5><ul><li><strong>3 segundos:</strong> requisito (não funcional, de desempenho): capacidade do sistema.</li><li><strong>Dezembro:</strong> restrição: limita o cronograma.</li><li><strong>Fornecedor:</strong> premissa: aceita como verdadeira para planejar, sem controle da equipe.</li><li><strong>R$ 500 mil:</strong> restrição: limite de orçamento.</li></ul><h5>Acompanhamento da premissa</h5><ul><li>Registrar a premissa e um responsável por confirmá-la.</li><li>Definir data de verificação antes dos testes.</li><li>Avaliar o impacto se for falsa (atraso dos testes, risco ao prazo de dezembro).</li><li>Preparar resposta ao risco (alternativa de infraestrutura, replanejamento).</li><li>Acompanhar nos eventos (Daily, Review), mantendo a transparência.</li></ul>"],
+    ["06. Histórias de usuário","Reescreva “implementar endpoint POST, criar tabela de notificações e configurar serviço de mensagens” como história, com três critérios de aceitação, e explique cartão, conversa e confirmação.",
+     "<h5>História (exemplo)</h5><p>“Como estudante, quero receber um alerta antes do vencimento de uma atividade, para não perder o prazo de entrega.”</p><h5>Critérios de aceitação</h5><ul><li>O alerta é enviado 48 horas antes do vencimento.</li><li>O alerta informa o nome da atividade e a data de entrega.</li><li>Atividades já entregues não geram alerta.</li><li>O estudante pode desativar os alertas.</li></ul><h5>Os três Cs</h5><ul><li><strong>Cartão:</strong> registro curto, lembrete da necessidade.</li><li><strong>Conversa:</strong> PO, Developers e usuários detalham o entendimento.</li><li><strong>Confirmação:</strong> critérios de aceitação que tornam o resultado verificável.</li></ul><p>O endpoint, a tabela e o serviço de mensagens viram tarefas técnicas da história.</p>"],
+    ["07. Posicionamento do RUP","Sistema com riscos arquiteturais elevados, várias integrações, documentação obrigatória e entregas intermediárias. Cascata, Scrum ou RUP? Explique fases, caráter iterativo e posição intermediária.",
+     "<h5>Escolha</h5><p>RUP adaptado ao projeto é o mais aderente: trata riscos arquiteturais explicitamente, produz a documentação exigida e entrega incrementos intermediários.</p><h5>Por que não as outras</h5><ul><li><strong>Cascata:</strong> riscos e integração ficariam para o fim, com validação tardia.</li><li><strong>Scrum puro:</strong> é possível, mas a documentação e a atenção à arquitetura precisariam ser acrescentadas.</li></ul><h5>Fases</h5><ul><li>Concepção: visão, escopo, viabilidade.</li><li>Elaboração: arquitetura executável e redução dos maiores riscos.</li><li>Construção: incrementos sucessivos.</li><li>Transição: implantação, treinamento e aceitação.</li></ul><h5>Caráter e posição</h5><p>Iterativo e incremental, dirigido por riscos, centrado na arquitetura. Mais adaptativo que o Cascata e mais prescritivo e documental que o Scrum; precisa ser ajustado para não virar burocracia.</p>"],
+    ["08. Integração para as provas","Backlog desatualizado, Dailys canceladas, premissas não acompanhadas, histórias técnicas e retros sem mudanças. Elabore um plano integrado.",
+     "<h5>Plano (problema → ação → fundamento)</h5><ul><li><strong>Backlog desatualizado</strong> → refinamento regular e ordenação pelo PO → transparência; responsabilidade do PO.</li><li><strong>Dailys canceladas</strong> → retomar a Daily diária de 15 min, conduzida pelos Developers → inspeção.</li><li><strong>Premissas sem acompanhamento</strong> → registro, responsável, data de verificação e plano de resposta ao risco → gestão de premissas.</li><li><strong>Histórias técnicas</strong> → reescrever no formato quem/o quê/para quê, com critérios de aceitação; detalhes técnicos viram tarefas → foco no valor.</li><li><strong>Retros sem mudança</strong> → selecionar ao menos uma melhoria por Sprint, incluí-la no Sprint Backlog e verificar o efeito → adaptação.</li></ul><p>Fechamento: as ações reforçam os três pilares e respeitam as responsabilidades (PO no valor, Developers no como, SM promovendo o Scrum).</p>"]
+  ];
+  var dbox=$("dis");
+  DIS.forEach(function(d){
+    var el=document.createElement("details");el.className="dis";
+    el.innerHTML="<summary>"+esc(d[0])+"</summary><div class=\"enun\">"+esc(d[1])+"</div><div class=\"rot\">"+d[2]+"</div>";
+    dbox.appendChild(el);
+  });
+
+  /* ---------- Flashcards ---------- */
+  var cards=[
+    ["Projeto","Esforço temporário para criar um produto, serviço ou resultado único."],
+    ["Projeto x operação","Projeto: temporário, resultado único, mudança. Operação: contínua, repetitiva, manutenção."],
+    ["Requisito funcional x não funcional","Funcional: o que o sistema faz. Não funcional: como funciona (desempenho, segurança, usabilidade)."],
+    ["Stakeholder","Quem influencia, é influenciado ou se percebe afetado pelo projeto."],
+    ["Crise do Software","Dificuldade recorrente de entregar software confiável no prazo, custo e requisitos."],
+    ["CHAOS 1994","31,1% cancelados, 52,7% desafiados, 16,2% no prazo e orçamento. Evidência histórica, não taxa atual."],
+    ["Verificação x validação","Verificação: produto construído corretamente. Validação: produto certo para o usuário."],
+    ["Iterativo x incremental","Iterativo melhora a mesma solução. Incremental acrescenta partes funcionais."],
+    ["Complicado x complexo","Complicado: analisável e reproduzível. Complexo: causa e efeito percebidos depois; exige experimentar."],
+    ["Output x outcome","Output: o que foi entregue. Outcome: o resultado gerado (menos erros, mais adesão)."],
+    ["Desperdício","Consumo de recursos sem valor ou aprendizado proporcional."],
+    ["Manifesto Ágil","2001, 17 profissionais, 4 valores e 12 princípios. Expressa preferência, não exclusão."],
+    ["Simplicidade (princípio 10)","Maximizar a quantidade de trabalho que não precisa ser feito."],
+    ["Fases do RUP","Concepção, elaboração, construção e transição, cada uma com iterações."],
+    ["RUP em uma frase","Iterativo e incremental, orientado por casos de uso, centrado na arquitetura e dirigido por riscos."],
+    ["Scrum, Kanban, XP, Lean","Framework; método de fluxo; método de práticas de engenharia; filosofia de valor e desperdício."],
+    ["Lead time x cycle time","Lead: da solicitação à conclusão. Cycle: do início do trabalho à conclusão."],
+    ["Empirismo","Conhecimento vem da experiência; decisões baseadas no que é observado."],
+    ["Pilares do Scrum","Transparência, inspeção e adaptação."],
+    ["Time-boxes (Sprint de 1 mês)","Planning 8 h, Daily 15 min, Review 4 h, Retrospective 3 h. Sprint de até 1 mês."],
+    ["Compromissos dos artefatos","Product Backlog: Objetivo do Produto. Sprint Backlog: Objetivo da Sprint. Incremento: Definição de Pronto."],
+    ["Quem cancela a Sprint?","Somente o Product Owner, quando o Objetivo da Sprint fica obsoleto."],
+    ["Requisito, restrição, premissa","O que atender; que limite respeitar; o que aceitamos como verdadeiro."],
+    ["Premissa instável","Fonte de risco: registrar, verificar, avaliar impacto e preparar resposta."],
+    ["Formato de história","Como [usuário], quero [capacidade], para [benefício]."],
+    ["Três Cs","Cartão (lembrete), conversa (entendimento), confirmação (critérios de aceitação)."]
+  ];
+  var ci=0,card=$("fcCard");
+  function showCard(){var f=card.classList.contains("flip");card.classList.remove("flip");setTimeout(function(){$("fcTerm").textContent=cards[ci][0];$("fcDef").textContent=cards[ci][1];$("fcCount").textContent=(ci+1)+" / "+cards.length},f?220:0)}
+  card.addEventListener("click",function(){card.classList.toggle("flip")});
+  $("fcPrev").addEventListener("click",function(){ci=(ci-1+cards.length)%cards.length;showCard()});
+  $("fcNext").addEventListener("click",function(){ci=(ci+1)%cards.length;showCard()});
+  showCard();
+
+  /* ---------- Tema ---------- */
+  var root=document.documentElement,mq=window.matchMedia("(prefers-color-scheme: dark)");
+  function atual(){return root.getAttribute("data-theme")||(mq.matches?"dark":"light")}
+  function pintar(){var esc2=atual()==="dark";document.querySelectorAll(".theme-btn").forEach(function(b){b.textContent=esc2?"☀":"☾";b.setAttribute("aria-label",esc2?"Mudar para tema claro":"Mudar para tema escuro");b.title=b.getAttribute("aria-label")})}
+  document.querySelectorAll(".theme-btn").forEach(function(b){b.addEventListener("click",function(){var n=atual()==="dark"?"light":"dark";root.setAttribute("data-theme",n);try{localStorage.setItem("guias-tema",n)}catch(e){}pintar()})});
+  if(mq.addEventListener)mq.addEventListener("change",pintar);
+  pintar();
+})();
+</script>
+</body>
+</html>
