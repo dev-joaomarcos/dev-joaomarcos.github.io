@@ -1,144 +1,336 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<script>try{var t=localStorage.getItem("guias-tema");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      try {
+        var t = localStorage.getItem("guias-tema");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Guias de estudo</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#F4F5F7; --surface:#FFFFFF; --ink:#18202A; --muted:#5B6574; --line:#D9DEE5;
-  --font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --display:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#11161C; --surface:#19212A; --ink:#E6EAF0; --muted:#98A3B2; --line:#28323E}
-}
-:root[data-theme="dark"]{--bg:#11161C; --surface:#19212A; --ink:#E6EAF0; --muted:#98A3B2; --line:#28323E}
-*,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{max-width:680px;margin:0 auto;padding:20px 20px 60px}
-.topbar{display:flex;justify-content:flex-end;margin-bottom:24px}
-h1{font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,9vw,3.4rem);line-height:1.05;margin:0;letter-spacing:-.02em}
-.sub{color:var(--muted);margin:10px 0 32px}
-.list{display:grid;gap:14px}
-.guide{display:grid;grid-template-columns:8px 1fr;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .2s,transform .2s}
-.guide:hover{border-color:var(--c);transform:translateY(-2px)}
-.guide:focus-visible{outline:3px solid var(--c);outline-offset:3px}
-.stripe{background:var(--c)}
-.body{padding:18px 18px 16px}
-.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.guide h2{font-family:var(--display);font-weight:800;font-size:1.45rem;margin:0;line-height:1.15}
-.go{color:var(--c);font-weight:700;font-size:.9rem;white-space:nowrap}
-.desc{color:var(--muted);font-size:.95rem;margin:6px 0 12px}
-.prog{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:10px}
-.track{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
-.fill{height:100%;background:var(--c);width:0;transition:width .4s}
-footer{color:var(--muted);font-size:.85rem;margin-top:36px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Guias de estudo</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f5f7;
+        --surface: #ffffff;
+        --ink: #18202a;
+        --muted: #5b6574;
+        --line: #d9dee5;
+        --font:
+          "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto,
+          sans-serif;
+        --display:
+          "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI",
+          sans-serif;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #11161c;
+          --surface: #19212a;
+          --ink: #e6eaf0;
+          --muted: #98a3b2;
+          --line: #28323e;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #11161c;
+        --surface: #19212a;
+        --ink: #e6eaf0;
+        --muted: #98a3b2;
+        --line: #28323e;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font);
+        font-size: 17px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 20px 20px 60px;
+      }
+      .topbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 24px;
+      }
+      h1 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: clamp(2.4rem, 9vw, 3.4rem);
+        line-height: 1.05;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 10px 0 32px;
+      }
+      .list {
+        display: grid;
+        gap: 14px;
+      }
+      .guide {
+        display: grid;
+        grid-template-columns: 8px 1fr;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .guide:hover {
+        border-color: var(--c);
+        transform: translateY(-2px);
+      }
+      .guide:focus-visible {
+        outline: 3px solid var(--c);
+        outline-offset: 3px;
+      }
+      .stripe {
+        background: var(--c);
+      }
+      .body {
+        padding: 18px 18px 16px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+      }
+      .guide h2 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.45rem;
+        margin: 0;
+        line-height: 1.15;
+      }
+      .go {
+        color: var(--c);
+        font-weight: 700;
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+      .desc {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin: 6px 0 12px;
+      }
+      .prog {
+        font-size: 0.82rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .track {
+        flex: 1;
+        height: 6px;
+        background: var(--line);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        background: var(--c);
+        width: 0;
+        transition: width 0.4s;
+      }
+      footer {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-top: 36px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
 
-.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:38px;height:36px;display:inline-grid;place-items:center;cursor:pointer;font-size:1.05rem;line-height:1;flex:none}
-.theme-btn:hover{border-color:var(--accent,var(--ink))}
-:root{color-scheme:light}
-:root[data-theme="dark"]{color-scheme:dark}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark}}
-</style>
-</head>
-<body>
-<main class="wrap">
-  <div class="topbar"><button class="theme-btn" type="button" aria-label="Alternar tema"></button></div>
-  <h1>Guias de estudo</h1>
-  <p class="sub">Escolha a matéria. O progresso de cada guia aparece aqui conforme você marca os tópicos como estudados.</p>
-  <div class="list" id="list"></div>
-  <footer>Para incluir um guia novo, adicione um item na lista <code>guias</code> no fim deste arquivo.</footer>
-</main>
+      .theme-btn {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        border-radius: 8px;
+        width: 38px;
+        height: 36px;
+        display: inline-grid;
+        place-items: center;
+        cursor: pointer;
+        font-size: 1.05rem;
+        line-height: 1;
+        flex: none;
+      }
+      .theme-btn:hover {
+        border-color: var(--accent, var(--ink));
+      }
+      :root {
+        color-scheme: light;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="topbar">
+        <button
+          class="theme-btn"
+          type="button"
+          aria-label="Alternar tema"
+        ></button>
+      </div>
+      <h1>Guias de estudo</h1>
+      <p class="sub">
+        Escolha a matéria. O progresso de cada guia aparece aqui conforme você
+        marca os tópicos como estudados.
+      </p>
+      <div class="list" id="list"></div>
+      <footer>
+        Para incluir um guia novo, adicione um item na lista
+        <code>guias</code> no fim deste arquivo.
+      </footer>
+    </main>
 
-<script>
-/* Para adicionar um guia: copie um bloco e ajuste os campos.
+    <script>
+      /* Para adicionar um guia: copie um bloco e ajuste os campos.
    chave = nome usado pelo guia para salvar o progresso no navegador.
    total = quantidade de tópicos do guia. */
-const guias = [
-  {
-    titulo: 'Virtualização',
-    descricao: 'Hypervisor, VMs, vCPU e pCPU, SMT, overcommitment, armazenamento e TI Verde.',
-    arquivo: 'guia-virtualizacao.html',
-    cor: '#2B54D9',
-    chave: 'virt-guia-estudados',
-    total: 22
-  },
-  {
-    titulo: 'Dart & Flutter',
-    descricao: 'Fundamentos, orientação a objetos, construtores, widgets, estado, alinhamento e treino de leitura de código.',
-    arquivo: 'guia-dart-flutter.html',
-    cor: '#0B7A75',
-    chave: 'flutter-guia-estudados',
-    total: 25
-  },
-  {
-    titulo: 'Métodos Ágeis',
-    descricao: 'Projetos, engenharia de software, Manifesto Ágil, Scrum, histórias de usuário e RUP, com o questionário comentado.',
-    arquivo: 'guia-metodos-ageis.html',
-    cor: '#8A2E66',
-    chave: 'ageis-guia-estudados',
-    total: 27
-  }
-];
+      const guias = [
+        {
+          titulo: "Virtualização",
+          descricao:
+            "Hypervisor, VMs, vCPU e pCPU, SMT, overcommitment, armazenamento e TI Verde.",
+          arquivo: "guia-virtualizacao.html",
+          cor: "#2B54D9",
+          chave: "virt-guia-estudados",
+          total: 22,
+        },
+        {
+          titulo: "Dart & Flutter",
+          descricao:
+            "Fundamentos, orientação a objetos, construtores, widgets, estado, alinhamento e treino de leitura de código.",
+          arquivo: "guia-dart-flutter.html",
+          cor: "#0B7A75",
+          chave: "flutter-guia-estudados",
+          total: 25,
+        },
+        {
+          titulo: "Métodos Ágeis",
+          descricao:
+            "Projetos, engenharia de software, Manifesto Ágil, Scrum, histórias de usuário e RUP, com o questionário comentado.",
+          arquivo: "guia-metodos-ageis.html",
+          cor: "#8A2E66",
+          chave: "ageis-guia-estudados",
+          total: 27,
+        },
+      ];
 
-const list = document.getElementById('list');
-guias.forEach(g => {
-  let feitos = 0;
-  try {
-    const salvo = JSON.parse(localStorage.getItem(g.chave) || '{}') || {};
-    feitos = Object.values(salvo).filter(Boolean).length;
-  } catch (e) { feitos = 0; }
-  const pct = Math.min(100, Math.round(feitos / g.total * 100));
-  const a = document.createElement('a');
-  a.className = 'guide';
-  a.href = g.arquivo;
-  a.style.setProperty('--c', g.cor);
-  a.innerHTML =
-    '<div class="stripe"></div><div class="body">' +
-      '<div class="top"><h2></h2><span class="go">' + (feitos ? 'Continuar' : 'Começar') + '</span></div>' +
-      '<p class="desc"></p>' +
-      '<div class="prog"><div class="track"><div class="fill"></div></div><span>' + feitos + ' de ' + g.total + '</span></div>' +
-    '</div>';
-  a.querySelector('h2').textContent = g.titulo;
-  a.querySelector('.desc').textContent = g.descricao;
-  list.appendChild(a);
-  requestAnimationFrame(() => { a.querySelector('.fill').style.width = pct + '%'; });
-});
-</script>
-<script>
-(function(){
-  var root=document.documentElement,mq=window.matchMedia("(prefers-color-scheme: dark)");
-  function atual(){return root.getAttribute("data-theme")||(mq.matches?"dark":"light")}
-  function pintar(){
-    var escuro=atual()==="dark";
-    document.querySelectorAll(".theme-btn").forEach(function(b){
-      b.textContent=escuro?"☀":"☾";
-      b.setAttribute("aria-label",escuro?"Mudar para tema claro":"Mudar para tema escuro");
-      b.title=b.getAttribute("aria-label");
-    });
-  }
-  document.querySelectorAll(".theme-btn").forEach(function(b){
-    b.addEventListener("click",function(){
-      var novo=atual()==="dark"?"light":"dark";
-      root.setAttribute("data-theme",novo);
-      try{localStorage.setItem("guias-tema",novo)}catch(e){}
-      pintar();
-    });
-  });
-  if(mq.addEventListener)mq.addEventListener("change",pintar);
-  pintar();
-})();
-</script>
-</body>
+      const list = document.getElementById("list");
+      guias.forEach((g) => {
+        let feitos = 0;
+        try {
+          const salvo = JSON.parse(localStorage.getItem(g.chave) || "{}") || {};
+          feitos = Object.values(salvo).filter(Boolean).length;
+        } catch (e) {
+          feitos = 0;
+        }
+        const pct = Math.min(100, Math.round((feitos / g.total) * 100));
+        const a = document.createElement("a");
+        a.className = "guide";
+        a.href = g.arquivo;
+        a.style.setProperty("--c", g.cor);
+        a.innerHTML =
+          '<div class="stripe"></div><div class="body">' +
+          '<div class="top"><h2></h2><span class="go">' +
+          (feitos ? "Continuar" : "Começar") +
+          "</span></div>" +
+          '<p class="desc"></p>' +
+          '<div class="prog"><div class="track"><div class="fill"></div></div><span>' +
+          feitos +
+          " de " +
+          g.total +
+          "</span></div>" +
+          "</div>";
+        a.querySelector("h2").textContent = g.titulo;
+        a.querySelector(".desc").textContent = g.descricao;
+        list.appendChild(a);
+        requestAnimationFrame(() => {
+          a.querySelector(".fill").style.width = pct + "%";
+        });
+      });
+    </script>
+    <script>
+      (function () {
+        var root = document.documentElement,
+          mq = window.matchMedia("(prefers-color-scheme: dark)");
+        function atual() {
+          return (
+            root.getAttribute("data-theme") || (mq.matches ? "dark" : "light")
+          );
+        }
+        function pintar() {
+          var escuro = atual() === "dark";
+          document.querySelectorAll(".theme-btn").forEach(function (b) {
+            b.textContent = escuro ? "☀" : "☾";
+            b.setAttribute(
+              "aria-label",
+              escuro ? "Mudar para tema claro" : "Mudar para tema escuro",
+            );
+            b.title = b.getAttribute("aria-label");
+          });
+        }
+        document.querySelectorAll(".theme-btn").forEach(function (b) {
+          b.addEventListener("click", function () {
+            var novo = atual() === "dark" ? "light" : "dark";
+            root.setAttribute("data-theme", novo);
+            try {
+              localStorage.setItem("guias-tema", novo);
+            } catch (e) {}
+            pintar();
+          });
+        });
+        if (mq.addEventListener) mq.addEventListener("change", pintar);
+        pintar();
+      })();
+    </script>
+  </body>
 </html>
