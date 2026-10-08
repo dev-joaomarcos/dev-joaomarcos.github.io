@@ -9,6 +9,7 @@ Explore os guias disponíveis:
 | [🖥️ Virtualização](./guia-virtualizacao.html) | Hypervisors, máquinas virtuais, vCPU e pCPU, SMT, overcommitment, armazenamento e TI Verde. |
 | [📱 Dart & Flutter](./guia-dart-flutter.html) | Fundamentos de Dart, orientação a objetos, widgets, estado, alinhamento e leitura de código. |
 | [🔄 Métodos Ágeis](./guia-metodos-ageis.html) | Engenharia de software, Manifesto Ágil, Scrum, histórias de usuário, RUP e questionário comentado. |
+| [🎛️ Usabilidade e Interfaces](./guia-usabilidade.html) | Metas, Norman, heurísticas de Nielsen, affordances, semiótica, cores, acessibilidade, emoção, flat design e revisão com 55 questões. |
 
 ## ✨ Sobre os guias
 
