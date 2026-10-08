@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script>try{var t=localStorage.getItem("guias-tema");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Usabilidade e Interfaces: guia de estudo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎛️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400;62..125,500;62..125,600;62..125,700;62..125,800;62..125,900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="f-deut"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0  0.7 0.3 0 0 0  0 0.3 0.7 0 0  0 0 0 1 0"/></filter>
+  <filter id="f-prot"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0  0.558 0.442 0 0 0  0 0.242 0.758 0 0  0 0 0 1 0"/></filter>
+</svg>
+<style>
+:root{
+  --bg:#F2F3F7; --surface:#FFFFFF; --sunken:#E9EBF1; --ink:#14151B; --muted:#5D6170; --line:#DADDE6;
+  --accent:#E8590C; --accent-ink:#B9430A; --accent-soft:#FDEBDF;
+  --ok:#1C7C54; --ok-soft:#DFF3E9;
+  --warn:#8A5A00; --warn-soft:#FFF4D6; --warn-line:#E8C46A;
+  --info:#3150C9; --info-soft:#E4E9FB;
+  --shadow:0 1px 2px rgba(20,21,27,.06),0 8px 24px rgba(20,21,27,.06);
+  --font:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  box-sizing:border-box;color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121317; --surface:#1B1D23; --sunken:#24262E; --ink:#ECEDF2; --muted:#9EA2B0; --line:#2E313B;
+    --accent:#FF8A4C; --accent-ink:#FF9D66; --accent-soft:#3A2418;
+    --ok:#5BD39A; --ok-soft:#15332A;
+    --warn:#F2C25C; --warn-soft:#2E2512; --warn-line:#6B531E;
+    --info:#8EA5FF; --info-soft:#1F2647;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121317; --surface:#1B1D23; --sunken:#24262E; --ink:#ECEDF2; --muted:#9EA2B0; --line:#2E313B;
+  --accent:#FF8A4C; --accent-ink:#FF9D66; --accent-soft:#3A2418;
+  --ok:#5BD39A; --ok-soft:#15332A;
+  --warn:#F2C25C; --warn-soft:#2E2512; --warn-line:#6B531E;
+  --info:#8EA5FF; --info-soft:#1F2647;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;font-stretch:100%}
+.wrap{max-width:780px;margin:0 auto;padding-left:20px;padding-right:20px}
+h1,h2,h3,h4{margin:0;line-height:1.08;font-stretch:118%;font-weight:800;letter-spacing:-.01em}
+p{margin:0 0 .9em}
+strong{font-weight:700}
+button{font:inherit;color:inherit}
+code,.mono{font-family:var(--mono);font-size:.86em}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* Topo */
+.back{display:inline-block;padding-top:16px;color:var(--accent-ink);font-weight:600;font-size:.92rem;text-decoration:none}
+.hero{padding-top:28px;padding-bottom:28px}
+.eyebrow{font-family:var(--mono);font-size:.78rem;color:var(--muted);letter-spacing:.04em}
+.hero h1{font-size:clamp(2.4rem,9.5vw,4.4rem);margin-top:8px;font-stretch:125%;font-weight:900;letter-spacing:-.025em}
+.hero h1 span{color:var(--accent)}
+.hero .sub{color:var(--muted);font-size:1.06rem;margin-top:12px;max-width:36em}
+.ratio{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-top:18px;max-width:340px}
+.ratio i{display:block}
+.ratio-l{display:flex;gap:14px;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:6px}
+
+/* Mock com heurísticas */
+.insp{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.insp-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--sunken)}
+.insp-bar i{width:10px;height:10px;border-radius:50%;background:var(--line);display:block}
+.insp-bar span{margin-left:8px;font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.insp-body{padding:14px;display:grid;gap:10px}
+.mk{position:relative;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.88rem;background:var(--surface)}
+.mk-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pin{position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:.75rem;display:grid;place-items:center;border:2px solid var(--surface);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);animation:pulse 2.4s ease-in-out infinite;z-index:2}
+.pin[aria-pressed="true"]{background:var(--ink);color:var(--surface);animation:none;transform:scale(1.15)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,89,12,.45)}50%{box-shadow:0 0 0 7px rgba(232,89,12,0)}}
+.mk.hl{outline:2px solid var(--accent);outline-offset:2px}
+.prog{height:8px;border-radius:4px;background:var(--sunken);overflow:hidden;flex:1;min-width:80px}
+.prog i{display:block;height:100%;width:62%;background:var(--accent)}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.8rem;background:var(--surface)}
+.fake-in{border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--muted);flex:1;min-width:120px;font-size:.85rem}
+.fake-btn{border-radius:8px;padding:6px 12px;font-weight:700;font-size:.82rem;background:var(--accent);color:#fff}
+.fake-btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.kbd{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px}
+.err-inline{color:#C92A2A;font-size:.8rem;display:flex;gap:4px;align-items:center}
+.insp-cap{border-top:1px solid var(--line);padding:12px 14px;background:var(--sunken);font-size:.92rem;min-height:4.6em}
+.insp-cap b{font-stretch:110%}
+
+/* Barra fixa */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:10px;height:56px}
+.progb{flex:1;min-width:0}
+.prog-txt{font-size:.84rem;color:var(--muted)}
+.prog-track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;width:0;background:var(--accent);transition:width .3s}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 13px;cursor:pointer;font-size:.92rem;font-weight:600}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#1B1D23}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.primary{color:#1B1D23}}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;width:38px;height:36px;display:inline-grid;place-items:center;cursor:pointer;font-size:1.05rem;line-height:1;flex:none}
+.theme-btn:hover{border-color:var(--accent)}
+.toc{display:none;position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 56px);bottom:0;background:var(--bg);z-index:19;overflow-y:auto;padding:16px 0 calc(32px + env(safe-area-inset-bottom,0px))}
+.toc.open{display:block}
+.toc h4{font-size:.92rem;margin:18px 0 6px;color:var(--muted);font-stretch:100%}
+.toc a{display:flex;justify-content:space-between;gap:10px;padding:8px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.toc a .ck{color:var(--ok);font-weight:700}
+
+/* Partes e tópicos */
+.part{margin-top:64px}
+.part-head{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:end;margin-bottom:22px}
+.part-num{font-size:4.2rem;font-weight:900;font-stretch:125%;line-height:.8;color:var(--accent);grid-row:span 2}
+.part-head .n{font-family:var(--mono);font-size:.76rem;color:var(--muted)}
+.part-head h2{font-size:2rem}
+.part-head p{grid-column:1/-1;color:var(--muted);margin:8px 0 0}
+.topic{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 20px 18px;margin-bottom:18px;box-shadow:var(--shadow)}
+.topic-head{margin-bottom:14px}
+.topic-head .src{font-family:var(--mono);font-size:.74rem;color:var(--accent-ink)}
+.topic-head h3{font-size:1.6rem;margin-top:4px}
+.topic ul,.topic ol{padding-left:1.2em;margin:0 0 .9em}
+.topic li{margin-bottom:.35em}
+.idea{font-size:1.1rem;font-weight:500;border-left:4px solid var(--accent);padding-left:12px;margin:0 0 16px}
+h4.sub-h{font-size:1.12rem;margin:22px 0 8px}
+.done-btn{margin-top:12px;display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px;font-size:.86rem;color:var(--muted);cursor:pointer}
+.done-btn[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.done-btn .box{width:14px;height:14px;border:1.5px solid currentColor;border-radius:4px;display:inline-grid;place-items:center;font-size:11px;line-height:1}
+
+/* Componentes de conteúdo */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.cols.three{grid-template-columns:repeat(3,1fr)}
+@media (max-width:580px){.cols,.cols.three{grid-template-columns:1fr}}
+.cols>div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.95rem;background:var(--surface)}
+.cols h4{font-size:1.08rem;margin-bottom:4px}
+.cols p:last-child,.cols ul:last-child{margin-bottom:0}
+.optlist{display:grid;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0}
+.optlist div{display:grid;grid-template-columns:10em 1fr;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:.95rem;align-items:baseline}
+.optlist div:last-child{border-bottom:none}
+.optlist b{color:var(--accent-ink)}
+@media (max-width:480px){.optlist div{grid-template-columns:1fr;gap:2px}}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0}
+.flow span{background:var(--sunken);border-radius:8px;padding:5px 10px;font-weight:600;font-size:.88rem}
+.flow i{font-style:normal;color:var(--muted)}
+.quote{font-weight:600;font-stretch:110%;font-size:1.12rem;line-height:1.35;margin:16px 0;padding:14px 16px;background:var(--sunken);border-radius:12px}
+.big3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.big3>div{border-radius:14px;padding:14px 12px;color:#fff}
+.big3 b{display:block;font-size:1.15rem;font-stretch:115%}
+.big3 span{font-size:.86rem;opacity:.92}
+@media (max-width:520px){.big3{grid-template-columns:1fr}}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 13px;font-size:.86rem;cursor:pointer;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.lab{border:1px solid var(--line);background:var(--sunken);border-radius:16px;padding:16px;margin:18px 0}
+.lab-t{font-family:var(--mono);font-size:.74rem;color:var(--accent-ink);margin-bottom:2px}
+.lab h4{font-size:1.05rem;margin-bottom:8px}
+
+/* Caixas */
+.note{border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.95rem}
+.note b.t{display:block;font-stretch:112%;font-size:1rem;margin-bottom:2px}
+.note p:last-child,.note ul:last-child{margin-bottom:0}
+.note.sum{background:var(--ok-soft)}
+.note.sum b.t{color:var(--ok)}
+.note.warn{background:var(--warn-soft);border:1px dashed var(--warn-line)}
+.note.warn b.t{color:var(--warn)}
+.note.warn b.t::before{content:"⚠ "}
+.note.tip{background:var(--info-soft)}
+.note.tip b.t{color:var(--info)}
+.note.rev{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.note.rev b.t{color:var(--accent-ink)}
+
+/* Heurísticas */
+.heur{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+@media (max-width:580px){.heur{grid-template-columns:1fr}}
+.hcard{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);position:relative}
+.hcard .num{font-size:2rem;font-weight:900;font-stretch:125%;color:var(--accent);line-height:1;float:left;margin:0 10px 0 0}
+.hcard h4{font-size:1rem;margin-bottom:4px;font-stretch:108%}
+.hcard p{font-size:.9rem;margin:0;color:var(--muted)}
+.hcard .ex{clear:both;font-size:.84rem;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+
+/* Classificador */
+.cls-item{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;margin:8px 0}
+.cls-item>p{margin:0 0 6px;font-weight:600;font-size:.95rem}
+.cls-opts{display:flex;flex-wrap:wrap;gap:6px}
+.cls-opts button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 10px;font-size:.84rem;cursor:pointer}
+.cls-opts button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:700}
+.cls-opts button.wrong{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.cls-fb{font-size:.88rem;color:var(--muted);margin-top:6px}
+.cls-score{font-weight:700;margin-top:8px}
+
+/* Demos */
+.house{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-width:360px}
+.room{border:2px solid var(--line);border-radius:10px;padding:10px;min-height:66px;font-size:.84rem;font-weight:600;display:flex;justify-content:space-between;align-items:flex-start;background:var(--surface);transition:background .2s}
+.room.on{background:#FFF3BF;color:#3B2F00;border-color:#F2C94C}
+.bulb{font-size:1.2rem;filter:grayscale(1);opacity:.5}
+.room.on .bulb{filter:none;opacity:1}
+.panel{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-width:360px;margin-top:10px}
+.panel.list{grid-template-columns:1fr}
+.sw{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:.84rem;font-weight:600;text-align:left}
+.sw[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.dlg{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);max-width:400px}
+.dlg h5{margin:0 0 4px;font-size:1rem;font-stretch:110%}
+.dlg input{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);margin:8px 0}
+.toast{display:inline-flex;gap:12px;align-items:center;background:var(--ink);color:var(--surface);border-radius:10px;padding:8px 12px;font-size:.88rem;margin-top:8px}
+.toast button{background:none;border:none;color:var(--accent);font-weight:700;cursor:pointer}
+.menus{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+@media (max-width:620px){.menus{grid-template-columns:repeat(2,1fr)}}
+.menus>div{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface);font-size:.8rem;min-height:130px;position:relative}
+.menus h5{margin:0 0 8px;font-size:.86rem;font-stretch:110%}
+.mi{border-radius:5px;padding:3px 6px;background:var(--sunken);margin-bottom:3px}
+.mi.act{background:var(--accent);color:#fff}
+.circ{position:relative;width:96px;height:96px;margin:0 auto;border-radius:50%;border:12px solid var(--sunken)}
+.circ i{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--accent);opacity:.75}
+.click-ui{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+@media (max-width:520px){.click-ui{grid-template-columns:repeat(2,1fr)}}
+.cu{border:2px dashed transparent;border-radius:12px;padding:12px 8px;display:grid;place-items:center;min-height:74px;cursor:pointer;background:var(--surface);position:relative;text-align:center}
+.cu.sel{border-color:var(--info)}
+.cu.good{border-style:solid;border-color:var(--ok)}
+.cu.bad{border-style:solid;border-color:var(--warn)}
+.cu small{position:absolute;left:6px;right:6px;bottom:4px;font-size:.66rem;color:var(--muted);line-height:1.2}
+.peirce{max-width:420px;margin:10px auto}
+.peirce text{font-family:var(--font)}
+.cc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.cc{grid-template-columns:1fr}}
+.cc label{display:grid;gap:4px;font-size:.84rem;font-weight:600;color:var(--muted)}
+.cc input[type=color]{width:100%;height:42px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:2px}
+.cc-prev{border-radius:12px;padding:16px;margin-top:12px;border:1px solid var(--line)}
+.cc-prev .lg{font-size:1.5rem;font-weight:800;font-stretch:110%}
+.cc-res{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.cc-ratio{font-size:1.8rem;font-weight:900;font-stretch:120%;margin-right:6px}
+.badge{border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:700}
+.badge.p{background:var(--ok-soft);color:var(--ok)}
+.badge.f{background:var(--warn-soft);color:var(--warn)}
+.status{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;color:#14151B;display:grid;gap:6px;font-size:.88rem}
+.st{display:flex;align-items:center;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+.mock6{display:grid;grid-template-columns:2fr 5fr;gap:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);min-height:190px;font-size:.78rem}
+.mock6 .side{padding:10px;display:grid;gap:6px;align-content:start}
+.mock6 .side i{display:block;height:9px;border-radius:4px;opacity:.55;background:currentColor}
+.mock6 .main{padding:12px;display:grid;gap:8px;align-content:start}
+.mock6 .card{border-radius:10px;padding:10px;display:grid;gap:6px}
+.mock6 .card i{display:block;height:7px;border-radius:4px;opacity:.35;background:currentColor}
+.mock6 .cta{justify-self:start;border-radius:8px;padding:6px 12px;font-weight:800}
+.dm{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.dm{grid-template-columns:1fr}}
+.dm>div{border-radius:14px;padding:12px;font-size:.84rem}
+.dm .c{border-radius:10px;padding:10px;margin-top:8px}
+.phone{width:250px;max-width:100%;border:8px solid #1E1F25;border-radius:30px;overflow:hidden;background:#fff;color:#14151B;box-shadow:var(--shadow);margin:0 auto;flex:none}
+.phone .scr{height:430px;position:relative;overflow:hidden;font-size:.82rem}
+.scr-wrap{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.scr-side{flex:1;min-width:220px;font-size:.94rem}
+.styles{display:grid;place-items:center;min-height:240px;border-radius:16px;padding:20px;transition:background .3s}
+.sbtn{font-weight:800;font-size:1rem;padding:12px 26px;border-radius:12px;border:none;cursor:pointer;transition:all .3s}
+.scard{width:min(280px,100%);border-radius:16px;padding:16px;transition:all .3s;display:grid;gap:10px;justify-items:start}
+.scard h5{margin:0;font-size:1rem}
+.scard p{margin:0;font-size:.85rem}
+.chunk{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+@media (max-width:520px){.chunk{grid-template-columns:1fr}}
+.chunk>div{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface)}
+.chunk .num{font-family:var(--mono);font-size:1.35rem;letter-spacing:.02em}
+.pyr{display:grid;justify-items:center;gap:4px;margin:14px 0}
+.pyr div{color:#fff;font-weight:700;font-size:.86rem;padding:8px 0;text-align:center;border-radius:6px}
+.lc{display:flex;gap:4px;flex-wrap:wrap;margin:12px 0}
+.lc span{flex:1;min-width:110px;border-radius:10px;padding:8px 10px;font-size:.82rem;font-weight:600;background:var(--sunken);border-top:4px solid var(--accent)}
+
+/* Quiz e flashcards */
+.q{margin:14px 0 22px}
+.q>p{font-weight:600}
+.q .tag{display:inline-block;font-family:var(--mono);font-size:.7rem;color:var(--accent-ink);background:var(--accent-soft);border-radius:999px;padding:1px 9px;margin-bottom:4px}
+.q .opts{display:grid;gap:6px}
+.q .opt{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.93rem}
+.q .opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.q .opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
+.q .fb{font-size:.9rem;color:var(--muted);margin-top:6px}
+.score{font-size:1.3rem;font-weight:800;font-stretch:115%}
+.fc{perspective:1000px;margin:16px 0}
+.fc-card{position:relative;min-height:190px;cursor:pointer;transition:transform .45s;transform-style:preserve-3d;border:none;background:none;width:100%;padding:0;text-align:left}
+.fc-card.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;padding:20px;display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow)}
+.fc-face.back{transform:rotateY(180deg);background:var(--accent-soft)}
+.fc-face h4{font-size:1.5rem}
+.fc-face small{color:var(--muted);margin-top:8px}
+.fc-nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+footer{color:var(--muted);font-size:.86rem;padding:40px 0 60px}
+</style>
+</head>
+<body>
+<div class="wrap"><a class="back" href="index.html">‹ Todos os guias</a></div>
+<header class="wrap hero">
+  <div class="eyebrow">PADRÕES DE USABILIDADE E DESENVOLVIMENTO DE INTERFACES</div>
+  <h1>Usabilidade<span>.</span><br>Interfaces<span>.</span></h1>
+  <p class="sub">Guia de estudo dos materiais 1 a 7, com o conteúdo da aula 8 (flat design e padrões de telas) reconstruído a partir da revisão. Inclui as 55 questões com gabarito.</p>
+  <div class="ratio" aria-label="Este guia segue a regra 60-30-10"><i style="width:60%;background:var(--bg);border:1px solid var(--line)"></i><i style="width:30%;background:var(--ink)"></i><i style="width:10%;background:var(--accent)"></i></div>
+  <div class="ratio-l"><span>60 fundo</span><span>30 estrutura</span><span>10 acento</span></div>
+
+  <div class="insp" aria-label="Interface de exemplo com as 10 heurísticas de Nielsen">
+    <div class="insp-bar"><i></i><i></i><i></i><span>loja.app/checkout · toque nos pontos</span></div>
+    <div class="insp-body">
+      <div class="mk" data-h="0"><button class="pin" type="button" aria-pressed="false">1</button><div class="mk-row"><span>Enviando pedido</span><div class="prog"><i></i></div><span class="mono">62%</span></div></div>
+      <div class="mk-row" style="gap:10px">
+        <div class="mk" data-h="1" style="flex:1"><button class="pin" type="button" aria-pressed="false">2</button>🛒 Carrinho · 🗑️ Remover</div>
+        <div class="mk" data-h="6" style="flex:1"><button class="pin" type="button" aria-pressed="false">7</button>Buscar <span class="kbd">Ctrl</span>+<span class="kbd">K</span></div>
+      </div>
+      <div class="mk" data-h="5"><button class="pin" type="button" aria-pressed="false">6</button><div class="mk-row"><div class="fake-in">Endereço</div><span class="chip">🕘 Casa</span><span class="chip">🕘 Trabalho</span></div></div>
+      <div class="mk" data-h="8"><button class="pin" type="button" aria-pressed="false">9</button><div class="fake-in" style="border-color:#C92A2A">CEP: 0912</div><div class="err-inline" style="margin-top:4px">✕ O CEP tem 8 dígitos. Ex.: 09120-000</div></div>
+      <div class="mk-row" style="gap:10px">
+        <div class="mk" data-h="3" style="flex:1"><button class="pin" type="button" aria-pressed="false">4</button><div class="mk-row"><span class="fake-btn sec">Voltar</span><span class="fake-btn">Pagar</span></div></div>
+        <div class="mk" data-h="4" style="flex:1"><button class="pin" type="button" aria-pressed="false">5</button><span style="font-size:.82rem">“Confirmar pagamento de R$ 89,90?”</span></div>
+      </div>
+      <div class="mk-row" style="gap:10px">
+        <div class="mk" data-h="2" style="flex:2"><button class="pin" type="button" aria-pressed="false">3</button>Item removido · <b style="color:var(--accent-ink)">Desfazer</b></div>
+        <div class="mk" data-h="9" style="flex:1"><button class="pin" type="button" aria-pressed="false">10</button>❔ Ajuda</div>
+        <div class="mk" data-h="7" style="flex:1"><button class="pin" type="button" aria-pressed="false">8</button>Layout limpo</div>
+      </div>
+    </div>
+    <div class="insp-cap" id="inspCap" aria-live="polite"><b>As 10 heurísticas de Nielsen numa tela só.</b> Toque em um número para ver qual heurística aquele elemento aplica.</div>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Progresso e tópicos">
+  <div class="wrap">
+    <div class="progb">
+      <div class="prog-txt" id="progTxt"></div>
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    </div>
+    <button class="theme-btn" type="button" aria-label="Alternar tema"></button>
+    <button class="btn" id="tocBtn" aria-expanded="false" aria-controls="toc">Tópicos</button>
+  </div>
+</nav>
+<div class="toc" id="toc"><div class="wrap" id="tocList"></div></div>
+
+<main class="wrap">
+
+<!-- ============ PARTE 1 ============ -->
+<section class="part" data-part="1 · Fundamentos">
+  <div class="part-head"><div class="part-num">01</div><div class="n">MATERIAL 1</div><h2>Fundamentos</h2><p>O que é usabilidade, onde entram UI, UX e design de interação, e as metas de Nielsen e Norman.</p></div>
+
+  <article class="topic" id="u1" data-title="Usabilidade e a ISO 9241-11">
+    <div class="topic-head"><div class="src">Material 1 · Revisão 1, 41</div><h3>Usabilidade e a ISO 9241-11</h3></div>
+    <p class="idea">Usabilidade é a capacidade de um produto ser usado por <strong>usuários específicos</strong> para atingir <strong>objetivos específicos</strong> com eficácia, eficiência e satisfação, em um <strong>contexto específico</strong> de uso.</p>
+    <div class="big3">
+      <div style="background:#2F6FDE"><b>Eficácia</b><span>Precisão e completude: o usuário atingiu o objetivo corretamente?</span></div>
+      <div style="background:#E8590C"><b>Eficiência</b><span>Recursos gastos (tempo, esforço) em relação ao resultado obtido.</span></div>
+      <div style="background:#1C7C54"><b>Satisfação</b><span>Quão agradável é a experiência; incentiva o uso contínuo.</span></div>
+    </div>
+    <p>A usabilidade é medida <strong>para um contexto</strong>, e não é uma propriedade fixa: o mesmo sistema pode ser ótimo para experientes e péssimo para iniciantes, ou fácil no uso esporádico e cansativo no uso diário.</p>
+    <div class="lab"><div class="lab-t">EXERCÍCIO</div><h4>Que métrica é esta?</h4><div class="cls" data-set="iso"></div></div>
+  </article>
+
+  <article class="topic" id="u2" data-title="Design de interação, interface, UI e UX">
+    <div class="topic-head"><div class="src">Material 1 · Revisão 42, 43</div><h3>Design de interação, interface, UI e UX</h3></div>
+    <p><strong>Design de interação (IxD)</strong>, segundo Sharp, Rogers e Preece (2011): projetar produtos interativos que apoiem a forma como as pessoas se comunicam e interagem no cotidiano e no trabalho. Estuda usabilidade intuitiva, design gráfico confortável, funcionalidade objetiva e legibilidade.</p>
+    <p><strong>Interface</strong>, para Brenda Laurel (1993): superfície de contato que reflete as propriedades físicas das partes que interagem, as funções a executar e o equilíbrio entre poder e controle. Ponto-chave: familiaridade com o mundo real.</p>
+    <div class="cols">
+      <div><h4>UI (User Interface)</h4><p>O <strong>meio</strong> pelo qual a pessoa usa o sistema: o arranjo visual e funcional. Cuida da facilidade de uso, sem se aprofundar em emoção ou encantamento.</p></div>
+      <div><h4>UX (User Experience)</h4><p>Como a pessoa <strong>se sente</strong> antes, durante e depois de usar o produto. Percepção holística, emoções e sentimentos.</p></div>
+    </div>
+    <div class="note sum"><b class="t">Como cai na prova</b><p>UI é o arranjo pelo qual se opera o sistema; UX é a experiência completa e as emoções da pessoa. Não são sinônimos, e nenhum dos dois se limita a desktop ou a mobile.</p></div>
+  </article>
+
+  <article class="topic" id="u3" data-title="Metas de usabilidade de Nielsen">
+    <div class="topic-head"><div class="src">Material 1 · Revisão 44</div><h3>Metas de usabilidade de Nielsen (1993)</h3></div>
+    <div class="optlist">
+      <div><b>Aprendizagem</b><span>Fácil de aprender: o novato começa a interagir rapidamente.</span></div>
+      <div><b>Eficiência</b><span>Depois de aprendido, permite alta produtividade.</span></div>
+      <div><b>Memorabilidade</b><span>Fácil de relembrar após um tempo sem usar, sem reaprender tudo.</span></div>
+      <div><b>Erros</b><span>Poucos erros; e, quando ocorrem, volta-se a um estado sem erro sem perder o trabalho.</span></div>
+      <div><b>Satisfação</b><span>O usuário gosta de usar o sistema.</span></div>
+    </div>
+    <div class="cols">
+      <div><h4>Aprendizagem</h4><p>Primeiro contato do <strong>novato</strong>.</p></div>
+      <div><h4>Memorabilidade</h4><p>Retorno do usuário <strong>casual</strong> depois de meses.</p></div>
+    </div>
+    <div class="note warn"><b class="t">Pequenas correções</b><ul>
+      <li>O nome é <strong>Jakob</strong> Nielsen; o material escreve “Jacob”.</li>
+      <li>O material 1 cita “The Design of Everyday Things” como de 1998. O livro saiu em 1988 (com o título <em>The Psychology of Everyday Things</em>), ganhou o nome atual em 1990 e uma edição revisada em 2013. Na prova, use a data do professor se ela for pedida.</li>
+    </ul></div>
+  </article>
+
+  <article class="topic" id="u4" data-title="Princípios de Norman">
+    <div class="topic-head"><div class="src">Material 1 · Revisão 3, 4, 46</div><h3>Princípios de Norman</h3></div>
+    <div class="optlist">
+      <div><b>Visibilidade</b><span>Quanto mais visíveis as funções, mais o usuário sabe como agir.</span></div>
+      <div><b>Feedback</b><span>Retorno de que a ação foi feita e de como foi feita. Pense numa caneta que demorasse segundos para mostrar a letra.</span></div>
+      <div><b>Restrições</b><span>Limitam a interação possível naquele momento: <strong>física</strong> (encaixe que só entra de um jeito), <strong>lógica</strong> (opção de menu desabilitada), <strong>cultural</strong> (vermelho para alerta).</span></div>
+      <div><b>Mapeamento</b><span>Relação entre controles e efeitos no mundo real: o volante gira e as rodas mudam de direção.</span></div>
+      <div><b>Consistência</b><span>Operações e elementos semelhantes para tarefas semelhantes.</span></div>
+    </div>
+    <div class="lab">
+      <div class="lab-t">DEMONSTRAÇÃO · REVISÃO 46</div>
+      <h4>Casa inteligente: mapeamento e restrição</h4>
+      <div class="seg" id="mapSeg" role="group" aria-label="Tipo de painel"><button data-k="map" aria-pressed="true">Mapeado</button><button data-k="list" aria-pressed="false">Lista genérica</button></div>
+      <div class="house" id="house"></div>
+      <div class="panel" id="panel"></div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+        <button class="btn" id="acBtn" type="button">❄️ Ligar ar-condicionado</button>
+        <label style="font-size:.88rem;display:flex;gap:6px;align-items:center"><input type="checkbox" id="acOff"> Aparelho desconectado</label>
+      </div>
+      <p id="mapTxt" style="font-size:.9rem;margin:10px 0 0;color:var(--muted)"></p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ PARTE 2 ============ -->
+<section class="part" data-part="2 · Heurísticas e avaliação">
+  <div class="part-head"><div class="part-num">02</div><div class="n">MATERIAIS 2 E 3</div><h2>Heurísticas e avaliação</h2><p>As 10 heurísticas de Nielsen, os tipos de erro e como conduzir uma avaliação heurística.</p></div>
+
+  <article class="topic" id="h1" data-title="As 10 heurísticas de Nielsen">
+    <div class="topic-head"><div class="src">Material 2 · Revisão 2, 45</div><h3>As 10 heurísticas de Nielsen</h3></div>
+    <p class="idea">Diretrizes resultantes da análise de cerca de 240 problemas de usabilidade, usadas para inspecionar interfaces. A primeira tela deste guia mostra todas elas aplicadas.</p>
+    <div class="heur" id="heurList"></div>
+    <div class="lab"><div class="lab-t">EXERCÍCIO</div><h4>Qual heurística foi violada?</h4><div class="cls" data-set="heu"></div></div>
+  </article>
+
+  <article class="topic" id="h2" data-title="Prevenção de erros">
+    <div class="topic-head"><div class="src">Material 2</div><h3>Prevenção de erros</h3></div>
+    <p class="idea">Melhor do que uma boa mensagem de erro é um design que evita o erro. “A culpa não é do usuário, é da sua interface.”</p>
+    <div class="cols three">
+      <div><h4>Deslize</h4><p>Intenção certa, execução errada (pressa, fadiga, botões parecidos). <strong>Evite</strong> com dropdowns, calendários, espaçamento e autocompletar.</p></div>
+      <div><h4>Interpretação</h4><p>Plano errado porque a interface induziu: a lupa que dá zoom em vez de buscar. <strong>Evite</strong> com convenções, affordances e modelos mentais.</p></div>
+      <div><h4>Crítico</h4><p>Ameaça dados, segurança ou continuidade. <strong>Evite</strong> com confirmação de ações irreversíveis, autosave e validação em tempo real.</p></div>
+    </div>
+    <div class="lab">
+      <div class="lab-t">DEMONSTRAÇÃO</div>
+      <h4>2-step operation só onde é crítico</h4>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="arqBtn" type="button">Arquivar e-mail</button><button class="btn" id="delBtn" type="button" style="color:#C92A2A">Excluir conta</button></div>
+      <div id="twoStep" style="margin-top:10px"></div>
+      <p style="font-size:.88rem;color:var(--muted);margin:10px 0 0">Ação comum e reversível: executa direto e oferece <strong>desfazer</strong>. Ação crítica e irreversível: pede uma etapa extra. Confirmar tudo faz o usuário ignorar os avisos.</p>
+    </div>
+    <div class="lab"><div class="lab-t">EXERCÍCIO</div><h4>Que tipo de erro é este?</h4><div class="cls" data-set="err"></div></div>
+  </article>
+
+  <article class="topic" id="h3" data-title="Avaliação heurística">
+    <div class="topic-head"><div class="src">Material 3 · Revisão 5, 47, 48</div><h3>Avaliação heurística</h3></div>
+    <p class="idea">Técnica de <strong>inspeção</strong> proposta por Nielsen e Molich (1990): especialistas examinam a interface e julgam se cada elemento segue as heurísticas.</p>
+    <p>A palavra vem do grego <em>heurískein</em>, “encontrar, descobrir”. Heurísticas são atalhos mentais, intuitivos e eficientes.</p>
+    <div class="flow"><span>1. Planejamento</span><i>→</i><span>2. Execução</span><i>→</i><span>3. Revisão</span></div>
+    <div class="optlist">
+      <div><b>Planejamento</b><span>Definir objetivos, conhecer os usuários, escolher o conjunto de heurísticas.</span></div>
+      <div><b>Execução</b><span>Cada especialista analisa <strong>sozinho e de forma independente</strong>, registrando heurística violada, local e gravidade.</span></div>
+      <div><b>Revisão</b><span>Consolidar os resultados e priorizar por gravidade e impacto.</span></div>
+    </div>
+    <div class="cols">
+      <div><h4>Vantagens</h4><ul><li>Feedback rápido</li><li>Custo relativamente baixo, sem recrutar usuários</li><li>Aplicável do protótipo ao produto final</li></ul></div>
+      <div><h4>Desvantagens</h4><ul><li>Exige avaliadores especialistas</li><li>Problemas graves que só surgem com usuários reais podem passar</li></ul></div>
+    </div>
+    <div class="note tip"><b class="t">Complemento: escala de gravidade e número de avaliadores</b><p>Nielsen propõe uma escala de 0 a 4: 0 não é problema, 1 cosmético, 2 menor, 3 maior, 4 catástrofe. Ele também recomenda de 3 a 5 avaliadores, porque um único especialista encontra só uma parte dos problemas.</p></div>
+    <div class="note warn"><b class="t">Não confunda as “heurísticas”</b><p>O material 3 dá exemplos como representatividade, regra do polegar e disponibilidade. Essas são <strong>heurísticas cognitivas</strong> (atalhos de julgamento estudados na psicologia). As heurísticas de usabilidade são as 10 diretrizes de Nielsen. As duas compartilham a ideia de atalho, mas são coisas distintas.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 3 ============ -->
+<section class="part" data-part="3 · Tipos de interface">
+  <div class="part-head"><div class="part-num">03</div><div class="n">MATERIAL 4</div><h2>Tipos de interface</h2><p>Da linha de comando às interfaces enativas e multimodais.</p></div>
+
+  <article class="topic" id="i1" data-title="CLI e o paradigma WIMP">
+    <div class="topic-head"><div class="src">Material 4 · Revisão 26, 27, 49</div><h3>CLI e o paradigma WIMP</h3></div>
+    <p><strong>CLI (linha de comando):</strong> o princípio mais importante é a <strong>consistência</strong> dos comandos (ordem e preenchimento padronizados); forma, nomes e estrutura são as questões-chave.</p>
+    <p><strong>WIMP</strong> = <strong>W</strong>indows, <strong>I</strong>cons, <strong>M</strong>enus e <strong>P</strong>ointing device. Base das GUIs, do Xerox Alto (1973) ao Apple Macintosh (1984).</p>
+    <div class="menus" aria-label="Tipos de menu">
+      <div><h5>Plano (flat)</h5><div class="mi">Arquivo</div><div class="mi act">Editar</div><div class="mi">Exibir</div><div class="mi">Ajuda</div></div>
+      <div><h5>Cascata</h5><div class="mi">Arquivo</div><div class="mi act">Exportar ▸</div><div class="mi" style="margin-left:18px">PDF</div><div class="mi" style="margin-left:18px">PNG</div></div>
+      <div><h5>Circular</h5><div class="circ"><i style="top:-14px;left:26px"></i><i style="top:26px;right:-14px"></i><i style="bottom:-14px;left:26px"></i><i style="top:26px;left:-14px"></i></div></div>
+      <div><h5>Contextual</h5><div style="font-size:.74rem;color:var(--muted);margin-bottom:4px">clique direito ▾</div><div class="mi">Copiar</div><div class="mi">Colar</div><div class="mi">Propriedades</div></div>
+    </div>
+    <div class="optlist">
+      <div><b>Janelas</b><span>Alternar entre elas sem perder a atenção; usar espaçamento, agrupamento visual e simplicidade.</span></div>
+      <div><b>Menus</b><span>Usar a linguagem do público; posição é crítica (Sair e Salvar não ficam próximos); seguir guidelines como a ISO 9241.</span></div>
+      <div><b>Ícones</b><span>Em regra mais fáceis de memorizar que comandos; texto junto enriquece a compreensão.</span></div>
+      <div><b>Ponteiros</b><span>Sem animação exagerada, com contraste, consistentes e contextualizados.</span></div>
+    </div>
+    <p><strong>Icon Design Game:</strong> atividade de design participativo. Um participante desenha um conceito, o grupo tenta adivinhar e um observador anota; os melhores desenhos viram rascunhos de ícones.</p>
+    <div class="note warn"><b class="t">Termo trocado no material</b><p>O slide 14 diz “para grandes conjuntos use barras de rolagem (rollovers)”. <em>Rollover</em> é o efeito que muda um elemento quando o ponteiro passa sobre ele (hover), e não barra de rolagem (<em>scrollbar</em>). A recomendação de usar rolagem para grandes conjuntos de ícones está certa; só o nome em inglês está trocado.</p></div>
+  </article>
+
+  <article class="topic" id="i2" data-title="Visualização, touch, gestos e wearables">
+    <div class="topic-head"><div class="src">Material 4 · Revisão 29, 30</div><h3>Visualização, touch, gestos e wearables</h3></div>
+    <p><strong>Visualização de informação:</strong> facilitar grandes volumes de dados com recursos adaptados à condição humana (como listas zebradas). Segundo Card et al. (1999), deve amplificar a cognição para que o usuário <strong>veja padrões, tendências e anomalias</strong>.</p>
+    <div class="cols">
+      <div><h4>Touch screen</h4><ul><li>Digitação rápida</li><li>Ergonomia em desktops</li><li>Tamanho dos elementos</li><li>Feedback adequado</li><li>Acessibilidade</li></ul></div>
+      <div><h4>Gestos no ar</h4><ul><li>Precisão difícil</li><li>Tarefas de precisão complicadas</li><li>Ainda exige treinamento</li><li>Ainda exige ambiente controlado</li></ul></div>
+    </div>
+  </article>
+
+  <article class="topic" id="i3" data-title="Interfaces enativas e multimodalidade">
+    <div class="topic-head"><div class="src">Material 4 · Revisão 28, 50</div><h3>Interfaces enativas e multimodalidade</h3></div>
+    <p class="idea">A teoria enativa (Varela, Thompson e Rosch) diz que a cognição surge da <strong>ação e percepção</strong> do corpo no ambiente. Na interface: ensinar o usuário a usar o sistema <strong>enquanto ele usa</strong>.</p>
+    <div class="cols">
+      <div><h4>Modelo tradicional (anos 60/70)</h4><p>Mente como processador de representações simbólicas internas e estáticas.</p></div>
+      <div><h4>Abordagem enativa</h4><p>Cognição emerge do acoplamento dinâmico entre ação e percepção corporificada: aprende-se fazendo.</p></div>
+    </div>
+    <div class="optlist">
+      <div><b>Autonomia</b><span>Sistemas cognitivos se auto-organizam.</span></div>
+      <div><b>Adaptatividade</b><span>Ajuste constante ao ambiente.</span></div>
+      <div><b>Incorporação</b><span>A cognição envolve todo o corpo, além do cérebro.</span></div>
+      <div><b>Emergência</b><span>Propriedades surgem das interações, sem se reduzir às partes.</span></div>
+      <div><b>Experiência</b><span>A experiência subjetiva é central para o conhecimento.</span></div>
+    </div>
+    <p>Na prática: interfaces intuitivas (clicou, algo acontece), <strong>feedback imediato</strong> (animação ou som ao arrastar) e <strong>exploração natural</strong> sem manual. <strong>Multimodalidade</strong> combina toque, gesto, fala e dispositivos tradicionais, como no exemplo da produção de filme a partir da narração do usuário com IA.</p>
+  </article>
+</section>
+
+<!-- ============ PARTE 4 ============ -->
+<section class="part" data-part="4 · Affordances e semiótica">
+  <div class="part-head"><div class="part-num">04</div><div class="n">MATERIAL 5</div><h2>Affordances e semiótica</h2><p>Como o usuário percebe o que pode fazer, e como os signos da interface ganham significado.</p></div>
+
+  <article class="topic" id="s1" data-title="Affordances: Gibson, Norman e Stamper">
+    <div class="topic-head"><div class="src">Material 5 · Revisão 31, 51</div><h3>Affordances: Gibson, Norman e Stamper</h3></div>
+    <div class="optlist">
+      <div><b>Gibson</b><span>Affordance se refere ao mesmo tempo ao ambiente e ao animal: implica <strong>complementaridade</strong>. Não é só propriedade física; é relativa à postura e ao comportamento de quem age.</span></div>
+      <div><b>Norman</b><span>Disse que deveria ter usado <strong>“affordance percebida”</strong>: no design de interfaces, importa o que o usuário <strong>percebe</strong> que pode fazer.</span></div>
+      <div><b>Stamper</b><span>Estendeu a ideia ao <strong>mundo social</strong>: invariantes sociais, como respeitar uma obra patenteada ou os usos aceitáveis de um copo.</span></div>
+    </div>
+    <div class="lab">
+      <div class="lab-t">TESTE · AFFORDANCE PERCEBIDA</div>
+      <h4>Toque no que você acha que é clicável</h4>
+      <div class="click-ui" id="clickUI"></div>
+      <div style="display:flex;gap:8px"><button class="btn primary" id="clickReveal" type="button">Revelar</button><button class="btn" id="clickReset" type="button">Recomeçar</button></div>
+      <p id="clickTxt" style="font-size:.9rem;margin:10px 0 0" aria-live="polite"></p>
+    </div>
+    <div class="note warn"><b class="t">Cuidado com a tradução</b><p>O material traduz affordance como “acessibilidade” (no sentido de algo fácil de usar por qualquer um). Na área, “acessibilidade” é o termo das normas como a WCAG, para pessoas com deficiência. Na prova, se aparecer “acessibilidade percebida” ou “de Stamper”, entenda como <strong>affordance</strong>.</p><p>A citação de Gibson atribuída a 1968, p. 127, costuma ser creditada ao livro de 1979 (<em>The Ecological Approach to Visual Perception</em>); o termo surgiu em 1966. Use a data do professor se ela for cobrada.</p></div>
+  </article>
+
+  <article class="topic" id="s2" data-title="Semiótica: Peirce, divisões e Andersen">
+    <div class="topic-head"><div class="src">Material 5 · Revisão 32, 33, 52</div><h3>Semiótica: Peirce, divisões e Andersen</h3></div>
+    <p class="idea">Semiótica estuda os signos e o processo de interpretá-los (semiose). Um signo é aquilo que representa <strong>algo para alguém</strong> em um contexto (<em>aliquid pro aliquo</em>).</p>
+    <svg class="peirce" viewBox="0 0 400 270" role="img" aria-label="Triângulo de Peirce aplicado ao ícone de salvar">
+      <polygon points="200,30 50,230 350,230" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2"/>
+      <g fill="var(--accent)"><circle cx="200" cy="30" r="9"/><circle cx="50" cy="230" r="9"/><circle cx="350" cy="230" r="9"/></g>
+      <text x="200" y="12" text-anchor="middle" font-weight="800" font-size="15" fill="currentColor">Interpretante</text>
+      <text x="200" y="62" text-anchor="middle" font-size="12" fill="currentColor" opacity=".7">“clicar aqui salva meu trabalho”</text>
+      <text x="50" y="256" text-anchor="middle" font-weight="800" font-size="15" fill="currentColor">Representâmen</text>
+      <text x="62" y="205" text-anchor="start" font-size="26">💾</text>
+      <text x="350" y="256" text-anchor="middle" font-weight="800" font-size="15" fill="currentColor">Objeto</text>
+      <text x="350" y="210" text-anchor="middle" font-size="12" fill="currentColor" opacity=".7">ação de armazenar</text>
+      <text x="108" y="128" text-anchor="middle" font-size="11" fill="currentColor" opacity=".6" transform="rotate(-53 108 128)">interpretação</text>
+      <text x="292" y="128" text-anchor="middle" font-size="11" fill="currentColor" opacity=".6" transform="rotate(53 292 128)">significação</text>
+      <text x="200" y="224" text-anchor="middle" font-size="11" fill="currentColor" opacity=".6">objetivação</text>
+    </svg>
+    <p><strong>Semiose ilimitada:</strong> o que representa algo num momento pode virar objeto de uma nova representação no momento seguinte.</p>
+    <div class="cols three">
+      <div><h4>Sintaxe</h4><p>Relação dos signos entre si (como se combinam).</p></div>
+      <div><h4>Semântica</h4><p>Relação do signo com o significado.</p></div>
+      <div><h4>Pragmática</h4><p>Relação do signo com quem interpreta, no contexto.</p></div>
+    </div>
+    <p><strong>Semiótica de máquinas (Andersen, 1997):</strong> nível <strong>físico</strong> (sistema físico no ambiente), <strong>funcional</strong> (executa funções) e <strong>semiótico</strong> (produz e interpreta sinais). O pincel do programa de desenho “está para” um pincel real.</p>
+    <div class="note warn"><b class="t">Os níveis de Stamper</b><p>O slide pergunta pelos “4 níveis” e cita sintaxe, semântica, pragmática e empírica, acrescentando depois o social. A escada semiótica de Stamper costuma ter <strong>seis</strong> degraus: mundo físico, empírica, sintaxe, semântica, pragmática e mundo social. Se a prova pedir os quatro do slide, responda sintaxe, semântica, pragmática e empírica.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 5 ============ -->
+<section class="part" data-part="5 · Cores">
+  <div class="part-head"><div class="part-num">05</div><div class="n">MATERIAL 6</div><h2>Cores</h2><p>Psicologia, regra 60-30-10, tokens, acessibilidade e modos claro e escuro.</p></div>
+
+  <article class="topic" id="c1" data-title="Psicologia das cores e contextos">
+    <div class="topic-head"><div class="src">Material 6 · Revisão 6, 7, 9, 55</div><h3>Psicologia das cores e contextos</h3></div>
+    <p class="idea">Segundo o material, o usuário forma uma opinião subconsciente sobre um app em até <strong>90 segundos</strong>, e de <strong>62% a 90%</strong> desse julgamento se baseia nas cores.</p>
+    <div class="optlist">
+      <div><b><span style="color:#2F6FDE">●</span> Azul</b><span>Segurança e estabilidade: bancos, sistemas corporativos, SaaS.</span></div>
+      <div><b><span style="color:#1C7C54">●</span> Verde</b><span>Crescimento e sucesso: transações, confirmações, ganhos.</span></div>
+      <div><b><span style="color:#E8590C">●</span> Laranja e vermelho</b><span>Urgência e ação: CTAs de conversão e alertas críticos.</span></div>
+      <div><b><span style="color:#7B3FE4">●</span> Roxo</b><span>Criatividade: entretenimento e educação.</span></div>
+      <div><b><span style="color:#E0A800">●</span> Amarelo</b><span>Aviso: status moderado e pendências.</span></div>
+    </div>
+    <p><strong>Hierarquia visual:</strong> o cérebro busca pontos de alto contraste, e a cor serve de âncora para guiar o olhar até a ação importante. Cores demais competindo geram fadiga mental.</p>
+    <div class="cols">
+      <div><h4>App de consumo (B2C)</h4><p>Paleta saturada e marcante; foco em retenção, emoção e conversão; CTAs fortes. Ex.: verde do Spotify, roxo do Nubank.</p></div>
+      <div><h4>Sistema corporativo (B2B/ERP)</h4><p>Tons neutros e cinzas para 8 horas de uso; foco em eficiência e leitura; cores fortes só para exceções críticas.</p></div>
+    </div>
+    <p style="font-size:.94rem"><strong>Exemplos do material:</strong> fintechs usam azul profundo, roxo ou verde esmeralda para passar solidez; Slack e Notion usam neutros para dar protagonismo ao conteúdo; iFood e Mercado Livre usam vermelho e amarelo por estimularem urgência.</p>
+    <div class="note warn"><b class="t">De onde vem o dado dos 90 segundos</b><p>O número costuma ser atribuído a um estudo de 2006 (Singh) sobre a percepção de <strong>produtos e ambientes em geral</strong>, e não especificamente de aplicativos. Ele é muito repetido, mas com pouca replicação. Para a prova, vale como está no material (revisão 6, alternativa A).</p></div>
+  </article>
+
+  <article class="topic" id="c2" data-title="Regra 60-30-10 e design tokens">
+    <div class="topic-head"><div class="src">Material 6 · Revisão 8, 10, 15</div><h3>Regra 60-30-10 e design tokens</h3></div>
+    <div class="optlist">
+      <div><b>60% dominante</b><span>Fundos, áreas estruturais e espaços de respiro (brancos, off-whites, cinzas claros).</span></div>
+      <div><b>30% estrutural</b><span>Cards, painéis laterais, barras de navegação e blocos secundários.</span></div>
+      <div><b>10% acento</b><span>CTAs, links ativos, ícones de destaque.</span></div>
+    </div>
+    <div class="lab">
+      <div class="lab-t">DEMONSTRAÇÃO</div>
+      <h4>A mesma tela com outras paletas</h4>
+      <div class="seg" id="pal" role="group" aria-label="Paleta"><button data-k="bank" aria-pressed="true">Banco</button><button data-k="food" aria-pressed="false">Delivery</button><button data-k="erp" aria-pressed="false">ERP</button><button data-k="chaos" aria-pressed="false">Sem regra</button></div>
+      <div class="mock6" id="mock6">
+        <div class="side"><b>Menu</b><i></i><i></i><i></i><i></i></div>
+        <div class="main"><b class="mt">Resumo</b><div class="card"><i></i><i style="width:70%"></i></div><div class="card"><i></i><i style="width:55%"></i></div><span class="cta">Confirmar</span></div>
+      </div>
+      <p id="palTxt" style="font-size:.9rem;margin:10px 0 0"></p>
+    </div>
+    <p><strong>Design tokens:</strong> em vez de cores fixas espalhadas pelo código, usar variáveis como <code>--primary-500</code> e <code>--bg-surface</code>. O benefício é permitir <strong>alterações globais imediatas</strong> e suporte nativo a temas. Este guia funciona assim: o botão de tema troca os tokens, e a tela inteira muda.</p>
+    <div class="note sum"><b class="t">Os 4 pecados capitais</b><ol style="margin:0"><li>Poluição visual: mais de 5 cores principais na mesma tela.</li><li>Falta de contraste: cinza claro sobre branco.</li><li>Inconsistência de significado: vermelho bom numa tela e erro na outra.</li><li>Ignorar acessibilidade: não testar daltonismo e leitores de tela.</li></ol></div>
+  </article>
+
+  <article class="topic" id="c3" data-title="Acessibilidade: contraste e daltonismo">
+    <div class="topic-head"><div class="src">Material 6 · Revisão 11, 12</div><h3>Acessibilidade: contraste e daltonismo</h3></div>
+    <p class="idea">WCAG nível AA: contraste mínimo de <strong>4.5:1</strong> para texto normal e <strong>3:1</strong> para texto grande.</p>
+    <div class="lab">
+      <div class="lab-t">FERRAMENTA</div>
+      <h4>Verificador de contraste</h4>
+      <div class="cc">
+        <label>Texto <input type="color" id="ccFg" value="#9AA0AC"></label>
+        <label>Fundo <input type="color" id="ccBg" value="#FFFFFF"></label>
+      </div>
+      <div class="seg" id="ccPre" role="group" aria-label="Exemplos"><button data-k="#9AA0AC|#FFFFFF" aria-pressed="true">Cinza no branco</button><button data-k="#14151B|#FFFFFF" aria-pressed="false">Preto no branco</button><button data-k="#FFFFFF|#E8590C" aria-pressed="false">Branco no laranja</button><button data-k="#1C7C54|#E53935" aria-pressed="false">Verde no vermelho</button></div>
+      <div class="cc-prev" id="ccPrev"><div class="lg">Título grande</div><div>Texto normal de interface, como este parágrafo.</div></div>
+      <div class="cc-res"><span class="cc-ratio" id="ccRatio"></span><span id="ccBadges"></span></div>
+      <p style="font-size:.84rem;color:var(--muted);margin:8px 0 0">Texto grande: a partir de 18 pt, ou 14 pt em negrito. O nível AAA, mais rígido, pede 7:1 e 4.5:1 (complemento).</p>
+    </div>
+    <p>Cerca de <strong>8% dos homens</strong> têm algum grau de daltonismo, principalmente a dificuldade de distinguir vermelho e verde. Regra: <strong>nunca comunicar um estado crítico só com cor</strong>; combinar com ícone, texto ou textura.</p>
+    <div class="lab">
+      <div class="lab-t">SIMULAÇÃO</div>
+      <h4>Como um daltônico vê estes status?</h4>
+      <div class="seg" id="cbSeg" role="group" aria-label="Tipo de visão"><button data-k="none" aria-pressed="true">Visão típica</button><button data-k="deut" aria-pressed="false">Deuteranopia</button><button data-k="prot" aria-pressed="false">Protanopia</button></div>
+      <div class="cols" id="cbView" style="margin:8px 0 0">
+        <div class="status"><b style="font-size:.8rem">Só cor</b><div class="st"><span class="dot" style="background:#2E9E44"></span>Servidor A</div><div class="st"><span class="dot" style="background:#D93025"></span>Servidor B</div><div class="st"><span class="dot" style="background:#2E9E44"></span>Servidor C</div></div>
+        <div class="status"><b style="font-size:.8rem">Cor + ícone + texto</b><div class="st"><span class="dot" style="background:#2E9E44"></span>✓ Servidor A · online</div><div class="st"><span class="dot" style="background:#D93025"></span>✕ Servidor B · erro</div><div class="st"><span class="dot" style="background:#2E9E44"></span>✓ Servidor C · online</div></div>
+      </div>
+      <p style="font-size:.84rem;color:var(--muted);margin:8px 0 0">Simulação aproximada por filtro de cor.</p>
+    </div>
+    <p style="font-size:.94rem">Ferramentas citadas: Stark ou Color Contrast Analyzer no design, tokens no código e emulação do Chrome DevTools nos testes. O ideal é validar contraste automaticamente no pipeline de CI/CD.</p>
+  </article>
+
+  <article class="topic" id="c4" data-title="Modo claro e modo escuro">
+    <div class="topic-head"><div class="src">Material 6 · Revisão 13, 14</div><h3>Modo claro e modo escuro</h3></div>
+    <div class="cols">
+      <div><h4>Light mode</h4><p>Ambientes iluminados, leitura intensa, planilhas, produtividade diurna. Transmite limpeza e organização.</p></div>
+      <div><h4>Dark mode</h4><p>Menos consumo em telas <strong>OLED/AMOLED</strong> e menos cansaço com pouca luz. IDEs, design, mídia, cripto.</p></div>
+    </div>
+    <div class="dm">
+      <div style="background:#000;color:#fff"><b>Inversão bruta ✕</b><div class="c" style="background:#000;border:1px solid #fff;box-shadow:0 6px 14px #000">Preto puro, branco puro e sombra preta</div><div class="c" style="background:#0040FF;color:#fff">Cor saturada sem ajuste</div></div>
+      <div style="background:#121212;color:#E3E3E3"><b>Paleta dedicada ✓</b><div class="c" style="background:#1E1E1E">Superfície elevada um pouco mais clara</div><div class="c" style="background:#2A2A2A;color:#9DB4FF">Cor dessaturada</div></div>
+    </div>
+    <p style="margin-top:12px">Inverter preto e branco gera sombras incorretas e contraste excessivo. O dark mode pede cinzas profundos (como <code>#121212</code>), cores dessaturadas e <strong>elevação clareando</strong> a superfície em vez de sombras pretas. Use <code>prefers-color-scheme</code> para respeitar a preferência do sistema, como este guia faz.</p>
+  </article>
+</section>
+
+<!-- ============ PARTE 6 ============ -->
+<section class="part" data-part="6 · Emoção e confiança">
+  <div class="part-head"><div class="part-num">06</div><div class="n">MATERIAL 7</div><h2>Emoção e confiança</h2><p>Computação afetiva, frustração, mensagens de erro, confiança e personagens virtuais.</p></div>
+
+  <article class="topic" id="e1" data-title="Emoção, afetividade e design emocional">
+    <div class="topic-head"><div class="src">Material 7 · Revisão 34</div><h3>Emoção, afetividade e design emocional</h3></div>
+    <p><strong>Computação afetiva</strong> estuda como computadores podem reconhecer, modelar e responder às emoções humanas.</p>
+    <div class="cols">
+      <div><h4>Emoção</h4><p>Agitação geralmente <strong>passageira</strong>, provocada por um fato. “A homenagem causou-lhe grande emoção.”</p></div>
+      <div><h4>Afetividade</h4><p>Resposta emocional construída com influência da <strong>cultura</strong>; cria <strong>vínculo emocional</strong>. “Eu adoro meu time do coração.”</p></div>
+    </div>
+    <h4 class="sub-h">Pirâmide do design emocional x Maslow</h4>
+    <div class="pyr" aria-label="Pirâmide do design emocional">
+      <div style="width:34%;background:#E8590C">Prazeroso ★</div>
+      <div style="width:52%;background:#3150C9">Usável</div>
+      <div style="width:70%;background:#2A3FA0">Confiável</div>
+      <div style="width:88%;background:#1E2C70">Funcional</div>
+    </div>
+    <p style="font-size:.94rem">Assim como as necessidades de Maslow, cada nível depende do anterior. O topo, <strong>prazeroso</strong>, é a “peça que falta” em muitos produtos.</p>
+    <div class="note tip"><b class="t">Complemento</b><p>Essa pirâmide é de Aarron Walter, no livro <em>Designing for Emotion</em> (2011).</p></div>
+  </article>
+
+  <article class="topic" id="e2" data-title="Frustração e mensagens de erro">
+    <div class="topic-head"><div class="src">Material 7 · Revisão 34, 53</div><h3>Frustração e mensagens de erro</h3></div>
+    <p><strong>Causam desconforto:</strong> app que falha; sistema que não faz o que o usuário quer; expectativas frustradas; falta de informação sobre o que fazer; mensagens vagas ou reprovadoras; visual espalhafatoso ou autoritário; muitos passos para descobrir no fim que houve erro e recomeçar.</p>
+    <div class="flow"><span>Ilusões (404, “em construção”): desconforto médio</span><span>Mensagens ruins: desconforto alto</span></div>
+    <div class="lab">
+      <div class="lab-t">DEMONSTRAÇÃO · REVISÃO 53</div>
+      <h4>Reescrevendo a mensagem</h4>
+      <div class="seg" id="msgSeg" role="group" aria-label="Versão da mensagem"><button data-k="bad" aria-pressed="true">Versão ruim</button><button data-k="good" aria-pressed="false">Versão boa</button></div>
+      <div class="dlg" id="msgDlg"></div>
+      <ul id="msgList" style="font-size:.9rem;margin:12px 0 0"></ul>
+    </div>
+  </article>
+
+  <article class="topic" id="e3" data-title="Confiança e personagens virtuais">
+    <div class="topic-head"><div class="src">Material 7 · Revisão 35</div><h3>Confiança e personagens virtuais</h3></div>
+    <p>Confiança é essencial em comércio eletrônico e internet banking: segurança contra terceiros e em relação ao próprio site.</p>
+    <div class="optlist">
+      <div><b>Segurança</b><span>Criptografia, autenticação, proteção contra ataques.</span></div>
+      <div><b>Transparência</b><span>Informações claras sobre o sistema e políticas de privacidade.</span></div>
+      <div><b>Usabilidade</b><span>Sistema fácil e intuitivo.</span></div>
+      <div><b>Feedback</b><span>Retorno claro e imediato das ações.</span></div>
+      <div><b>Design</b><span>Apresentação atraente, equilibrada e profissional.</span></div>
+      <div><b>Suporte</b><span>Eficiente, paciente, respeitoso e engajado.</span></div>
+    </div>
+    <p><strong>Personagens virtuais</strong> simulam personalidade para envolver o usuário. Cuidado para não ficarem irritantes ou repetitivos, como o clipe do Office. O sucesso depende de design, contexto, época e público. Aspectos a definir conforme público e objetivo: <strong>credibilidade, aparência, comportamento e modo de interação</strong>.</p>
+  </article>
+</section>
+
+<!-- ============ PARTE 7 ============ -->
+<section class="part" data-part="7 · Conteúdo da revisão (aula 8)">
+  <div class="part-head"><div class="part-num">07</div><div class="n">RECONSTRUÍDO DA REVISÃO</div><h2>Telas, flat design e guidelines</h2><p>O material da aula 8 não foi publicado. Estes tópicos foram montados a partir das questões e do gabarito da revisão.</p></div>
+
+  <div class="note rev"><b class="t">Como ler esta parte</b><p>Tudo o que está aqui aparece nas questões da revisão (16 a 25 e 36 a 40). Onde a revisão só traz uma frase, completei com o conhecimento consolidado da área e sinalizei. Se o material oficial for publicado, vale comparar.</p></div>
+
+  <article class="topic" id="r1" data-title="Padrões de telas">
+    <div class="topic-head"><div class="src">Revisão 16 a 20</div><h3>Padrões de telas</h3></div>
+    <div class="seg" id="scrSeg" role="group" aria-label="Tipo de tela"><button data-k="splash" aria-pressed="true">Splash</button><button data-k="onb" aria-pressed="false">Onboarding</button><button data-k="feed" aria-pressed="false">Feed</button><button data-k="check" aria-pressed="false">Checkout</button></div>
+    <div class="scr-wrap" style="margin-top:10px">
+      <div class="phone"><div class="scr" id="scrMock"></div></div>
+      <div class="scr-side" id="scrSide"></div>
+    </div>
+  </article>
+
+  <article class="topic" id="r2" data-title="Flat design e evolução estética">
+    <div class="topic-head"><div class="src">Revisão 21 a 25</div><h3>Flat design e evolução estética</h3></div>
+    <p class="idea">As interfaces alternam entre realismo e minimalismo. A revisão explica isso com dois fenômenos do comportamento: <strong>generalização</strong> e <strong>habituação</strong>.</p>
+    <div class="lab">
+      <div class="lab-t">O MESMO BOTÃO EM CINCO ESTILOS</div>
+      <div class="seg" id="styleSeg" role="group" aria-label="Estilo visual"><button data-k="skeu" aria-pressed="false">Skeuomorfismo</button><button data-k="flat" aria-pressed="true">Flat</button><button data-k="mat" aria-pressed="false">Material</button><button data-k="neu" aria-pressed="false">Neumorfismo</button><button data-k="glass" aria-pressed="false">Liquid Glass</button></div>
+      <div class="styles" id="styleBox"><div class="scard" id="styleCard"><h5>Novo pedido</h5><p>Seu carrinho tem 3 itens.</p><button class="sbtn" id="styleBtn" type="button">Finalizar</button></div></div>
+      <p id="styleTxt" style="font-size:.92rem;margin:12px 0 0"></p>
+    </div>
+    <div class="optlist">
+      <div><b>Generalização (Skinner, 1966)</b><span>O usuário abstrai a função independentemente do estilo: aprende que um retângulo colorido destacado é um botão, mesmo sem textura de botão real. Foi o que permitiu a passagem do realismo para o flat.</span></div>
+      <div><b>Habituação visual (Thompson e Spencer, 1966)</b><span>Estímulos repetidos e idênticos perdem o poder de atrair atenção, gerando fadiga ou apatia. Ajuda a explicar o cansaço do flat estrito.</span></div>
+      <div><b>Semi-realismo atual</b><span>Gradientes sutis, refração e profundidade (como o Liquid Glass) são vistos como evolução baseada em padrões vivos: riqueza visual e imersão sem abrir mão da clareza funcional.</span></div>
+      <div><b>Novas métricas</b><span>Além da conversão: satisfação estética e engajamento emocional, medidos com pesquisas longitudinais e rastreamento ocular (eye tracking).</span></div>
+    </div>
+    <div class="note warn"><b class="t">Atenção às datas da questão 21</b><p>A questão diz que o estilo “que predominou entre 2007 e 2013” e trocou texturas por retângulos planos é o flat design, e o gabarito marca <strong>Flat Design</strong>. Pela descrição, a resposta está certa. Historicamente, porém, 2007 a 2013 foi o auge do <strong>skeuomorfismo</strong> (iPhone original, couro e madeira nos apps); o flat se popularizou com o Windows Phone (2010) e se consolidou com o iOS 7, em 2013. Na prova, responda pela descrição.</p></div>
+    <div class="note tip"><b class="t">Complemento: problemas do flat estrito</b><p>Sem sombras nem relevo, botões e textos podem ficar parecidos, reduzindo os <em>signifiers</em> (pistas de que algo é clicável). Isso liga o flat ao tópico de affordances: teste a atividade “Toque no que é clicável” na Parte 4.</p></div>
+  </article>
+
+  <article class="topic" id="r3" data-title="Guidelines e checklist de experiência">
+    <div class="topic-head"><div class="src">Revisão 36 a 40, 54</div><h3>Guidelines e checklist de experiência</h3></div>
+    <p class="idea">Guidelines (como as da ISO 9241) orientam decisões e reduzem a <strong>carga cognitiva</strong>: o usuário não deve precisar memorizar grandes volumes de informação.</p>
+    <div class="chunk">
+      <div><small style="color:var(--muted)">Sem agrupamento</small><div class="num">11987654321</div></div>
+      <div><small style="color:var(--muted)">Com chunking</small><div class="num">(11) 98765-4321</div></div>
+    </div>
+    <p><strong>Chunking:</strong> agrupar informação em blocos gerenciáveis (a regra dos 7 itens, de Miller). Outras diretrizes da revisão 54: trocar digitação livre por listas e caixas de seleção e oferecer <strong>desfazer</strong>.</p>
+    <h4 class="sub-h">Ciclo de vida da experiência</h4>
+    <div class="lc"><span>1. Instalação</span><span>2. Primeiro uso e customização</span><span>3. Uso regular</span><span>4. Gerenciamento e manutenção</span><span>5. Desinstalar ou atualizar</span></div>
+    <div class="optlist">
+      <div><b>Resolução</b><span>Suportar no mínimo 800×600 efetivos e ter layouts redimensionáveis a partir de 1024×768.</span></div>
+      <div><b>Janela de propriedades</b><span>Abre centralizada no topo da janela proprietária.</span></div>
+      <div><b>Janela contextual</b><span>Abre perto do objeto que a originou.</span></div>
+      <div><b>Padronizar</b><span>Textos (títulos, seções, formulários), controles (listas, busca, seleção), comandos (menus, barras, botões) e janelas de mensagem (avisos, erros, confirmações).</span></div>
+    </div>
+    <div class="note warn"><b class="t">Contexto das diretrizes</b><p>As regras de resolução e posição de janelas vêm de guias de interface para desktop (como as diretrizes do Windows) e refletem telas mais antigas. Hoje se fala em layout responsivo. A regra dos 7 itens (Miller, 1956) também foi revisada por estudos que apontam algo próximo de 4 blocos. Para a prova, vale o que está na revisão.</p></div>
+  </article>
+</section>
+
+<!-- ============ PARTE 8 ============ -->
+<section class="part" data-part="8 · Treino">
+  <div class="part-head"><div class="part-num">08</div><div class="n">REVISÃO + GABARITO</div><h2>Treino para a prova</h2><p>As 55 questões da revisão, com as respostas do gabarito e um comentário em cada uma.</p></div>
+  <article class="topic" id="q1" data-title="Revisão com gabarito (55 questões)">
+    <div class="topic-head"><div class="src">REVISÃO · GABARITO DO QUIZ</div><h3>Revisão com gabarito</h3></div>
+    <p style="font-size:.94rem;color:var(--muted)">Enunciados levemente resumidos. Filtre por bloco ou faça todas.</p>
+    <div class="seg" id="qFilter" role="group" aria-label="Filtrar por bloco"></div>
+    <div id="quiz"></div>
+    <p class="score" id="score"></p>
+    <button class="btn primary" id="quizReset" type="button">Refazer</button>
+  </article>
+</section>
+
+<!-- ============ REVISÃO ============ -->
+<section class="part" data-part="Revisão final" id="revisao">
+  <div class="part-head"><div class="part-num">✦</div><div class="n">REVISÃO FINAL</div><h2>Flashcards</h2><p>Toque no cartão para ver a resposta.</p></div>
+  <div class="fc">
+    <button class="fc-card" id="fcCard" aria-live="polite">
+      <div class="fc-face front"><h4 id="fcTerm"></h4><small>Toque para virar</small></div>
+      <div class="fc-face back"><p id="fcDef" style="margin:0;font-size:1.03rem"></p></div>
+    </button>
+    <div class="fc-nav">
+      <button class="btn" id="fcPrev">Anterior</button>
+      <span id="fcCount" style="color:var(--muted);font-size:.9rem"></span>
+      <button class="btn" id="fcNext">Próximo</button>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="wrap">Baseado nos materiais 1 a 7 de Padrões de Usabilidade e Desenvolvimento de Interfaces, na revisão e no gabarito do quiz. A Parte 7 foi reconstruída a partir da revisão porque o material da aula 8 não foi publicado.</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var esc=function(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};
+  function seg(id,cb){
+    var g=$(id);
+    g.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;g.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});cb(b.dataset.k)});
+    var f=g.querySelector("[aria-pressed=\"true\"]")||g.querySelector("button");if(f)cb(f.dataset.k);
+  }
+
+  /* ---------- Heurísticas (dados) ---------- */
+  var H=[
+    ["Visibilidade do status do sistema","Informar em tempo real o que está acontecendo.","Barra de progresso, perfil logado, episódio atual na Netflix."],
+    ["Correspondência com o mundo real","Falar a linguagem do usuário, com metáforas e convenções familiares.","Lixeira para excluir, engrenagem para configurações, vermelho para negativo."],
+    ["Controle e liberdade do usuário","Saídas de emergência claras para sair de estados indesejados.","Desfazer, refazer, cancelar, voltar sem salvar."],
+    ["Consistência e padrões","Mesmas palavras, ícones e ações significam a mesma coisa; seguir convenções da plataforma.","Botões primários sempre com a mesma cor e posição."],
+    ["Prevenção de erros","Design que evita o erro; confirmação antes de ações críticas.","Sugestões da busca do Google; confirmar pagamento."],
+    ["Reconhecimento em vez de memorização","Opções visíveis; o usuário não precisa decorar caminhos.","Endereços recentes, histórico, menus visíveis."],
+    ["Flexibilidade e eficiência de uso","Atender do leigo ao avançado; aceleradores invisíveis para novatos.","Atalhos de teclado do Gmail; pré-carregamento de dados."],
+    ["Estética e design minimalista","Sem informação irrelevante: cada extra compete com o essencial.","“Não encha linguiça”."],
+    ["Ajudar a reconhecer, diagnosticar e recuperar erros","Mensagens em linguagem simples, sem códigos, perto do erro, sugerindo solução.","“O CEP tem 8 dígitos. Ex.: 09120-000”."],
+    ["Ajuda e documentação","Se necessária: fácil de buscar, focada na tarefa, em passos concretos e perto do usuário.","Ícone de ajuda ao lado do campo complexo."]
+  ];
+  $("heurList").innerHTML=H.map(function(h,i){return "<div class=\"hcard\"><span class=\"num\">"+(i+1)+"</span><h4>"+esc(h[0])+"</h4><p>"+esc(h[1])+"</p><div class=\"ex\">Ex.: "+esc(h[2])+"</div></div>"}).join("");
+
+  /* Hero pins */
+  var pins=[].slice.call(document.querySelectorAll(".insp .pin"));
+  pins.forEach(function(p){
+    p.addEventListener("click",function(){
+      var mk=p.parentElement,i=+mk.dataset.h;
+      pins.forEach(function(x){x.setAttribute("aria-pressed",x===p?"true":"false");x.parentElement.classList.toggle("hl",x===p)});
+      $("inspCap").innerHTML="<b>"+(i+1)+". "+esc(H[i][0])+".</b> "+esc(H[i][1]);
+    });
+  });
+
+  /* ---------- Progresso e sumário ---------- */
+  var KEY="ux-guia-estudados",done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
+  var topics=[].slice.call(document.querySelectorAll(".topic"));
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}}
+  function buildToc(){
+    var list=$("tocList");list.innerHTML="";
+    document.querySelectorAll(".part").forEach(function(p){
+      var h=document.createElement("h4");h.textContent=p.dataset.part;list.appendChild(h);
+      var ts=p.querySelectorAll(".topic");
+      if(!ts.length){var a0=document.createElement("a");a0.href="#revisao";a0.textContent="Flashcards";list.appendChild(a0)}
+      ts.forEach(function(t){var a=document.createElement("a");a.href="#"+t.id;a.innerHTML="<span>"+esc(t.dataset.title)+"</span><span class=\"ck\">"+(done[t.id]?"✓":"")+"</span>";list.appendChild(a)});
+    });
+  }
+  function updateProg(){
+    var n=topics.filter(function(t){return done[t.id]}).length;
+    $("progTxt").textContent=n+" de "+topics.length+" tópicos estudados";
+    $("progFill").style.width=(n/topics.length*100)+"%";buildToc();
+  }
+  topics.forEach(function(t){
+    var b=document.createElement("button");b.className="done-btn";b.type="button";
+    function set(){b.setAttribute("aria-pressed",done[t.id]?"true":"false");b.innerHTML="<span class=\"box\">"+(done[t.id]?"✓":"")+"</span>"+(done[t.id]?"Estudado":"Marcar como estudado")}
+    b.addEventListener("click",function(){done[t.id]=!done[t.id];save();set();updateProg()});
+    set();t.appendChild(b);
+  });
+  var toc=$("toc"),tocBtn=$("tocBtn");
+  tocBtn.addEventListener("click",function(){var o=toc.classList.toggle("open");tocBtn.setAttribute("aria-expanded",o);tocBtn.textContent=o?"Fechar":"Tópicos"});
+  toc.addEventListener("click",function(e){if(e.target.closest("a")){toc.classList.remove("open");tocBtn.setAttribute("aria-expanded","false");tocBtn.textContent="Tópicos"}});
+  updateProg();
+
+  /* ---------- Classificadores ---------- */
+  var HN=H.map(function(h,i){return (i+1)+". "+h[0].split(" ").slice(0,2).join(" ")});
+  var SETS={
+    iso:{opts:["Eficácia","Eficiência","Satisfação"],items:[
+      ["Percentual de cidadãos que emitiram a certidão correta",0,"Mede se o objetivo foi atingido com precisão e completude."],
+      ["Tempo médio para emitir a certidão",1,"Relaciona o resultado ao tempo gasto."],
+      ["Nota média em um questionário sobre o quanto gostaram do portal",2,"Mede a experiência agradável e a percepção positiva."],
+      ["Número de cliques necessários para concluir o cadastro",1,"Esforço gasto para chegar ao resultado."],
+      ["Quantos usuários completaram a compra sem erro",0,"Conclusão correta da tarefa."]
+    ]},
+    heu:{opts:["Visibilidade","Mundo real","Controle","Consistência","Prevenção","Reconhecimento","Flexibilidade","Minimalismo","Recuperação","Ajuda"],items:[
+      ["O upload de um vídeo grande não mostra nenhum indicador de progresso",0,"O usuário não sabe o que está acontecendo."],
+      ["O sistema exibe “Erro 0x80004005” sem explicar o que fazer",8,"A mensagem deve ser em linguagem simples e sugerir solução."],
+      ["Depois de excluir um arquivo por engano, não há como desfazer",2,"Faltou uma saída de emergência."],
+      ["Em uma tela o botão Salvar é verde à direita; em outra, cinza à esquerda",3,"Elementos iguais devem ter aparência e posição consistentes."],
+      ["Para pagar uma conta, é preciso lembrar o código de serviço digitado na tela anterior",5,"A informação deveria estar visível."],
+      ["O campo de data aceita texto livre e frequentemente recebe datas inválidas",4,"Um seletor de data evitaria o erro."],
+      ["Um app de banco usa o termo “efetivar lançamento contábil” para “pagar”",1,"Deveria usar a linguagem do usuário."],
+      ["A tela inicial mostra 40 avisos, banners e links ao mesmo tempo",7,"Informação irrelevante compete com a importante."]
+    ]},
+    err:{opts:["Deslize","Interpretação","Crítico"],items:[
+      ["Clicar em Excluir querendo Editar, porque os botões são vizinhos e da mesma cor",0,"A intenção estava certa; a execução falhou."],
+      ["Tocar na lupa achando que é busca, mas ela dá zoom",1,"O plano estava errado porque o signo induziu ao erro."],
+      ["O app fecha no meio de um formulário longo e perde tudo",2,"Falha que compromete os dados; autosave evitaria a perda."],
+      ["Digitar “.com.br” em vez de “.com” no e-mail por pressa",0,"Erro de execução por desatenção."],
+      ["Apagar a base inteira de clientes sem nenhuma confirmação",2,"Ação irreversível sem confirmação dupla."]
+    ]}
+  };
+  document.querySelectorAll(".cls").forEach(function(box){
+    var S=SETS[box.dataset.set],ok=0,n=0,score=document.createElement("div");score.className="cls-score";
+    S.items.forEach(function(it){
+      var d=document.createElement("div");d.className="cls-item";
+      d.innerHTML="<p>"+esc(it[0])+"</p><div class=\"cls-opts\"></div><div class=\"cls-fb\" hidden></div>";
+      var o=d.querySelector(".cls-opts"),fb=d.querySelector(".cls-fb");
+      S.opts.forEach(function(op,i){
+        var b=document.createElement("button");b.type="button";b.textContent=op;
+        b.addEventListener("click",function(){
+          if(d.dataset.done)return;d.dataset.done=1;n++;
+          if(i===it[1]){b.classList.add("right");ok++;fb.textContent="Certo. "+it[2]}
+          else{b.classList.add("wrong");o.children[it[1]].classList.add("right");fb.textContent="Resposta: "+S.opts[it[1]]+". "+it[2]}
+          fb.hidden=false;if(n===S.items.length)score.textContent="Você acertou "+ok+" de "+n+".";
+        });
+        o.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+    box.appendChild(score);
+  });
+
+  /* ---------- Mapeamento (casa) ---------- */
+  var rooms=["Sala","Cozinha","Quarto","Banheiro"],on=[false,false,false,false],mode="map";
+  var shuffled=[2,0,3,1];
+  function drawHouse(){
+    $("house").innerHTML=rooms.map(function(r,i){return "<div class=\"room"+(on[i]?" on":"")+"\">"+r+"<span class=\"bulb\">💡</span></div>"}).join("");
+    var p=$("panel");p.className="panel"+(mode==="list"?" list":"");p.innerHTML="";
+    var order=mode==="map"?[0,1,2,3]:shuffled;
+    order.forEach(function(ri,k){
+      var b=document.createElement("button");b.type="button";b.className="sw";b.setAttribute("aria-pressed",on[ri]?"true":"false");
+      b.textContent=mode==="map"?"💡 "+rooms[ri]:"Luz "+(k+1);
+      b.addEventListener("click",function(){on[ri]=!on[ri];drawHouse()});
+      p.appendChild(b);
+    });
+    $("mapTxt").textContent=mode==="map"?"Os interruptores seguem a planta da casa: o botão de cima à esquerda acende a sala, que fica em cima à esquerda. Você prevê o efeito sem pensar.":"Com uma lista genérica, é preciso testar para descobrir qual luz acende qual cômodo. Falta mapeamento.";
+  }
+  seg("mapSeg",function(k){mode=k;drawHouse()});
+  function acState(){var off=$("acOff").checked;$("acBtn").disabled=off;$("acBtn").title=off?"Indisponível: aparelho desconectado":""}
+  $("acOff").addEventListener("change",acState);acState();
+  $("acBtn").addEventListener("click",function(){$("mapTxt").textContent="Ar-condicionado ligado. Marque “aparelho desconectado” para ver a restrição lógica: o botão fica desabilitado, e o erro nem chega a acontecer."});
+
+  /* ---------- 2-step ---------- */
+  $("arqBtn").addEventListener("click",function(){
+    $("twoStep").innerHTML="<div class=\"toast\">E-mail arquivado <button type=\"button\" id=\"undoBtn\">Desfazer</button></div>";
+    $("undoBtn").addEventListener("click",function(){$("twoStep").innerHTML="<div class=\"toast\">Ação desfeita ✓</div>"});
+  });
+  $("delBtn").addEventListener("click",function(){
+    $("twoStep").innerHTML="<div class=\"dlg\"><h5>Excluir sua conta?</h5><p style=\"font-size:.88rem;margin:0\">Todos os seus dados serão apagados permanentemente. Digite <b>EXCLUIR</b> para confirmar.</p><input id=\"delIn\" autocomplete=\"off\" aria-label=\"Digite EXCLUIR\"><div style=\"display:flex;gap:8px;justify-content:flex-end\"><button class=\"btn\" type=\"button\" id=\"delCancel\">Cancelar</button><button class=\"btn primary\" type=\"button\" id=\"delOk\" disabled>Excluir conta</button></div></div>";
+    $("delIn").addEventListener("input",function(){$("delOk").disabled=this.value.trim().toUpperCase()!=="EXCLUIR"});
+    $("delCancel").addEventListener("click",function(){$("twoStep").innerHTML=""});
+    $("delOk").addEventListener("click",function(){$("twoStep").innerHTML="<div class=\"toast\">Conta excluída (só na demonstração 😉)</div>"});
+  });
+
+  /* ---------- Clicável? ---------- */
+  var CU=[
+    [true,"<span class=\"btn primary\" style=\"pointer-events:none\">Comprar</span>","Botão com cor de acento e forma de botão: sinal claro."],
+    [false,"<b style=\"color:var(--info)\">Seção Ofertas</b>","Título colorido parece link, mas não é. Cor de link em texto comum confunde."],
+    [true,"<span style=\"text-decoration:underline;color:var(--info)\">ver detalhes</span>","Sublinhado e cor de link: convenção conhecida."],
+    [true,"<span style=\"font-size:1.4rem\">⋮</span>","Ícone de mais opções, clicável, mas sem rótulo. Depende de o usuário conhecer a convenção."],
+    [false,"<span style=\"border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-weight:600\">Entregue</span>","Etiqueta de status com cara de botão: affordance falsa."],
+    [true,"<span style=\"font-weight:600\">Configurações</span>","Item clicável sem nenhuma pista visual: affordance escondida, comum no flat estrito."]
+  ];
+  var sel={};
+  function drawCU(){
+    $("clickUI").innerHTML="";sel={};$("clickTxt").textContent="";
+    CU.forEach(function(c,i){
+      var d=document.createElement("button");d.type="button";d.className="cu";d.innerHTML=c[1];
+      d.addEventListener("click",function(){if($("clickUI").dataset.rev)return;sel[i]=!sel[i];d.classList.toggle("sel",sel[i])});
+      $("clickUI").appendChild(d);
+    });
+    delete $("clickUI").dataset.rev;
+  }
+  $("clickReveal").addEventListener("click",function(){
+    var ok=0;$("clickUI").dataset.rev=1;
+    [].forEach.call($("clickUI").children,function(d,i){
+      var right=!!sel[i]===CU[i][0];if(right)ok++;
+      d.classList.remove("sel");d.classList.add(right?"good":"bad");
+      d.insertAdjacentHTML("beforeend","<small>"+(CU[i][0]?"Clicável. ":"Não clicável. ")+esc(CU[i][2])+"</small>");
+      d.style.minHeight="140px";d.style.alignContent="start";
+    });
+    $("clickTxt").textContent="Você acertou "+ok+" de "+CU.length+". O que o usuário percebe (affordance percebida) pesa mais que o que o elemento realmente faz.";
+  });
+  $("clickReset").addEventListener("click",drawCU);drawCU();
+
+  /* ---------- Paletas 60-30-10 ---------- */
+  var PAL={
+    bank:{d:"#F5F7FB",s:"#1F3A8A",sc:"#fff",c:"#FFFFFF",ci:"#1F2937",a:"#16A34A",ai:"#fff",t:"Banco: fundo claro (60), azul profundo estruturando (30) e verde só na confirmação (10). Passa solidez e destaca a ação."},
+    food:{d:"#FFFFFF",s:"#FFE8E3",sc:"#7A1E12",c:"#FFF6F4",ci:"#3A1510",a:"#EA1D2C",ai:"#fff",t:"Delivery: vermelho de alta conversão concentrado no botão. A urgência fica onde importa."},
+    erp:{d:"#F3F4F6",s:"#E5E7EB",sc:"#374151",c:"#FFFFFF",ci:"#374151",a:"#2563EB",ai:"#fff",t:"ERP: neutros para 8 horas de uso; o acento é discreto e as cores fortes ficam para exceções."},
+    chaos:{d:"#FFEB3B",s:"#9C27B0",sc:"#fff",c:"#00E5FF",ci:"#B71C1C",a:"#76FF03",ai:"#000",t:"Sem regra: mais de 5 cores competindo. Nada se destaca, e o olho não sabe para onde ir (pecado capital 1)."}
+  };
+  seg("pal",function(k){
+    var p=PAL[k],m=$("mock6");
+    m.style.background=p.d;
+    var sd=m.querySelector(".side");sd.style.background=p.s;sd.style.color=p.sc;
+    m.querySelector(".main").style.color=p.ci;
+    m.querySelectorAll(".card").forEach(function(c){c.style.background=p.c;c.style.color=p.ci;c.style.border="1px solid rgba(0,0,0,.08)"});
+    var cta=m.querySelector(".cta");cta.style.background=p.a;cta.style.color=p.ai;
+    $("palTxt").textContent=p.t;
+  });
+
+  /* ---------- Contraste ---------- */
+  function lum(hex){var c=hex.replace("#","");var r=parseInt(c.substr(0,2),16)/255,g=parseInt(c.substr(2,2),16)/255,b=parseInt(c.substr(4,2),16)/255;function f(v){return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)}return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b)}
+  function contrast(){
+    var fg=$("ccFg").value,bg=$("ccBg").value,a=lum(fg),b=lum(bg),r=(Math.max(a,b)+0.05)/(Math.min(a,b)+0.05);
+    $("ccPrev").style.color=fg;$("ccPrev").style.background=bg;
+    $("ccRatio").textContent=r.toFixed(2).replace(".",",")+":1";
+    function bd(label,okv){return "<span class=\"badge "+(okv?"p":"f")+"\">"+(okv?"✓ ":"✕ ")+label+"</span> "}
+    $("ccBadges").innerHTML=bd("AA texto normal (4,5)",r>=4.5)+bd("AA texto grande (3)",r>=3)+bd("AAA (7)",r>=7);
+  }
+  ["ccFg","ccBg"].forEach(function(id){$(id).addEventListener("input",function(){document.querySelectorAll("#ccPre button").forEach(function(x){x.setAttribute("aria-pressed","false")});contrast()})});
+  seg("ccPre",function(k){var v=k.split("|");$("ccFg").value=v[0].toLowerCase();$("ccBg").value=v[1].toLowerCase();contrast()});
+
+  /* ---------- Daltonismo ---------- */
+  seg("cbSeg",function(k){$("cbView").style.filter=k==="none"?"none":"url(#f-"+k+")"});
+
+  /* ---------- Mensagem de erro ---------- */
+  var MSG={
+    bad:["<h5 style=\"color:#C92A2A\">ERRO FATAL 0x80004005</h5><p style=\"margin:0;font-size:.9rem\">Ação inválida!</p><p style=\"margin:8px 0 0;font-size:.8rem;color:var(--muted)\">(os 20 campos do formulário foram apagados)</p><div style=\"text-align:right;margin-top:10px\"><button class=\"btn\" type=\"button\">OK</button></div>",
+      ["Palavras como “FATAL” e “inválido” assustam e culpam o usuário.","Código técnico sem explicação.","Não diz o que aconteceu nem o que fazer.","Apaga o trabalho do usuário: desconforto alto e perda de confiança."]],
+    good:["<h5>Não conseguimos enviar o formulário</h5><p style=\"margin:0;font-size:.9rem\">A conexão caiu durante o envio. <b>Seus dados foram mantidos</b>; tente enviar de novo.</p><div style=\"display:flex;gap:8px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap\"><button class=\"btn\" type=\"button\">Ver ajuda</button><button class=\"btn primary\" type=\"button\">Tentar de novo</button></div>",
+      ["Linguagem simples, sem culpar ninguém.","Explica a causa com precisão.","Preserva os dados digitados.","Oferece caminho direto de solução e link para ajuda."]]
+  };
+  seg("msgSeg",function(k){$("msgDlg").innerHTML=MSG[k][0];$("msgList").innerHTML=MSG[k][1].map(function(x){return "<li>"+esc(x)+"</li>"}).join("")});
+
+  /* ---------- Padrões de telas ---------- */
+  var SCR={
+    splash:["<div style=\"height:100%;display:grid;place-items:center;background:#E8590C;color:#fff;text-align:center\"><div><div style=\"font-size:3rem\">🛍️</div><b style=\"font-size:1.3rem\">loja</b><div style=\"width:60px;height:4px;border-radius:2px;background:rgba(255,255,255,.4);margin:16px auto 0;overflow:hidden\"><div style=\"width:60%;height:100%;background:#fff\"></div></div></div></div>",
+      "<h4 style=\"font-size:1.1rem;margin-bottom:6px\">Splash screen</h4><p>Tela de abertura exibida enquanto o app carrega.</p><ul><li>Até <strong>3 segundos</strong>, de preferência menos.</li><li>Elementos leves e discretos (logo, cor da marca).</li><li>Serve para mascarar o carregamento, nunca para atrasar o usuário.</li></ul>"],
+    onb:["<div style=\"height:100%;display:flex;flex-direction:column;padding:18px 16px\"><div style=\"text-align:right;font-weight:700;color:#E8590C\">Pular</div><div style=\"flex:1;display:grid;place-items:center;text-align:center\"><div><div style=\"font-size:3rem\">🚚</div><b style=\"font-size:1.05rem\">Entrega em 1 dia</b><p style=\"color:#5D6170;margin:6px 0 0\">Receba amanhã os pedidos feitos até 18h.</p></div></div><div style=\"display:flex;justify-content:center;gap:6px;margin-bottom:12px\"><i style=\"width:18px;height:6px;border-radius:3px;background:#E8590C\"></i><i style=\"width:6px;height:6px;border-radius:3px;background:#ccc\"></i><i style=\"width:6px;height:6px;border-radius:3px;background:#ccc\"></i></div><div style=\"background:#E8590C;color:#fff;border-radius:10px;padding:10px;text-align:center;font-weight:700\">Próximo</div></div>",
+      "<h4 style=\"font-size:1.1rem;margin-bottom:6px\">Onboarding</h4><p>Apresenta o app ao novo usuário e aumenta a retenção.</p><ul><li>Destacar só <strong>3 benefícios</strong> principais.</li><li>Sempre oferecer <strong>Pular</strong>.</li><li>Nada de formulários enormes nem jargão técnico.</li></ul>"],
+    feed:["<div style=\"height:100%;overflow:hidden\"><div style=\"padding:12px 14px;font-weight:800;border-bottom:1px solid #eee\">Notícias</div>"+[["Nova lei de dados entra em vigor","O que muda para quem compra online."],["Chuva volta no fim de semana","Previsão indica frente fria a partir de sábado."],["Time vence e lidera o campeonato","Vitória de virada no último minuto."],["Tecnologia: celulares mais caros","Preço médio sobe 12% no ano."]].map(function(x){return "<div style=\"padding:10px 14px;border-bottom:1px solid #eee;display:flex;gap:10px\"><div style=\"width:52px;height:52px;border-radius:8px;background:#E9EBF1;flex:none\"></div><div><b style=\"font-size:.82rem;display:block\">"+x[0]+"</b><span style=\"color:#5D6170;font-size:.76rem\">"+x[1]+"</span></div></div>"}).join("")+"</div>",
+      "<h4 style=\"font-size:1.1rem;margin-bottom:6px\">Feed</h4><p>Conteúdo contínuo em redes sociais e portais.</p><ul><li><strong>Títulos claros e resumos objetivos</strong> para decidir rápido se vale abrir.</li><li>Separação visual consistente entre itens.</li><li>Nada de atualização automática que tira o foco do usuário.</li></ul>"],
+    check:["<div style=\"height:100%;display:flex;flex-direction:column;padding:14px\"><b style=\"font-size:1rem\">Pagamento</b><div style=\"font-size:.74rem;color:#5D6170;margin:2px 0 10px\">Etapa 2 de 2</div><div style=\"border:1px solid #ddd;border-radius:8px;padding:8px;margin-bottom:6px;color:#5D6170\">✓ Endereço preenchido automaticamente</div><div style=\"border:2px solid #E8590C;border-radius:8px;padding:8px;margin-bottom:6px\">⚡ Pix</div><div style=\"border:1px solid #ddd;border-radius:8px;padding:8px;margin-bottom:10px\">💳 Cartão</div><div style=\"display:flex;justify-content:space-between;font-size:.8rem\"><span>Produtos</span><span>R$ 79,90</span></div><div style=\"display:flex;justify-content:space-between;font-size:.8rem\"><span>Frete</span><span>R$ 10,00</span></div><div style=\"display:flex;justify-content:space-between;font-weight:800;margin:6px 0 auto\"><span>Total</span><span>R$ 89,90</span></div><div style=\"font-size:.74rem;text-align:center;color:#5D6170;margin-bottom:6px\">Comprando como visitante · criar conta é opcional</div><div style=\"background:#E8590C;color:#fff;border-radius:10px;padding:10px;text-align:center;font-weight:700\">Pagar R$ 89,90</div></div>",
+      "<h4 style=\"font-size:1.1rem;margin-bottom:6px\">Checkout</h4><p>Etapa crítica: é onde mais se abandona o carrinho.</p><ul><li>Compra como <strong>visitante</strong> (guest checkout).</li><li><strong>Preenchimento automático</strong> de dados.</li><li><strong>Menos etapas</strong> no fluxo.</li><li>Valores e frete visíveis antes de pagar; botão com texto inequívoco.</li></ul>"]
+  };
+  seg("scrSeg",function(k){$("scrMock").innerHTML=SCR[k][0];$("scrSide").innerHTML=SCR[k][1]});
+
+  /* ---------- Estilos visuais ---------- */
+  var ST={
+    skeu:{box:"background:repeating-linear-gradient(90deg,#7a5230 0 6px,#6d4728 6px 12px)",card:"background:linear-gradient(#fdf8ec,#efe4c8);border:1px solid #b89c6a;box-shadow:inset 0 1px 0 #fff,0 6px 14px rgba(0,0,0,.45);color:#3b2a14;font-family:Georgia,serif",btn:"background:linear-gradient(#7fbf4d,#4f8f2a);color:#fff;border:1px solid #3d6e1f;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 3px rgba(0,0,0,.4);text-shadow:0 -1px 0 rgba(0,0,0,.4)",t:"Skeuomorfismo: imita materiais reais (madeira, papel, relevo). Facilita o reconhecimento para quem está começando no digital; em excesso, pesa e envelhece rápido."},
+    flat:{box:"background:#E9EBF1",card:"background:#fff;color:#14151B",btn:"background:#E8590C;color:#fff",t:"Flat design: retângulos de cor sólida, sem texturas, sombras ou relevo. Limpo e leve, mas com menos pistas de que algo é clicável."},
+    mat:{box:"background:#E9EBF1",card:"background:#fff;color:#14151B;box-shadow:0 2px 4px rgba(0,0,0,.12),0 8px 20px rgba(0,0,0,.1)",btn:"background:#E8590C;color:#fff;box-shadow:0 3px 6px rgba(232,89,12,.4);border-radius:8px",t:"Material (complemento): flat com sombras que indicam elevação. Devolve parte das pistas de profundidade sem voltar às texturas."},
+    neu:{box:"background:#E4E7EE",card:"background:#E4E7EE;color:#3A3F4C;box-shadow:8px 8px 16px #c2c6cf,-8px -8px 16px #ffffff",btn:"background:#E4E7EE;color:#E8590C;box-shadow:5px 5px 10px #c2c6cf,-5px -5px 10px #ffffff",t:"Neumorfismo (complemento): elementos parecem moldados no fundo com sombras suaves. Bonito, mas costuma falhar em contraste e acessibilidade."},
+    glass:{box:"background:radial-gradient(circle at 20% 20%,#ff8a4c,transparent 45%),radial-gradient(circle at 80% 70%,#5b6cff,transparent 50%),#1b1d23",card:"background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4)",btn:"background:rgba(255,255,255,.28);color:#fff;border:1px solid rgba(255,255,255,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px",t:"Liquid Glass: translucidez, refração e profundidade sutil. Exemplo do semi-realismo atual citado na revisão: riqueza visual sem perder a clareza funcional."}
+  };
+  seg("styleSeg",function(k){var s=ST[k];$("styleBox").setAttribute("style",s.box);$("styleCard").setAttribute("style",s.card);$("styleBtn").setAttribute("style",s.btn);$("styleTxt").textContent=s.t});
+
+  /* ---------- Quiz ---------- */
+  var B=["Fundamentos","Cores","Acessibilidade","Telas","Flat design","Interfaces","Affordance e emoção","Guidelines","Dissertativas"];
+  var QS=[
+    [0,"Sobre usabilidade e metas de interação (ISO 9241-11), assinale a correta.",["A usabilidade é intrínseca e fixa, igual para iniciantes e especialistas.","A eficiência é a precisão e completude, independente de esforço ou tempo.","A satisfação é o quão agradável é a experiência, incentivando o uso contínuo.","A memorabilidade é fazer uma tarefa complexa na primeira tentativa, sem aprendizado.","A eficácia mede a rapidez com o menor esforço computacional."],2,"A trocou o contexto; B e E inverteram eficácia e eficiência; D descreve aprendizagem."],
+    [0,"Qual princípio oferece saídas de emergência como desfazer e refazer?",["Visibilidade do status do sistema.","Controle do usuário e liberdade.","Consistência e padrões.","Prevenção de erros.","Reconhecimento em vez de memorização."],1,"Heurística 3: saídas de emergência claramente marcadas."],
+    [0,"Relação entre controles e efeitos no mundo real, como o volante e as rodas:",["Affordance física.","Mapeamento (mapping).","Restrição cultural.","Visibilidade restrita.","Consistência lógica."],1,"Mapeamento natural de Norman."],
+    [0,"Exemplo de restrição cultural:",["Desativar opções de menu por contexto lógico.","Impedir fisicamente o USB invertido.","Usar vermelho para alertas e erros.","Exigir autenticação de dois fatores.","Ocultar botões secundários no cadastro."],2,"A é restrição lógica e B é física; a cor vermelha depende de convenção cultural."],
+    [0,"Sobre a avaliação heurística, é correto afirmar:",["Exige centenas de usuários em laboratório.","Substitui definitivamente os testes com usuários.","É inspeção sistemática por especialistas com diretrizes, rápida e econômica.","Avalia código, banco de dados e servidores.","É puramente matemática e sem viés."],2,"É inspeção por especialistas, sem usuários."],
+    [1,"Tempo para formar opinião subconsciente sobre um app e base desse julgamento:",["Até 90 segundos, baseando-se na maioria das vezes na paleta de cores.","Cores neutras aumentam a desconfiança no onboarding.","Mais de 10 cores melhoram a retenção.","O azul é evitado em bancos por gerar alerta.","O cérebro evita pontos de alto contraste."],0,"Dado do material 6: 90 segundos, 62% a 90% pelas cores."],
+    [1,"Cor indispensável em transações, confirmações e indicadores de sucesso:",["Vermelho e laranja, para paz.","Verde.","Amarelo como fundo de leitura.","Roxo para falhas de hardware.","Cinza escuro para conversão."],1,"Verde: crescimento e sucesso."],
+    [1,"Na regra 60-30-10, os 30% vão para:",["Fundos e espaços de respiro.","Cards, painéis laterais, navegação e blocos secundários.","CTAs, links ativos e ícones de destaque.","Decoração 3D.","Rodapés e termos."],1,"60 fundo, 30 estrutura, 10 acento."],
+    [1,"Sobre B2C x B2B/ERP, é correto:",["B2C usa neutros para evitar engajamento.","ERPs usam neutros e cinzas para ergonomia de longo prazo e evitar exaustão.","ERPs devem usar cores saturadas em todas as tabelas.","Apps evitam feedback por cor para economizar banda.","Ergonomia é irrelevante em 8 horas de uso."],1,"Cores fortes no ERP ficam para exceções críticas."],
+    [1,"Principal benefício de tokens e variáveis de design:",["Cores fixas no código de cada componente.","Alterações globais imediatas e suporte nativo a temas.","Arquivo maior para otimizar cache de vídeo.","Dispensar validação WCAG.","Substituir o backend por IA."],1,"Muda-se o token, muda-se o sistema inteiro."],
+    [2,"Contraste mínimo WCAG AA para texto normal e grande:",["2:1 e 1,5:1","4,5:1 e 3:1","10:1 e 7:1","1:1 e 0,5:1","7,5:1 e 5:1"],1,"AAA, mais rígido, pede 7:1 e 4,5:1."],
+    [2,"Diretriz para daltonismo:",["Banir vermelho e verde.","Nunca comunicar estado crítico só com vermelho ou verde; combinar com ícones e texturas.","Ocultar textos e usar voz.","Inverter cores para azul e amarelo sem aviso.","Evitar redundância visual."],1,"Redundância (cor + ícone + texto) é a regra."],
+    [2,"Vantagem técnica do dark mode:",["Acelera o processador.","Reduz consumo de energia em telas OLED e AMOLED.","Elimina o CSS.","Garante conversão CMYK.","Aumenta a refletividade ao sol."],1,"Em OLED, pixels pretos ficam apagados."],
+    [2,"Por que inverter preto e branco no dark mode é um erro?",["Gera sombras incorretas e contraste excessivo; exige paleta dedicada com cinzas profundos.","Impede o reconhecimento da preferência de tema.","Muda a resolução do monitor.","Desativa os CTAs.","Trava o kernel."],0,"Use #121212, dessature cores e eleve clareando."],
+    [2,"Um dos pecados capitais no uso de cores:",["Até duas cores neutras em leitura.","Consistência do vermelho em todas as telas.","Mais de 5 cores principais na mesma tela.","Linting de contraste no CI/CD.","Respeitar a preferência de tema."],2,"Poluição visual e caos informacional."],
+    [3,"Tela de abertura exibida no carregamento:",["Checkout.","Splash Screen.","Feed contínuo.","Dashboard analítico.","Modal de configuração."],1,"Splash screen."],
+    [3,"Tempo ideal de uma splash screen:",["15 segundos com 3D.","Até 3 segundos, preferencialmente menos, com elementos leves.","30 a 60 segundos para ler termos.","O tempo do backup do banco.","Enquanto o dedo estiver pressionado."],1,"Ela só deve mascarar o carregamento."],
+    [3,"Regra de ouro do onboarding:",["Formulário com 50 campos.","Ocultar o botão Pular.","Destacar só 3 benefícios por tela e sempre permitir Pular.","Mostrar todos os recursos na primeira tela.","Usar jargão técnico."],2,"Menos barreira, mais retenção."],
+    [3,"Elemento essencial de um feed eficiente:",["Textos longos sem separação.","Títulos claros e resumos objetivos para decidir rápido.","Cores piscantes em cada item.","Ocultar cabeçalhos e separadores.","Atualizar a página a cada segundo."],1,"O usuário escaneia e decide o que abrir."],
+    [3,"Como reduzir o abandono no checkout:",["Exigir conta e verificação por e-mail.","Aumentar etapas.","Guest checkout, preenchimento automático e menos etapas.","Ocultar taxas até o fim.","Botões ambíguos."],2,"Menos atrito, mais conversão."],
+    [4,"Estilo de 2007 a 2013 que trocou texturas por retângulos planos (segundo a revisão):",["Skeuomorfismo.","Flat Design.","Liquid Glass.","Neomorfismo avançado.","Realismo dimensional."],1,"Pela descrição, flat. Veja a nota sobre as datas na Parte 7."],
+    [4,"A generalização comportamental (Skinner, 1966) permite que os usuários:",["Rejeitem interfaces sem couro e madeira.","Abstraiam a função independentemente do estilo, como reconhecer um retângulo destacado como botão.","Decorem assembly vendo ícones.","Sintam falhas de hardware pelo mouse.","Dispensem feedback visual."],1,"Base da transição do realismo para o flat."],
+    [4,"Estímulos repetidos e idênticos perdem atenção, gerando fadiga ou apatia:",["Efeito de primazia.","Habituação visual (Thompson e Spencer, 1966).","Lei de Fitts.","Viés de confirmação estética.","Carga cognitiva extrínseca."],1,"Ajuda a explicar o cansaço do flat estrito."],
+    [4,"A guinada do flat estrito para gradientes, refração e profundidade (Liquid Glass) representa:",["Retrocesso aos anos 1980.","Evolução por padrões vivos: riqueza visual e imersão sem perder clareza funcional.","Obrigação de reaprender links e campos.","Eliminação de 3D em B2B.","Volta à CLI."],1,"Semi-realismo como resposta à habituação."],
+    [4,"Novas métricas para interfaces semi-realistas:",["Linhas de código removidas.","Satisfação estética e engajamento emocional, com pesquisas longitudinais e eye tracking.","Velocidade do cooler.","Bugs na primeira hora.","Custo de servidor."],1,"Vão além da conversão."],
+    [5,"Componente WIMP que apresenta opções em forma plana, cascata ou contextual:",["Janela.","Ícone.","Menu.","Dispositivo apontador.","Barra de rolagem."],2,"Menus: flat, cascata, circular, contextual."],
+    [5,"Sobre ícones, é correto:",["Ícones abstratos sem texto são sempre mais fáceis.","Ícones representam objetos familiares e são, em regra, mais fáceis de memorizar que comandos de texto.","Devem ter menos de 8 pixels.","Animar todos melhora a concentração.","É proibido texto junto a ícones."],1,"Texto junto ao ícone enriquece a compreensão."],
+    [5,"Princípio das interfaces enativas:",["Representações mentais estáticas sem interação.","Percepção e ação constantes: o usuário aprende usando.","Aprender só por manuais.","Máquinas com consciência humana.","Cognição na memória cache."],1,"Ensinar a usar enquanto se usa."],
+    [5,"Segundo Card et al. (1999), a visualização deve permitir:",["Imprimir todos os registros.","Ver padrões, tendências e anomalias.","Ocultar números.","Trocar gráficos por texto.","Rodar código de máquina."],1,"Amplificar a cognição humana."],
+    [5,"Desafio das interfaces gestuais em AR:",["Precisão fácil sem treino.","Dificuldade em tarefas de precisão, exigindo ambiente controlado e treinamento.","Sem requisitos de processamento.","Incompatível com WIMP.","Só comandos digitados."],1,"Exatamente o que o material 4 lista."],
+    [6,"O que é affordance (Gibson e Norman)?",["Propriedade física ou percebida que sugere como o objeto pode ser usado.","Custo de licença de framework.","Velocidade de rede.","Nível de criptografia.","Memória RAM em segundo plano."],0,"Norman enfatiza a affordance percebida."],
+    [6,"Elementos da relação triádica de Peirce:",["Servidor, cliente e banco.","Representâmen, objeto e interpretante.","Sintaxe, semântica e pragmática.","Hardware, software e firmware.","Input, processamento e output."],1,"C são as divisões da semiótica, não o signo de Peirce."],
+    [6,"No nível semiótico de Andersen, as máquinas:",["Interagem por propriedades mecânicas.","Executam funções sem intervenção humana.","Produzem e interpretam sinais que representam conceitos (o pincel do programa de desenho).","Armazenam dados em discos.","Conduzem energia elétrica."],2,"A e B descrevem os níveis físico e funcional."],
+    [6,"Situação de alto desconforto e frustração:",["Mensagens de erro vagas ou que culpam o usuário, como “Erro fatal 98547”.","Paletas neutras em painéis.","Feedback claro após sucesso.","Links de ajuda perto do erro.","Salvamento automático."],0,"As outras são boas práticas."],
+    [6,"Elementos que constroem a confiança do usuário:",["Ocultar privacidade e remover suporte.","Segurança, transparência, usabilidade, feedback imediato e design profissional.","Pop-ups agressivos.","Fazer o usuário adivinhar as regras.","Alertas sonoros no volume máximo."],1,"A lista do material 7, mais o suporte."],
+    [7,"Objetivo das guidelines em relação à carga cognitiva:",["Forçar a memorização de comandos.","Evitar que o usuário memorize muita informação, usando blocos gerenciáveis (7 itens, chunks).","Ocultar informações essenciais.","Complicar formulários.","Trocar listas por digitação livre."],1,"Chunking reduz a carga de memória."],
+    [7,"Estágios do ciclo de vida da experiência:",["Instalação, primeiro uso e customização, uso regular, gerenciamento e manutenção, desinstalar ou atualizar.","Programação, compilação, testes, deploy, desativação.","Planejamento, contratação, marketing, vendas, suporte.","Análise semiótica, inspeção, teste cego, homologação, certificação.","Requisitos, papel, wireframe, código, refatoração."],0,"É o ciclo do ponto de vista de quem usa."],
+    [7,"Diretriz de dimensionamento de janelas web:",["Fixar em 300×200.","Mínimo efetivo de 800×600 e layouts redimensionáveis a partir de 1024×768.","Exigir 8K.","Ocultar rolagem abaixo de 1200 px.","Só desktop sem toque."],1,"Diretriz de checklists de interface."],
+    [7,"Posição inicial de janelas de propriedades e contextuais:",["Propriedades centralizadas no topo da janela proprietária; contextuais perto do objeto de origem.","Aleatória.","Contextuais sempre no canto inferior direito.","Propriedades cobrindo 100% da tela.","Recalculada a cada clique."],0,"Proximidade com a origem preserva o contexto."],
+    [7,"O que padronizar segundo design systems e guidelines:",["Textos, controles, comandos e janelas de mensagem.","Processadores e TCP/IP.","Tabelas SQL e chaves.","Marketing e funil.","Custos de nuvem e juros."],0,"Elementos de interface, e não de infraestrutura."],
+    [8,"41. Eficácia x eficiência na emissão de certidões:",["Eficácia é emitir em 30 s; eficiência é não errar.","Eficácia é precisão e completude do objetivo; eficiência relaciona a acurácia aos recursos e tempo gastos.","São idênticas e medem satisfação.","Eficiência é estética; eficácia é memória do servidor.","100% de eficiência garante eficácia."],1,"A inverte os conceitos, uma pegadinha comum."],
+    [8,"42. Objetivo do design de interação (Sharp, Rogers e Preece):",["Algoritmos de IA para backend.","Projetar produtos interativos que apoiem a comunicação e interação no cotidiano e no trabalho, com usabilidade intuitiva, conforto gráfico, funcionalidade objetiva e legibilidade.","Reduzir hardware simplificando CSS.","Restringir a CLI.","Manuais impressos."],1,"Definição do material 1."],
+    [8,"43. Diferença entre UI e UX:",["UI trata de sensações; UX, do hexadecimal das cores.","UI é o meio e o arranjo visual e funcional; UX é a percepção holística e as emoções antes, durante e depois.","UI é desktop; UX é mobile.","São sinônimos.","UI substitui testes; UX roda scripts."],1,"A também inverte os conceitos."],
+    [8,"44. Aprendizagem x memorabilidade em ERP de uso esporádico:",["Aprendizagem: rapidez do novato no primeiro contato; memorabilidade: o usuário casual volta após meses sem reaprender.","Memorabilidade exige decorar atalhos.","Medem CPU e disco.","Exigem teste presencial.","Memorabilidade só vale para jogos."],0,"Novato x usuário casual."],
+    [8,"45. Visibilidade do status e correspondência com o mundo real em streaming:",["Barra de progresso do buffer e perfil ativo; lixeira para remover e engrenagem para configurações.","Ocultar download; mensagens em SQL.","Tela branca; caminhos em CLI.","Termos de rede; botões aleatórios.","Avisar só após travar; banir ícones."],0,"Status visível e metáforas do cotidiano."],
+    [8,"46. Mapeamento e restrição na casa inteligente:",["Botões das lâmpadas na disposição dos cômodos; ar-condicionado desabilitado se desconectado.","Textos aleatórios; desligar a cada 10 min.","Volume invertido; senhas sem autenticação.","Gráficos de pizza; ocultar desligar.","Comandos em hexadecimal; sem feedback tátil."],0,"É a demonstração do tópico de Norman."],
+    [8,"47. Fases da avaliação heurística:",["Compilação, carga e deploy.","Planejamento, execução individual e independente por especialistas, e revisão com consolidação e priorização.","Investidores, preço e marketing.","Teste cego, questionário e auditoria.","Papel, servidores e treinamento."],1,"Planejamento, execução, revisão."],
+    [8,"48. Vantagens e desvantagens da avaliação heurística:",["Zero conhecimento; demorada e cara.","Rápida e barata sem recrutar usuários; exige especialistas e pode não captar problemas que só surgem com usuários reais.","Acha bugs de banco; é proibida.","Gera protótipos; usa ressonância.","Feita por robôs; sem relatório."],1,"É o trade-off clássico."],
+    [8,"49. Significado de WIMP:",["Web, Internet, Modem e Protocol.","Windows, Icons, Menus e Pointing device.","Widgets, Input, Memory e Processing.","Wireless, Interactive, Mobile e Portable.","Workspace, Information, Management e Performance."],1,"Janelas, ícones, menus e apontador."],
+    [8,"50. Abordagem enativa x modelo tradicional:",["Tradicional: representações simbólicas internas e estáticas; enativa: cognição do acoplamento entre ação e percepção corporificada, aprendendo fazendo.","Tradicional era por toque; enativa exige matemática.","Enativa separa mente e corpo.","Ambas guardam pixels.","Enativa defende cartões perfurados."],0,"Representação x ação."],
+    [8,"51. Affordance de Gibson x affordance percebida de Norman:",["Gibson: depende de software; Norman: só smartphones.","Gibson: propriedade real do ambiente, independente da percepção; Norman: no software importa como as pistas visuais comunicam a interatividade.","Norman rejeitou Gibson.","É velocidade de processamento.","Telas planas têm as affordances de botões com mola."],1,"Na interface, conta o que o usuário percebe."],
+    [8,"52. Peirce aplicado ao ícone de salvar (disquete):",["C++, RAM e fabricante.","Representâmen: o desenho do disquete; objeto: a ação de armazenar; interpretante: a compreensão de que clicar salva o trabalho.","Placa de rede, nuvem e Mbps.","Cor de fundo, marca e conversão.","Teclado, monitor e cabo."],1,"Veja o triângulo na Parte 4."],
+    [8,"53. Formulário de 20 campos apagado com “ERRO FATAL 0x80004005”:",["Baixo desconforto; manter o texto.","Alta frustração e quebra de confiança; preservar dados, explicar em linguagem clara e oferecer caminho de solução.","Frustração irrelevante se houver logs.","Bip no volume máximo.","Bloquear por 24 horas."],1,"Veja a demonstração na Parte 6."],
+    [8,"54. Três diretrizes contra sobrecarga de memória e erros:",["Digitação livre de códigos, sem confirmação, sem undo.","Chunking, listas e caixas de seleção em vez de digitação livre, e desfazer.","Mais texto, termos técnicos, sem contraste.","Decorar 15 etapas.","Cores piscantes."],1,"Reduz memória e erro ao mesmo tempo."],
+    [8,"55. Por que tons neutros no ERP hospitalar B2B?",["Para economizar tinta.","Previnem a fadiga visual em longas jornadas, e as cores saturadas reservadas a exceções críticas chamam atenção sem poluir.","B2C proíbe cores primárias.","Fundo amarelo neon mantém vigilância.","Cor não afeta erros."],1,"Ergonomia visual de longo prazo."]
+  ];
+  var filt="all",ans=0,hit=0,fg=$("qFilter");
+  ["Todas"].concat(B).forEach(function(n,i){var b=document.createElement("button");b.type="button";b.dataset.k=i===0?"all":String(i-1);b.textContent=n;b.setAttribute("aria-pressed",i===0?"true":"false");fg.appendChild(b)});
+  function buildQuiz(){
+    var box=$("quiz");box.innerHTML="";ans=0;hit=0;$("score").textContent="";
+    var list=QS.map(function(q,i){return [i].concat(q)}).filter(function(q){return filt==="all"||String(q[1])===filt});
+    list.forEach(function(q){
+      var d=document.createElement("div");d.className="q";
+      d.innerHTML="<span class=\"tag\">"+(q[0]+1)+" · "+B[q[1]]+"</span><p>"+esc(q[2])+"</p><div class=\"opts\"></div><div class=\"fb\" hidden></div>";
+      var o=d.querySelector(".opts"),fb=d.querySelector(".fb");
+      q[3].forEach(function(t,i){
+        var b=document.createElement("button");b.type="button";b.className="opt";b.textContent=String.fromCharCode(65+i)+") "+t;
+        b.addEventListener("click",function(){
+          if(d.dataset.done)return;d.dataset.done=1;ans++;
+          if(i===q[4]){b.classList.add("right");hit++;fb.textContent="Correto. "+q[5]}
+          else{b.classList.add("wrong");o.children[q[4]].classList.add("right");fb.textContent="Gabarito: "+String.fromCharCode(65+q[4])+". "+q[5]}
+          fb.hidden=false;if(ans===list.length)$("score").textContent="Você acertou "+hit+" de "+list.length+".";
+        });
+        o.appendChild(b);
+      });
+      box.appendChild(d);
+    });
+  }
+  seg("qFilter",function(k){filt=k;buildQuiz()});
+  $("quizReset").addEventListener("click",buildQuiz);
+
+  /* ---------- Flashcards ---------- */
+  var cards=[
+    ["Usabilidade (ISO 9241-11)","Usuários específicos atingem objetivos específicos com eficácia, eficiência e satisfação, num contexto específico."],
+    ["Eficácia x eficiência","Eficácia: atingiu o objetivo com precisão? Eficiência: quanto tempo e esforço custou?"],
+    ["UI x UX","UI: o meio e o arranjo pelo qual se usa o sistema. UX: como a pessoa se sente antes, durante e depois."],
+    ["IxD","Projetar produtos interativos que apoiem como as pessoas se comunicam e interagem (Sharp, Rogers e Preece)."],
+    ["Metas de Nielsen","Aprendizagem, eficiência, memorabilidade, poucos erros e satisfação."],
+    ["Princípios de Norman","Visibilidade, feedback, restrições, mapeamento e consistência."],
+    ["Restrições de Norman","Física (encaixe), lógica (menu desabilitado) e cultural (vermelho = alerta)."],
+    ["Mapeamento","Relação entre o controle e o efeito: volante e rodas, setas e cursor."],
+    ["Avaliação heurística","Inspeção por especialistas (Nielsen e Molich, 1990). Fases: planejamento, execução individual, revisão."],
+    ["Deslize x interpretação","Deslize: intenção certa, execução errada. Interpretação: plano errado induzido pela interface."],
+    ["2-step operation","Etapa extra só para ações críticas e irreversíveis."],
+    ["WIMP","Windows, Icons, Menus e Pointing device."],
+    ["Teoria enativa","Varela, Thompson e Rosch: cognição pela ação e percepção. Ensinar a usar enquanto se usa."],
+    ["Affordance percebida","Termo de Norman: o que importa é o que o usuário percebe que pode fazer."],
+    ["Signo de Peirce","Representâmen, objeto e interpretante."],
+    ["Sintaxe, semântica, pragmática","Signo com signo; signo com significado; signo com quem interpreta."],
+    ["Níveis de Andersen","Físico, funcional e semiótico."],
+    ["Regra 60-30-10","60 fundo, 30 estrutura (cards, navegação), 10 acento (CTAs)."],
+    ["WCAG AA","Contraste de 4,5:1 para texto normal e 3:1 para texto grande."],
+    ["Daltonismo","Cerca de 8% dos homens. Nunca comunicar estado crítico só com cor."],
+    ["Dark mode correto","Cinzas profundos (#121212), cores dessaturadas, elevação clareando, prefers-color-scheme."],
+    ["Emoção x afetividade","Emoção: passageira. Afetividade: influenciada pela cultura, cria vínculo."],
+    ["Pirâmide do design emocional","Funcional, confiável, usável e prazeroso."],
+    ["Splash e onboarding","Splash: até 3 s. Onboarding: 3 benefícios por tela e botão Pular."],
+    ["Checkout","Guest checkout, preenchimento automático e menos etapas."],
+    ["Generalização x habituação","Generalização: reconhecer a função em qualquer estilo. Habituação: estímulo repetido perde atenção."],
+    ["Chunking","Agrupar informação em blocos gerenciáveis para reduzir a carga cognitiva."]
+  ];
+  var ci=0,card=$("fcCard");
+  function showCard(){var f=card.classList.contains("flip");card.classList.remove("flip");setTimeout(function(){$("fcTerm").textContent=cards[ci][0];$("fcDef").textContent=cards[ci][1];$("fcCount").textContent=(ci+1)+" / "+cards.length},f?220:0)}
+  card.addEventListener("click",function(){card.classList.toggle("flip")});
+  $("fcPrev").addEventListener("click",function(){ci=(ci-1+cards.length)%cards.length;showCard()});
+  $("fcNext").addEventListener("click",function(){ci=(ci+1)%cards.length;showCard()});
+  showCard();
+
+  /* ---------- Tema ---------- */
+  var root=document.documentElement,mq=window.matchMedia("(prefers-color-scheme: dark)");
+  function atual(){return root.getAttribute("data-theme")||(mq.matches?"dark":"light")}
+  function pintar(){var d=atual()==="dark";document.querySelectorAll(".theme-btn").forEach(function(b){b.textContent=d?"☀":"☾";b.setAttribute("aria-label",d?"Mudar para tema claro":"Mudar para tema escuro");b.title=b.getAttribute("aria-label")})}
+  document.querySelectorAll(".theme-btn").forEach(function(b){b.addEventListener("click",function(){var n=atual()==="dark"?"light":"dark";root.setAttribute("data-theme",n);try{localStorage.setItem("guias-tema",n)}catch(e){}pintar()})});
+  if(mq.addEventListener)mq.addEventListener("change",pintar);
+  pintar();
+})();
+</script>
+</body>
+</html>
